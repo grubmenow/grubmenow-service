@@ -16,4 +16,15 @@
         <servlet-name>FoodItemDashboardServlet</servlet-name>
         <url-pattern>/dashboard/fooditem</url-pattern>
     </servlet-mapping>
+    
+    <servlet>
+      	<servlet-name>AddFoodItemDashboardServlet</servlet-name>
+      	<servlet-class>com.grubmenow.service.dashboard.servlet.AddFoodItemDashboardServlet</servlet-class>
+     </servlet>
+     
+     <servlet-mapping>
+        <servlet-name>AddFoodItemDashboardServlet</servlet-name>
+        <url-pattern>/dashboard/fooditem-add</url-pattern>
+    </servlet-mapping>
+    
 </web-app>

@@ -15,7 +15,7 @@
    		
    		$('#add-form-submit-button').click(function(e) {
  			 var link = $('#add-form').serialize()
-   			 link = '/fooditem-add?' + link;
+   			 link = '/dashboard/fooditem-add?' + link;
  			 
  			
  			 $('#add-form-submit-button').hide();
