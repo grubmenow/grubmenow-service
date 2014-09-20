@@ -3,12 +3,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.grubmenow.service</groupId>
   <artifactId>grubmenow-service</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>grubmenow-service</name>
   <url>http://maven.apache.org</url>
   <properties>
-    <tomcat.version>8.0.12</tomcat.version>
+   
   </properties>
   <dependencies>
     <dependency>
@@ -19,29 +19,11 @@
     </dependency>
 	
 	<dependency>
-		<groupId>org.apache.thrift</groupId>
-		<artifactId>libthrift</artifactId>
-		<version>0.9.1</version>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-lang3</artifactId>
+		<version>3.0</version>
 	</dependency>
-	
-	<dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>jcl-over-slf4j</artifactId>
-        <version>1.7.0</version>
-        <scope>runtime</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>1.7.0</version>
-        <scope>runtime</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-log4j12</artifactId>
-        <version>1.7.0</version>
-        <scope>runtime</scope>
-    </dependency>
+
     <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
@@ -74,35 +56,11 @@
 		<version>4.3.6.Final</version>
 	</dependency>
     <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-core</artifactId>
-        <version>${tomcat.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-logging-juli</artifactId>
-        <version>${tomcat.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.tomcat.embed</groupId>
-        <artifactId>tomcat-embed-jasper</artifactId>
-        <version>${tomcat.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.tomcat</groupId>
-        <artifactId>tomcat-jasper</artifactId>
-        <version>${tomcat.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.tomcat</groupId>
-        <artifactId>tomcat-jasper-el</artifactId>
-        <version>${tomcat.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.tomcat</groupId>
-        <artifactId>tomcat-jsp-api</artifactId>
-        <version>${tomcat.version}</version>
-    </dependency>
+    	<groupId>javax.servlet</groupId>
+    	<artifactId>servlet-api</artifactId>
+    	<version>2.5</version>
+    	<scope>provided</scope>
+	</dependency>
   </dependencies>
   <build>
      <plugins>
@@ -113,12 +71,29 @@
         <configuration>
 		    <includes>
 		      <include implementation="java.lang.String">src/main/java/**/*.java</include>
-		      <include implementation="java.lang.String">gen-java/**/*.java</include>
 		    </includes>
           <source>7</source>
           <target>7</target>
         </configuration>
       </plugin>
+      <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>2.1.1</version>
+            <configuration>
+                <failOnMissingWebXml>false</failOnMissingWebXml>
+                <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
+                <warName>${project.artifactId}_${version}</warName>
+                <archive>
+                    <addMavenDescriptor>false</addMavenDescriptor>
+                    <manifest>
+                        <addClasspath>false</addClasspath>
+                    </manifest>
+                    <manifestEntries/>
+                    <manifestFile/>
+                </archive>
+            </configuration>
+        </plugin>
     </plugins>
   </build>
 </project>

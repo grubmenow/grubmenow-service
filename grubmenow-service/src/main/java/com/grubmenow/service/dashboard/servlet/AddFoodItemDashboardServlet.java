@@ -3,7 +3,6 @@ package com.grubmenow.service.dashboard.servlet;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +11,6 @@ import com.grubmenow.service.datamodel.FoodItemState;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.persist.PersistenceFactory;
 
-@WebServlet(name = "Add Food Servlet", urlPatterns = {"/fooditem-add"} )
 public class AddFoodItemDashboardServlet extends AbstractDashboadServlet {
 
 	@Override  
