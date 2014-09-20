@@ -7,6 +7,9 @@
   <version>1.0-SNAPSHOT</version>
   <name>grubmenow-service</name>
   <url>http://maven.apache.org</url>
+  <properties>
+    <tomcat.version>8.0.12</tomcat.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -55,7 +58,51 @@
 		<artifactId>aws-java-sdk</artifactId>
 		<version>1.8.9.1</version>
 	</dependency>
-
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-core</artifactId>
+		<version>4.3.6.Final</version>
+	</dependency>
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.32</version>
+	</dependency>
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-c3p0</artifactId>
+		<version>4.3.6.Final</version>
+	</dependency>
+    <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-logging-juli</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-jasper</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jasper-el</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat</groupId>
+        <artifactId>tomcat-jsp-api</artifactId>
+        <version>${tomcat.version}</version>
+    </dependency>
   </dependencies>
   <build>
      <plugins>
@@ -64,6 +111,10 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
+		    <includes>
+		      <include implementation="java.lang.String">src/main/java/**/*.java</include>
+		      <include implementation="java.lang.String">gen-java/**/*.java</include>
+		    </includes>
           <source>7</source>
           <target>7</target>
         </configuration>

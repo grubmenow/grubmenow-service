@@ -1,81 +1,100 @@
 package com.grubmenow.service.datamodel;
 
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-
 /**
  * Data Access Object Class to represent a Provider 
  */
 
+@Entity
+@Table(name = "PROVIDER")
 @ToString
-@DynamoDBTable(tableName="Provider")
 public class ProviderDAO {
 
+	@Id
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBHashKey(attributeName="providerId")
+    @Column(name = "PROVIDER_ID")
 	private String providerId;
 
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="providerName")
+    @Column(name = "PROVIDER_NAME")
 	private String providerName;
 	
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="providerAddressStreetNumber")
+    @Column(name = "PROVIDER_ADDRESS_STREET_NUMBER")
 	private String providerAddressStreetNumber;
 	
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="providerAddressStreet")
+    @Column(name = "PROVIDER_ADDRESS_STREET")
 	private String providerAddressStreet;
 	
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="providerAddressApartmentNumber")
+    @Column(name = "PROVIDER_ADDRESS_APARTMENT_NUMBER")
 	private String providerAddressApartmentNumber;
 	
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="providerAddressZipCode")
+    @Column(name = "PROVIDER_ADDRESS_ZIP_CODE")
 	private String providerAddressZipCode;
 	
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="providerAddressState")
+    @Column(name = "PROVIDER_ADDRESS_STATE")
 	private String providerAddressState;
 	
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="providerAddressCity")
+    @Column(name = "PROVIDER_ADDRESS_CITY")
 	private String providerAddressCity;
 	
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="providerImageURL")
+    @Column(name = "PROVIDER_IMAGE_URL")
 	private String providerImageURL;
 	
 	@Getter
 	@Setter
 	@NonNull
-	@DynamoDBAttribute(attributeName="acceptedPaymentMethods")
-	private Set<String> acceptedPaymentMethods;
+    @Column(name = "IS_ONLINE_PAYMENT_ACCEPTED")
+	private Boolean isOnlinePaymentAccepted;
+	
+	@Getter
+	@Setter
+	@NonNull
+    @Column(name = "IS_CASH_ON_DELIVERY_PAYMENT_ACCEPTED")
+	private Boolean isCashOnDeliverPaymentAccepted;
+	
+	@Getter
+	@Setter
+	@NonNull
+    @Column(name = "IS_CARD_ON_DELIVERY_PAYMENT_ACCEPTED")
+	private Boolean isCardOnDeliverPaymentAccepted;
+	
+    @Getter
+    @Setter
+    @NonNull
+    @Column(name = "PROVIDER_STATE")
+	private String providerState;
 }

@@ -1,44 +1,59 @@
 package com.grubmenow.service.datamodel;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-
 /**
  * Data Access Object Class to represent the food item and it's various attributes 
  */
 
+@Entity
+@Table(name = "FOOD_ITEM")
 @ToString
-@DynamoDBTable(tableName="FoodItem")
 public class FoodItemDAO {
 
+	@Id
 	@Getter
     @Setter
     @NonNull
-	@DynamoDBHashKey(attributeName="foodItemId")
+    @Column(name = "FOOD_ITEM_ID")
 	private String foodItemId;
 	
 	@Getter
     @Setter
     @NonNull
-    @DynamoDBAttribute(attributeName="foodItemName")
+	@Column(name = "FOOD_ITEM_NAME")
 	private String foodItemName;
 
     @Getter
     @Setter
     @NonNull
-    @DynamoDBAttribute(attributeName="foodItemImageUrl")  
+    @Column(name = "FOOD_ITEM_IMAGE_URL")
 	private String foodItemImageUrl;
 
     @Getter
     @Setter
     @NonNull
-    @DynamoDBAttribute(attributeName="foodItemDescription")
+    @Column(name = "FOOD_ITEM_DESCRIPTION")
 	private String foodItemDescription;
+    
+    @Getter
+    @Setter
+    @NonNull
+    @Column(name = "FOOD_ITEM_DESCRIPTION_TAGS")
+	private String foodItemDescriptionTags;
+
+    @Getter
+    @Setter
+    @NonNull
+    @Column(name = "FOOD_ITEM_STATE")
+	private FoodItemState foodItemState;
 
 }

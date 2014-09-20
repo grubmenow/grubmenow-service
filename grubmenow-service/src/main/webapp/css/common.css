@@ -1,0 +1,33 @@
+body {
+	background-color: #FFFFFF;
+	color: black;
+	font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode",
+		"Luxi Sans", Tahoma, sans-serif;
+	margin: 0;
+	padding: 0;
+	font-size: 14px;
+}
+
+.input_form_text {
+	style ="color: #2B3856;
+	font-family: Consolas, monospace;
+	font-size: 12px";
+}
+
+.table_header {
+	background: none repeat scroll 0 0 #335055;
+	border: 1px solid #45515D;
+	border-radius: 4px 4px 4px 4px;
+	text-align: center;
+	vertical-align: top;
+	font-size: 13px;
+	color: white;
+}
+
+.table_cell {
+	border: 1px solid #45515D;
+	border-radius: 4px 4px 4px 4px;
+	text-align: center;
+	vertical-align: top;
+	font-size: 12px;
+}
