@@ -66,16 +66,6 @@
 		<url-pattern>/dashboard/fooditemoffer</url-pattern>
 	</servlet-mapping>
 
-	<servlet>
-		<servlet-name>AddFoodItemOfferDashboardServlet</servlet-name>
-		<servlet-class>com.grubmenow.service.dashboard.servlet.AddFoodItemOfferDashboardServlet</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>AddFoodItemOfferDashboardServlet</servlet-name>
-		<url-pattern>/dashboard/fooditemoffer-add</url-pattern>
-	</servlet-mapping>
-
     <servlet>
       	<servlet-name>SearchFoodItemsApi</servlet-name>
       	<servlet-class>com.grubmenow.service.api.SearchFoodItems</servlet-class>

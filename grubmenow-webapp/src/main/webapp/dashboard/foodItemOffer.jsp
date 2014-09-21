@@ -45,10 +45,10 @@
       	  <td class="table_header"> Provider Id </td>
       	  <td class="table_header"> Offer Description </td>
       	  <td class="table_header"> Offer Description Tags</td>
-      	  <td class="table_header"> State </td>
       	  <td class="table_header"> Offer Unit Price </td>
       	  <td class="table_header"> Currency </td>
-      	  <td class="table_header"> Quantity </td>
+      	  <td class="table_header"> Offer Quantity </td>
+      	  <td class="table_header"> Available Quantity </td>
       	  <td class="table_header"> Offer Day </td>
       	  <td class="table_header"> Meal Type </td>
       	  <td class="table_header"> Is Food Delivery Option Available  </td>
@@ -57,7 +57,7 @@
      </tr>
    </thead>  	
    <% for(FoodItemOfferDAO foodItemOffer: foodItemOfferDAOs) { %>
-   	<tr>
+   	<tr> 
    		  <td class="table_cell"> <%= foodItemOffer.getFoodItemOfferId() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getFoodItemId() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getProviderId() %> </td>
@@ -66,6 +66,7 @@
       	  <td class="table_cell"> <%= foodItemOffer.getOfferUnitPrice() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getOfferCurrency() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getOfferQuantity() %> </td>
+      	  <td class="table_cell"> <%= foodItemOffer.getAvailableQuantity() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getOfferDay() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getOfferMealType() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getIsFoodDeliveryOptionAvailable() %> </td>

@@ -1,56 +1,46 @@
 package com.grubmenow.service.datamodel;
 
-import java.util.Calendar;
+import javax.persistence.Id;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
 
+import org.joda.time.DateTime;
+
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 /**
  * Data Access Object Class to represent an Order placed by Customer 
  */
 
 @ToString
-@DynamoDBTable(tableName="Order")
+@Data
 public class OrderDAO {
 
-	@Getter
-	@Setter
+	@Id
 	@NonNull
 	@DynamoDBHashKey(attributeName="orderId")
 	private String orderId;
 	
-	@Getter
-	@Setter
 	@NonNull
 	@DynamoDBAttribute(attributeName="customerId")
 	private String customerId;
 
-	@Getter
-	@Setter
 	@NonNull
 	@DynamoDBAttribute(attributeName="providerId")
 	private String providerId;
 
-	@Getter
-	@Setter
 	@NonNull
 	@DynamoDBAttribute(attributeName="orderCreationDate")
-	private Calendar orderCreationDate;
+	private DateTime orderCreationDate;
 	
-	@Getter
-	@Setter
 	@NonNull
 	private String foodItemId;
 
-	@Getter
-	@Setter
 	@NonNull
 	private String foodItemOfferId;
-
 }

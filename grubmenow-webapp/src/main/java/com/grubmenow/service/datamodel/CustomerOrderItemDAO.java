@@ -1,7 +1,5 @@
 package com.grubmenow.service.datamodel;
 
-import java.util.Calendar;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,6 +9,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import lombok.ToString;
+
+import org.joda.time.DateTime;
 
 /**
  * Data Access Object Class to represent an Order placed by Customer 
@@ -62,5 +62,5 @@ public class CustomerOrderItemDAO {
 	@Setter
 	@NonNull
     @Column(name = "ORDER_CREATION_DATE")
-	private Calendar orderCreationDate;
+	private DateTime orderCreationDate;
 }
