@@ -67,12 +67,11 @@ public class SearchFoodItems extends HttpServlet {
 
 	private List<FoodItemDAO> getAllFoodItemsInZipCodes(
 			List<String> neighboringZipCodes) {
-		return PersistenceFactory.getInstance().getAllFoodItem();
+		return PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(neighboringZipCodes);
 	}
 
 	private List<String> getAllNeighboringZipCodes(String zipCode, int radius) {
-		// TODO Auto-generated method stub
-		return null;
+		return PersistenceFactory.getInstance().getNeighbouringZipCodes(zipCode, radius);
 	}
 
 }

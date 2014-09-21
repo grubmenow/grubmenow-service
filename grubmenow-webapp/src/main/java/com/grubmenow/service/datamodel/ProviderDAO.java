@@ -2,6 +2,8 @@ package com.grubmenow.service.datamodel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -72,5 +74,6 @@ public class ProviderDAO {
 	
     @NonNull
     @Column(name = "PROVIDER_STATE")
+    @Enumerated(EnumType.STRING)
 	private ProviderState providerState;
 }
