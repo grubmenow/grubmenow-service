@@ -5,6 +5,8 @@ import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -74,6 +76,7 @@ public class FoodItemOfferDAO {
 
 	@NonNull
 	@Column(name = "OFFER_STATE")
+	@Enumerated(EnumType.STRING)
 	private OfferState offerState;
 
 }
