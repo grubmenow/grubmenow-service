@@ -1,5 +1,5 @@
 <body>
-<script type="text/javascript" src="js/jquery/jquery-1.11.1.min.js" ></script>
+<script type="text/javascript" src="dashboard/js/jquery/jquery-1.11.1.min.js" ></script>
 <script>
 function foo()
 {
@@ -13,7 +13,8 @@ function errorAlert(e, jqxhr)
 
 function processData(data)
 {
-	alert("Your request was successful: " + data);
+	alert("Your request was successful: " + JSON.stringify(data));
+	$('output').innerHTML = JSON.stringify(data);
 }
 		
 function searchFoodItems() {
@@ -40,4 +41,7 @@ function searchFoodItems() {
 </script>
 
 <input type=button value=submit onclick="searchFoodItems();"/>
+
+<textarea name="output"></textarea>
+
 </body>
