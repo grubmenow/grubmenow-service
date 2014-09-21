@@ -1,0 +1,31 @@
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
+         metadata-complete="false" version="3.0">
+  <display-name>GrubMeNow Web Application</display-name>
+  
+  <welcome-file-list>
+        <welcome-file>dashboard.jsp</welcome-file>
+    </welcome-file-list>
+    
+     <servlet>
+      	<servlet-name>FoodItemDashboardServlet</servlet-name>
+      	<servlet-class>com.grubmenow.service.dashboard.servlet.FoodItemDashboardServlet</servlet-class>
+     </servlet>
+     
+     <servlet-mapping>
+        <servlet-name>FoodItemDashboardServlet</servlet-name>
+        <url-pattern>/fooditem</url-pattern>
+    </servlet-mapping>
+    
+    <servlet>
+      	<servlet-name>AddFoodItemDashboardServlet</servlet-name>
+      	<servlet-class>com.grubmenow.service.dashboard.servlet.AddFoodItemDashboardServlet</servlet-class>
+     </servlet>
+     
+     <servlet-mapping>
+        <servlet-name>AddFoodItemDashboardServlet</servlet-name>
+        <url-pattern>/fooditem-add</url-pattern>
+    </servlet-mapping>
+     
+</web-app>
