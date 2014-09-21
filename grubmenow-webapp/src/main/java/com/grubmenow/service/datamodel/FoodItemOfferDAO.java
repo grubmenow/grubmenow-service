@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.joda.time.DateTime;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -57,12 +59,16 @@ public class FoodItemOfferDAO {
 	private Integer offerQuantity;
 
 	@NonNull
+	@Column(name = "AVAILABLE_QUANTITY")
+	private Integer availableQuantity;
+	
+	@NonNull
 	@Column(name = "OFFER_DAY")
-	private Calendar offerDay;
+	private DateTime offerDay;
 
 	@NonNull
 	@Column(name = "OFFER_MEAL_TYPE")
-	private String offerMealType;
+	private OfferMealType offerMealType;
 
 	@NonNull
 	@Column(name = "IS_FOOD_DELIVERY_OPTION_AVAILABLE")
