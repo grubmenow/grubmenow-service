@@ -10,7 +10,7 @@ public class SQLReader {
 
 	private static String loadTemplate(String file) {
 		try {
-			return FileUtils.readFileToString(new File("sql/" + file));
+			return FileUtils.readFileToString(new File(SQLReader.class.getResource(file).getFile()));
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

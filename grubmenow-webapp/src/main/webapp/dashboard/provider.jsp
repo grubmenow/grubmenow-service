@@ -1,3 +1,4 @@
+<%@page import="com.grubmenow.service.persist.PersistenceFactory"%>
 <%@page import="com.grubmenow.service.datamodel.ProviderState"%>
 <%@page import="com.grubmenow.service.datamodel.ProviderDAO"%>
 <%@page import="com.grubmenow.service.datamodel.FoodItemDAO"%>
@@ -19,7 +20,7 @@
  			 
  			
  			 $('#add-form-submit-button').hide();
-     		 $('#add-form-message-window').html('<p align="left">Saving .. &nbsp <img src="/img/loader.gif"></p>');
+     		 $('#add-form-message-window').html('<p align="left">Saving .. &nbsp <img src="img/loader.gif"></p>');
       		 $('#add-form-message-window').load(link); 
 			
    			return false;	
@@ -33,7 +34,7 @@
   </jsp:include>
   
   <%
-   List<ProviderDAO> providerDAOs = (List<ProviderDAO>) request.getAttribute("providers");
+   List<ProviderDAO> providerDAOs = PersistenceFactory.getInstance().getAllProvider();
   %> 
    
    <a id="add" href="#">Add New</a> <br/>
@@ -55,6 +56,10 @@
       	<tr>
       	  <td class="input_form_text">Apartment Number</td>
       	  <td> <textarea class="input_form_text"  name="providerAddressApartmentNumber" ></textarea> </td> 
+      	</tr>
+      	<tr>
+      	  <td class="input_form_text">Zip Code</td>
+      	  <td> <textarea class="input_form_text"  name="providerAddressZipCode" ></textarea> </td> 
       	</tr>
       	<tr>
       	  <td class="input_form_text">State</td>
@@ -104,7 +109,7 @@
       	<tr>
       	  <td class="input_form_text"> State </td>
       	  <td> 
-      	      <select class="input_form_text"  name="providerState" multiple="multiple">
+      	      <select class="input_form_text"  name="providerState">
       			<% for(ProviderState state: ProviderState.values()) { %>
       				<option value="<%=state.name()%>"><%=state.name()%></option>
       			<%} %>

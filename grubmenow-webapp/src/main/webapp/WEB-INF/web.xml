@@ -1,31 +1,79 @@
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
-         metadata-complete="false" version="3.0">
-  <display-name>GrubMeNow Web Application</display-name>
-  
-  <welcome-file-list>
-        <welcome-file>dashboard.jsp</welcome-file>
-    </welcome-file-list>
-    
-     <servlet>
-      	<servlet-name>FoodItemDashboardServlet</servlet-name>
-      	<servlet-class>com.grubmenow.service.dashboard.servlet.FoodItemDashboardServlet</servlet-class>
-     </servlet>
-     
-     <servlet-mapping>
-        <servlet-name>FoodItemDashboardServlet</servlet-name>
-        <url-pattern>/fooditem</url-pattern>
-    </servlet-mapping>
-    
-    <servlet>
-      	<servlet-name>AddFoodItemDashboardServlet</servlet-name>
-      	<servlet-class>com.grubmenow.service.dashboard.servlet.AddFoodItemDashboardServlet</servlet-class>
-     </servlet>
-     
-     <servlet-mapping>
-        <servlet-name>AddFoodItemDashboardServlet</servlet-name>
-        <url-pattern>/fooditem-add</url-pattern>
-    </servlet-mapping>
-     
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	metadata-complete="false" version="3.0">
+	<display-name>GrubMeNow Web Application</display-name>
+
+
+	<servlet>
+		<servlet-name>DashboardServlet</servlet-name>
+		<jsp-file>/dashboard/dashboard.jsp</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>DashboardServlet</servlet-name>
+		<url-pattern>/dashboard/console</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>FoodItemDashboardServlet</servlet-name>
+		<jsp-file>/dashboard/foodItem.jsp</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>FoodItemDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/fooditem</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>AddFoodItemDashboardServlet</servlet-name>
+		<servlet-class>com.grubmenow.service.dashboard.servlet.AddFoodItemDashboardServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AddFoodItemDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/fooditem-add</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>ProviderDashboardServlet</servlet-name>
+		<jsp-file>/dashboard/provider.jsp</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ProviderDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/provider</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>AddProviderDashboardServlet</servlet-name>
+		<servlet-class>com.grubmenow.service.dashboard.servlet.AddProviderDashboardServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AddProviderDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/provider-add</url-pattern>
+	</servlet-mapping>
+
+
+	<servlet>
+		<servlet-name>FoodItemOfferDashboardServlet</servlet-name>
+		<jsp-file>/dashboard/foodItemOffer.jsp</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>FoodItemOfferDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/fooditemoffer</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>AddFoodItemOfferDashboardServlet</servlet-name>
+		<servlet-class>com.grubmenow.service.dashboard.servlet.AddFoodItemOfferDashboardServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AddFoodItemOfferDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/fooditemoffer-add</url-pattern>
+	</servlet-mapping>
+
 </web-app>

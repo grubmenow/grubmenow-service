@@ -18,6 +18,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
+import com.google.common.collect.ImmutableMap;
 import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
@@ -76,6 +77,16 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		return new SessionHandler(sessionFactory.openSession());
 	}
 
+	@Override
+	public List<String> getNeighbouringZipCodes(String zipCode, int numberOfMilesAround) {
+		Map<String, String> tokens = ImmutableMap.of("zip_code", zipCode,
+				"distance_in_miles", Integer.toString(numberOfMilesAround));
+		
+		String sql = SQLReader.loadSQL("/find_neighbouring_zip_codes.sql",
+				tokens);
+		
+		return executeCustomSQL(sql);
+	}
 	
 	@Override
 	public List<FoodItemDAO> getAllFoodItem() {
@@ -92,9 +103,9 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		}
 		
 		Map<String, String> tokens = new HashMap<>();
-		tokens.put("zip_codes", StringUtils.join(zipCodes, ", "));
+		tokens.put("zip_codes", StringUtils.join(zipCodesWithQuotes, ", "));
 		
-		String sql = SQLReader.loadSQL("find_all_food_item_with_zip_code.sql", tokens);
+		String sql = SQLReader.loadSQL("/find_all_food_item_with_zip_code.sql", tokens);
 		
 		return executeCustomSQL(FoodItemDAO.class, sql);
 	}
@@ -243,6 +254,8 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	}
 	
 	private <T> List<T> executeCustomSQL(Class<T> clazz, String sql) {
+		System.out.println(sql);
+		
 		Session session = sessionFactory.openSession();
 		try {
 			return session.createSQLQuery(sql).addEntity(clazz).list();		
@@ -252,6 +265,18 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 			session.close();
 		}	
 	}
+	
+	private <T> List<T> executeCustomSQL(String sql) {
+		Session session = sessionFactory.openSession();
+		try {
+			return session.createSQLQuery(sql).list();		
+		} catch (HibernateException e) {
+			throw e;
+		} finally {
+			session.close();
+		}	
+	}
+
 	
 	private <T> List<T> getAll(Class<T> clazz, int maxResult) {
 		Session session = sessionFactory.openSession();

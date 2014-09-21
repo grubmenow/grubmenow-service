@@ -1,35 +1,21 @@
 package com.grubmenow.service;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashSet;
+import java.util.List;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.grubmenow.service.datamodel.FoodItemDAO;
-import com.grubmenow.service.datamodel.FoodItemOfferDAO;
-import com.grubmenow.service.datamodel.ProviderDAO;
-import com.grubmenow.service.persist.PersistenceHandlerImpl;
-import com.grubmenow.service.persist.PersistenceHandlerInterface;
+import com.grubmenow.service.persist.PersistenceFactory;
+
 
 public class PersistTest {
 
 	public static void main(String[] args) {
-		AWSCredentials awsCredentials = new BasicAWSCredentials("", "");
-		AmazonDynamoDBClient awsDynamoDBClient = new AmazonDynamoDBClient(awsCredentials);
-		awsDynamoDBClient.setRegion(Region.getRegion(Regions.US_WEST_2));
-//		PersistenceHandlerInterface persistenceHandlerInterface = new PersistenceHandlerImpl();
-		
-//		testFoodItem(persistenceHandlerInterface);
-//		testProvider(persistenceHandlerInterface);
-//		testFoodItemOffer(persistenceHandlerInterface);
 
+		List<String> zipCodes = PersistenceFactory.getInstance().getNeighbouringZipCodes("98007", 10);
+		
+		List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(zipCodes);
+		
+		System.out.println(zipCodes);
+		
 	}
 	
 //	private static void testFoodItem(PersistenceHandlerInterface persistenceHandlerInterface) {

@@ -1,3 +1,4 @@
+<%@page import="com.grubmenow.service.persist.PersistenceFactory"%>
 <%@page import="com.grubmenow.service.datamodel.FoodItemState"%>
 <%@page import="com.grubmenow.service.datamodel.FoodItemDAO"%>
 <%@page import="java.util.List"%>
@@ -14,11 +15,11 @@
    		
    		$('#add-form-submit-button').click(function(e) {
  			 var link = $('#add-form').serialize()
-   			 link = 'dashboard/fooditem-add?' + link;
+   			 link = 'fooditem-add?' + link;
  			 
  			
  			 $('#add-form-submit-button').hide();
-     		 $('#add-form-message-window').html('<p align="left">Saving .. &nbsp <img src="/img/loader.gif"></p>');
+     		 $('#add-form-message-window').html('<p align="left">Saving .. &nbsp <img src="img/loader.gif"></p>');
       		 $('#add-form-message-window').load(link); 
 			
    			return false;	
@@ -32,7 +33,7 @@
   </jsp:include>
   
   <%
-   List<FoodItemDAO> foodItemDAOs = (List<FoodItemDAO>) request.getAttribute("foodItems");
+   List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllFoodItem();
   %> 
    
    <a id="add" href="#">Add New</a> <br/>
@@ -58,7 +59,7 @@
       	<tr>
       	  <td class="input_form_text"> State </td>
       	  <td> 
-      	      <select class="input_form_text"  name="foodItemState" multiple="multiple">
+      	      <select class="input_form_text"  name="foodItemState">
       			<% for(FoodItemState state: FoodItemState.values()) { %>
       				<option value="<%=state.name()%>"><%=state.name()%></option>
       			<%} %>
