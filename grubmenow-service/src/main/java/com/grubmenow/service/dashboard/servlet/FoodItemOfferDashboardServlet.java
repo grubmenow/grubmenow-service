@@ -8,20 +8,19 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.grubmenow.service.datamodel.FoodItemDAO;
+import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.persist.PersistenceFactory;
 
-@WebServlet(name = "Food Item Servlet", urlPatterns = {"/fooditem"} )
-public class FoodItemDashboardServlet extends AbstractDashboadServlet {
+@WebServlet(name = "Provider Servlet", urlPatterns = {"/fooditemoffer"} )
+public class FoodItemOfferDashboardServlet extends AbstractDashboadServlet {
 
 	@Override  
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 		
-		List<FoodItemDAO> foodItems = PersistenceFactory.getInstance().getAllFoodItem();
-		request.setAttribute("foodItems", foodItems);
+		List<FoodItemOfferDAO> foodItemOffers = PersistenceFactory.getInstance().getAllFoodItemOffer();
+		request.setAttribute("foodItemOffers", foodItemOffers);
 		
-    	forwardTo(request, response, "/foodItem.js");
+    	forwardTo(request, response, "/foodItemOffer.jsp");
     }
-	
 }

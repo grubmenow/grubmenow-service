@@ -17,10 +17,15 @@ import com.grubmenow.service.datamodel.ProviderDAO;
 public interface PersistenceHandler {
 
 	/**
-	 * Create Food Item
+	 * Get All Food Items
 	 */
 	public List<FoodItemDAO> getAllFoodItem();
 
+	
+	/**
+	 * Get All Food Items for ZipCodes
+	 */
+	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes);
 	
 	/**
 	 * Create Food Item
@@ -37,6 +42,11 @@ public interface PersistenceHandler {
 	 */
 	public FoodItemDAO getFoodItemById(String foodItemId);
 
+	/**
+	 * Get All Provider
+	 */
+	public List<ProviderDAO> getAllProvider();
+	
 	/**
 	 * Create Provider
 	 */
@@ -82,6 +92,8 @@ public interface PersistenceHandler {
 	 */
 	public FoodItemOfferDAO getFoodItemOfferbyId(String offerId);
 
+	
+	public List<FoodItemOfferDAO> getAllFoodItemOffer();
 	/**
 	 * Create Order
 	 */

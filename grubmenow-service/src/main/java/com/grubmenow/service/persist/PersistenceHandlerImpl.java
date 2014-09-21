@@ -1,10 +1,14 @@
 package com.grubmenow.service.persist;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -20,6 +24,7 @@ import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
+import com.grubmenow.service.persist.sql.SQLReader;
 
 /**
  * Implementation of {@link PersistenceHandler} using Amazon AWS as a storage 
@@ -62,6 +67,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 	}
 	
+	
 	public void shutDown() {
 		sessionFactory.close();
 	}
@@ -74,6 +80,23 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	@Override
 	public List<FoodItemDAO> getAllFoodItem() {
 		return getAll(FoodItemDAO.class, 1024);
+	}
+
+	
+	@Override
+	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes) {
+
+		List<String> zipCodesWithQuotes = new ArrayList<>(); 
+		for(String zipCode: zipCodes) {
+			zipCodesWithQuotes.add("'" + zipCode + "'");
+		}
+		
+		Map<String, String> tokens = new HashMap<>();
+		tokens.put("zip_codes", StringUtils.join(zipCodes, ", "));
+		
+		String sql = SQLReader.loadSQL("find_all_food_item_with_zip_code.sql", tokens);
+		
+		return executeCustomSQL(FoodItemDAO.class, sql);
 	}
 	
 	@Override
@@ -98,6 +121,12 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		return getObject(FoodItemDAO.class, foodItemId);
 	}
 
+	
+	@Override
+	public List<ProviderDAO> getAllProvider() {
+		return getAll(ProviderDAO.class, 1024);
+	}
+	
 	
 	@Override
 	public void createProvider(ProviderDAO provider) {
@@ -162,6 +191,12 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		
 		return getObject(FoodItemOfferDAO.class, foodItemOfferId);
 	}
+	
+	@Override
+	public List<FoodItemOfferDAO> getAllFoodItemOffer() {
+		return getAll(FoodItemOfferDAO.class, 1024);
+	}
+
 
 	@Override
 	public void createCustomerOrder(SessionHandler sessionHandler, CustomerOrderDAO customerOrder) {
@@ -205,6 +240,17 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		log.info(String.format("Retrieving order Item: %s " , orderItemId));
 		
 		return getObject(CustomerOrderItemDAO.class, orderItemId);
+	}
+	
+	private <T> List<T> executeCustomSQL(Class<T> clazz, String sql) {
+		Session session = sessionFactory.openSession();
+		try {
+			return session.createSQLQuery(sql).addEntity(clazz).list();		
+		} catch (HibernateException e) {
+			throw e;
+		} finally {
+			session.close();
+		}	
 	}
 	
 	private <T> List<T> getAll(Class<T> clazz, int maxResult) {

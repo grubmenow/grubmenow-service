@@ -77,3 +77,22 @@ CREATE TABLE CUSTOMER_ORDER_ITEM (
  ORDER_CREATION_DATE DATE NOT NULL,
  PRIMARY KEY ( ORDER_ITEM_ID )
 );
+
+DROP TABLE ZIP_DATA;
+CREATE TABLE `ZIP_DATA` (
+  `ZIP_CODE` varchar(10) NOT NULL,
+  `STATE_ABBREVIATION` varchar(2) NOT NULL,
+  `LATTITUDE` varchar(50) NOT NULL,
+  `LONGITUDE` varchar(50) NOT NULL,
+  `CITY` varchar(256) DEFAULT NULL,
+  `STATE` varchar(256) NOT NULL,
+  PRIMARY KEY (`ZIP_CODE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+load data local INFILE "data/zips.csv"
+   into table ZIP_DATA
+   columns terminated by ', '
+   enclosed by '"'
+   ignore 1 lines
+(zip_code, STATE_ABBREVIATION, LATTITUDE, LONGITUDE, CITY, STATE);
+commit;
