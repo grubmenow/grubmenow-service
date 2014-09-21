@@ -19,13 +19,12 @@
     </servlet-mapping>
     
     <servlet>
-      	<servlet-name>AddFoodItemDashboardServlet</servlet-name>
-      	<servlet-class>com.grubmenow.service.dashboard.servlet.AddFoodItemDashboardServlet</servlet-class>
+      	<servlet-name>SearchFoodItemsApi</servlet-name>
+      	<servlet-class>com.grubmenow.service.api.SearchFoodItems</servlet-class>
      </servlet>
      
      <servlet-mapping>
-        <servlet-name>AddFoodItemDashboardServlet</servlet-name>
-        <url-pattern>/fooditem-add</url-pattern>
+        <servlet-name>SearchFoodItemsApi</servlet-name>
+        <url-pattern>/searchFoodItems</url-pattern>
     </servlet-mapping>
-     
 </web-app>
