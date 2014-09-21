@@ -1,5 +1,4 @@
 <%@page import="com.grubmenow.service.datamodel.FoodItemState"%>
-<%@page import="com.grubmenow.service.FoodItem"%>
 <%@page import="com.grubmenow.service.datamodel.FoodItemDAO"%>
 <%@page import="java.util.List"%>
 <html>

@@ -4,11 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.persist.PersistenceFactory;
 

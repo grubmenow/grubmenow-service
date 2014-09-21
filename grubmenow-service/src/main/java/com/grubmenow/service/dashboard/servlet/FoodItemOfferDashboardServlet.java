@@ -4,14 +4,12 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.persist.PersistenceFactory;
 
-@WebServlet(name = "Provider Servlet", urlPatterns = {"/fooditemoffer"} )
 public class FoodItemOfferDashboardServlet extends AbstractDashboadServlet {
 
 	@Override  

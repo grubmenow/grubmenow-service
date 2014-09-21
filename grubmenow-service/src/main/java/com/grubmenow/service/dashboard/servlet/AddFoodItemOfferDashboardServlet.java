@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Calendar;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +13,6 @@ import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.OfferState;
 import com.grubmenow.service.persist.PersistenceFactory;
 
-@WebServlet(name = "Add Food Servlet", urlPatterns = { "/fooditemoffer-add" })
 public class AddFoodItemOfferDashboardServlet extends AbstractDashboadServlet {
 
 	@Override
