@@ -13,8 +13,7 @@ function errorAlert(e, jqxhr)
 
 function processData(data)
 {
-	alert("Your request was successful: " + JSON.stringify(data));
-	$('output').innerHTML = JSON.stringify(data);
+	$('#output').text(JSON.stringify(data));
 }
 		
 function searchFoodItems() {
@@ -41,7 +40,8 @@ function searchFoodItems() {
 </script>
 
 <input type=button value=submit onclick="searchFoodItems();"/>
-
-<textarea name="output"></textarea>
+<br/>
+Output: 
+<textarea id="output"></textarea>
 
 </body>
