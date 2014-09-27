@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="gmnBrowse">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>GrubMeNow Restaurant Selector</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="browseController.js"></script>
+<style type="text/css">
+    body {
+	background:#e9e8e4 url(img/bg-grid.png);
+    }
+    @-ms-viewport {
+	width: device-width;
+    }
+    .rest-sel {
+        margin:10px 20px;
+    }
+    .panel-heading {
+        cursor: pointer;
+    }
+    .restIcon {
+        float: right;
+    }
+    .tableTitle {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+    .qtyBox {
+        width: 45px;
+    }
+    .foodTitle {
+        line-height: 24px;
+    }
+    .panel-heading {
+        background-color: #E1EEF5 !important;
+    }
+    .atcButton {
+        border-top: 1px solid #E1EEF5;
+        padding-top: 10px;
+    }
+    .showhideBtn {
+	margin-left: -14px;
+    }
+    .logoImage {
+	margin-bottom: 20px;
+    }
+    .optionsText {
+	color: #F04E00;
+	font-weight: bold;
+    }
+    .navLineBtn {
+	color: #0A549C;
+	font-weight: bold;
+    }
+</style>
+</head>
+<body>
+    
+<div class="rest-sel" ng-controller="RestuarantCtrl">
+    <div class="col-xs-12  text-center">
+	<img src="logo.png" class="logoImage"/>
+    </div>
+    <div class="clearfix"></div>
+    <div>
+	<div class="col-xs-6 text-left navLineBtn">
+	    Your options for 'Masala Dosa' for Today: 
+	</div>
+	<div class="col-xs-6 text-right navLineBtn">
+	    <a href="searchForm.html">Back to food results <span class="glyphicon glyphicon-cutlery"></span></a>
+	</div>
+    </div>
+    <div class="clearfix"></div>
+    <p/>
+    <div class="panel-group" id="accordion">
+	<div class="panel panel-primary" ng-repeat="rest in restList">
+	    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}">
+	        <div class="panel-heading">
+	            <h4 class="panel-title">
+	                {{rest.restName}}
+	            </h4>
+	        </div>
+	    </a>
+	    <div id="collapse{{$index}}" class="panel-collapse collapse" ng-class="{in:$index==0}">
+                <div class="panel-body">
+                    <div class="container tableCtr">
+			<div class="col-xs-12">
+			    <p class="optionsText">{{rest.deliverOption}}</p>
+			</div>
+                        <div class="col-xs-3 col-md-2">
+                            <span class="tableTitle">Name</span>    
+                        </div>
+                        <div class="col-xs-4 col-md-5">
+                            <span class="tableTitle">Description</span>    
+                        </div>
+                        <div class="col-xs-3 col-md-3">
+                            <span class="tableTitle">Price</span>    
+                        </div>
+                        <div class="col-xs-2 col-md-2">
+                            <span class="tableTitle">Qty</span>    
+                        </div>
+			
+                        <div class="clearfix"></div>
+			
+                        <div class="col-xs-3 col-md-2">
+                            <span class="foodTitle">{{rest.primaryFood.name}}</span>
+                        </div>
+                        <div class="col-xs-4 col-md-5">
+                            <span class="foodTitle">{{rest.primaryFood.desc}}</span>
+                        </div>
+                        <div class="col-xs-3 col-md-3">
+                            <span class="foodTitle">${{rest.primaryFood.price | number:2}}</span>
+                        </div>
+                        <div class="col-xs-2 col-md-2">
+                            <input type="text" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="rest.primaryFood.qty" maxlength="2">
+                        </div>
+			
+                        <div class="clearfix"></div>
+                        <p/>
+                        <div class="col-xs-12 text-left">
+                            <button type="button" id="showMore{{$index}}" ng-show="!showRestMenu[rest.restId]" class="btn btn-link showhideBtn optionsText" ng-click="showMenu(rest.restId)">More from this seller <span class="glyphicon glyphicon-chevron-down"></span></button>
+			    <button type="button" id="showMore{{$index}}" ng-show="showRestMenu[rest.restId]" class="btn btn-link showhideBtn optionsText" ng-click="showRestMenu[rest.restId]=0">Hide <span class="glyphicon glyphicon-chevron-up"></span></button>
+                        </div>
+                        
+			<div ng-repeat="restMenuItem in restMenu[rest.restId]" ng-show="showRestMenu[rest.restId]">
+			    <div class="col-xs-3 col-md-2">
+			        <span class="foodTitle">{{restMenuItem.name}}</span>
+			    </div>
+			    <div class="col-xs-4 col-md-5">
+			        <span class="foodTitle">{{restMenuItem.desc}}</span>
+			    </div>
+			    <div class="col-xs-3 col-md-3">
+			        <span class="foodTitle">${{restMenuItem.price | number:2}}</span>
+			    </div>
+			    <div class="col-xs-2 col-md-2">
+			        <input type="text" class="form-control qtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.qty" maxlength="2">
+			    </div>
+			    <div class="clearfix"></div>
+			    <p/>
+			</div>
+			<div class="clearfix"></div>
+                        <p/>
+			
+                        <div class="col-xs-12 text-right atcButton">
+			    <span class="totalInfo"><strong>Total: {{getTotalItems($index)}} items  @ ${{getTotalPrice($index)}} &nbsp;</strong></span>
+                            <button type="button" class="btn btn-primary" ng-click="getFinalOrder($index)">Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div ng-show="finalOrder">
+	hello
+	{{finalOrder}}
+    </div>
+</div>
+</body>
+</html>
+
