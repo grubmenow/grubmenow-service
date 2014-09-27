@@ -3,7 +3,6 @@
 	metadata-complete="false" version="3.0">
 	<display-name>GrubMeNow Web Application</display-name>
 
-
 	<servlet>
 		<servlet-name>DashboardServlet</servlet-name>
 		<jsp-file>/dashboard/dashboard.jsp</jsp-file>
@@ -66,13 +65,4 @@
 		<url-pattern>/dashboard/fooditemoffer</url-pattern>
 	</servlet-mapping>
 
-    <servlet>
-      	<servlet-name>SearchFoodItemsApi</servlet-name>
-      	<servlet-class>com.grubmenow.service.api.SearchFoodItems</servlet-class>
-     </servlet>
-     
-     <servlet-mapping>
-        <servlet-name>SearchFoodItemsApi</servlet-name>
-        <url-pattern>/searchFoodItems</url-pattern>
-    </servlet-mapping>
 </web-app>
