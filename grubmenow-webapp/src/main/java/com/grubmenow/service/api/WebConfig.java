@@ -11,11 +11,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		//registry.addResourceHandler("/dashboard/**")
-		//	.addResourceLocations("classpath:/dashboard/");
-		
-		registry.addResourceHandler("/dashboard/**")
+    	registry.addResourceHandler("/**")
+    		.addResourceLocations("/webassets/");
+
+    	registry.addResourceHandler("/dashboard/**")
 			.addResourceLocations("/dashboard/");
+		
 	}
 
 }
