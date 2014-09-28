@@ -160,6 +160,17 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 
 		return getObject(ProviderDAO.class, providerId);
 	}
+	
+	@Override
+	public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId)
+	{
+		String sql = "select * from FOOD_ITEM_OFFER where PROVIDER_ID=:providerId";
+		Session session = sessionFactory.openSession();
+		List<FoodItemOfferDAO> results = session.createSQLQuery(sql)
+				.addEntity(FoodItemOfferDAO.class)
+				.list();
+		return results;
+	}
 
 	@Override
 	public void createCustomer(CustomerDAO customer) {
