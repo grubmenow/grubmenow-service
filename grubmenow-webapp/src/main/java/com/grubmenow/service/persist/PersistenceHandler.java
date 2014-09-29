@@ -60,6 +60,13 @@ public interface PersistenceHandler {
 	public List<ProviderDAO> getAllProvider();
 	
 	/**
+	 * Get all the offers by a provider;
+	 * @param providerId
+	 * @return all the offer list. A single item may be duplicated because of multiple offers
+	 */
+	public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId);
+	
+	/**
 	 * Create Provider
 	 */
 	public void createProvider(ProviderDAO provider);

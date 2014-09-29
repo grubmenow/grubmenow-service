@@ -1,0 +1,17 @@
+[  
+    {  
+        "name":"Soup",
+        "desc":"yummy, tasty soup made from good stuff and wow",
+        "price":4.50
+    },
+    {  
+        "name":"Veggie Platter",
+        "desc":"Mixture of pakoras and chai-biscoot and maggi and parle-G",
+        "price":14.60
+    },
+    {  
+        "name":"Masala Soda",
+        "desc":"Good blah blah blah blah blah blah blah blah blah blah blah blah",
+        "price":7.50
+    }
+]

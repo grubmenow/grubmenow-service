@@ -3,7 +3,6 @@
 	metadata-complete="false" version="3.0">
 	<display-name>GrubMeNow Web Application</display-name>
 
-
 	<servlet>
 		<servlet-name>DashboardServlet</servlet-name>
 		<jsp-file>/dashboard/dashboard.jsp</jsp-file>

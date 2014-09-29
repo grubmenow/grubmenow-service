@@ -1,0 +1,35 @@
+[  
+    {  
+        "restId":"1234",
+        "restName":"Vikas's Homemade Meals",
+        "deliverOption":"Delivery and Pick Up (Location: 1234 156th Ave, Redmond, WA 98055)",
+        "primaryFood":{  
+            "name":"Masala Dosa",
+            "desc":"Crispy something something with something inside it. (Vegeterian and Less Oil)",
+            "price":10.50,
+            "qty":1
+        }
+    },
+    {  
+        "restId":"1343",
+        "restName":"Yash's cafe",
+        "deliverOption":"Pick Up Only (Location: 7865 156th Ave, Redmond, WA 98055)",
+        "primaryFood":{  
+            "name":"Masala Dosa",
+            "desc":"Healthy breakfast blah blah blah and super blah with chutney and sambhar",
+            "price":12.50,
+            "qty":1
+        }
+    },
+    {  
+        "restId":"4567",
+        "restName":"Nitin's Ghar Ka Khana",
+        "deliverOption":"Pick Up Only (Location: 4445 156th Ave, Redmond, WA 98055)",
+        "primaryFood":{  
+            "name":"Masala Dosa",
+            "desc":"Healthy breakfast blah blah blah and super blah with chutney and sambhar",
+            "price":8.50,
+            "qty":1
+        }
+    }
+]

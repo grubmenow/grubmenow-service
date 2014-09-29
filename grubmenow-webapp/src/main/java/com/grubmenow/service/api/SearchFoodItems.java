@@ -1,17 +1,13 @@
 package com.grubmenow.service.api;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.grubmenow.service.datamodel.FoodItemDAO;
@@ -19,19 +15,14 @@ import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.SearchQuery;
 import com.grubmenow.service.persist.PersistenceFactory;
 
-public class SearchFoodItems extends HttpServlet {
+@RestController
+public class SearchFoodItems  {
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
-	@Override
-	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws ServletException, IOException {
-		
-		StringWriter sw = new StringWriter();
-		IOUtils.copy(req.getInputStream(), sw);
-		
-		System.out.println(sw.toString());
-		
-		SearchQuery searchQuery = objectMapper.readValue(sw.toString(), SearchQuery.class);
+	@RequestMapping(value = "/searchFoodItems", method=RequestMethod.POST)
+	@ResponseBody
+	protected List<FoodItem> doPost(@RequestBody SearchQuery searchQuery) 
+	{
 		// get all the zip codes in the given radius
 		List<String> neighboringZipCodes = getAllNeighboringZipCodes(searchQuery.getZipCode(), searchQuery.getRadius());
 		
@@ -40,12 +31,7 @@ public class SearchFoodItems extends HttpServlet {
 		List<FoodItem> foodItems = new ArrayList<FoodItem>();
 		if (foodItemsAround == null || foodItemsAround.isEmpty())
 		{
-			resp.setContentType("application/json");
-			String jsonObject = objectMapper.writeValueAsString(foodItemsAround);
-			PrintWriter out = resp.getWriter();
-			out.print(jsonObject);
-			out.flush();
-			return;
+			return foodItems;
 		}
 		
 		for (FoodItemDAO dao: foodItemsAround)
@@ -57,12 +43,7 @@ public class SearchFoodItems extends HttpServlet {
 			foodItem.setFoodItemImageUrl(dao.getFoodItemImageUrl());
 			foodItems.add(foodItem);
 		}
-		resp.setContentType("application/json");
-		PrintWriter out = resp.getWriter();
-		
-		String jsonObject = objectMapper.writeValueAsString(foodItems);
-		out.print(jsonObject);
-		out.flush();
+		return foodItems;
 	}
 
 	private List<FoodItemDAO> getAllFoodItemsInZipCodes(

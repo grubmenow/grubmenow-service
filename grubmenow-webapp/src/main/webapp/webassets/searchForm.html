@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="gmnBrowse">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>GrubMeNow Browse Food</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+<script src="browseController.js"></script>
+<style type="text/css">
+    .bs-example {
+    	margin: 20px;
+    }
+    .logoImage {
+	margin-bottom: 20px;
+    }
+    .zipForm {
+	margin: 20px;
+    }
+    body {
+	background:#e9e8e4 url(img/bg-grid.png);
+    }
+    @-ms-viewport {
+	width: device-width;
+    }
+    
+    .formElem {
+	display: inline-block !important;
+	width: 200px;
+    }
+        
+    .cbTitle {
+	padding-top: 2px;
+    }
+    
+</style>
+</head>
+<body>
+<div class="food-finder text-center" ng-controller="ZipcodeCtrl">
+    <div class="container">
+    <div class="col-md-3 col-sm-2"></div>
+    <div class="col-md-6 col-sm-8">
+	<img src="logo.png" class="logoImage"/>
+	
+	<h4>Let's find you some good food! </h4>
+    	<form class="form-horizontal zipForm" role="form" novalidate>
+	    <input type="text" class="form-control formElem zipCode" id="inputZipcode" placeholder="Enter your zipcode" ng-model="location.zipcode" maxlength="5">
+	    <p/>
+	    <div class="form-group formElem">
+	        <label for="inputRadius" class="control-label">Search radius: </label>
+		
+		    <select class="form-control" id="inputRadius" ng-model="location.radius">
+		        <option value=5>Within 5 miles</option>
+		        <option value=10>Within 10 miles</option>
+		        <option value=25>Within 25 miles</option>
+		    </select>
+		
+	    </div>
+	    <p/>
+	    <div class="formElem">
+	        <label class="control-label">When do you want it: </label>
+	    </div>
+	    <div class="form-group spacerDiv">
+		<div class="checkbox col-sm-2 hidden-xs"></div>
+		<div class="checkbox col-xs-6 col-sm-4">
+		    <label class="control-label "><input type="checkbox" ng-model="location.today">Today</label>
+		</div>
+		<div class="checkbox col-xs-6  col-sm-4">
+		    <label class="control-label "><input type="checkbox" ng-model="location.tomorrow">Tomorrow</label>
+		</div>
+	    </div>
+	    <button ng-click="update(location)" class="btn btn-primary">Go</button>
+	</form>
+    </div>
+    <div class="col-md-3 col-sm-2"></div>
+    <p>	
+    </div>
+    <h3 ng-show="master.searchinggg">Finding delicious food within {{master.radius}} miles of {{master.zipcode}} ...</h3>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food">
+                <div class="thumbnail">
+                    <a href="restaurantChooser.html?id={{foodItem.id}}"><img src="{{foodItem.img}}" alt="Masala Dosa">
+                    <div class="caption">
+                        <h4>{{foodItem.title}}</h4>
+                        <p>{{foodItem.desc}}</p>
+                    </div>
+		    </a>
+                </div>
+            </div>
+    	</div>
+    </div>
+</div>
+
+</body>
+</html>     
