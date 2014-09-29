@@ -47,7 +47,7 @@
 	
 	<h4>Let's find you some good food! </h4>
     	<form class="form-horizontal zipForm" role="form" novalidate>
-	    <input type="text" class="form-control formElem zipCode" id="inputZipcode" placeholder="Enter your zipcode" ng-model="location.zipcode" maxlength="5">
+	    <input type="text" class="form-control formElem zipCode" id="inputZipcode" placeholder="Enter your zipcode" ng-model="location.zipCode" maxlength="5">
 	    <p/>
 	    <div class="form-group formElem">
 	        <label for="inputRadius" class="control-label">Search radius: </label>
@@ -66,10 +66,10 @@
 	    <div class="form-group spacerDiv">
 		<div class="checkbox col-sm-2 hidden-xs"></div>
 		<div class="checkbox col-xs-6 col-sm-4">
-		    <label class="control-label "><input type="checkbox" ng-model="location.today">Today</label>
+		    <label class="control-label "><input type="radio" name="dayRadio" id="dayRadio1" value="TODAY" checked ng-model="location.availableDay"> Today</label>
 		</div>
 		<div class="checkbox col-xs-6  col-sm-4">
-		    <label class="control-label "><input type="checkbox" ng-model="location.tomorrow">Tomorrow</label>
+		    <label class="control-label "><input type="radio" name="dayRadio" id="dayRadio2" value="TOMORROW" ng-model="location.availableDay"> Tomorrow</label>
 		</div>
 	    </div>
 	    <button ng-click="update(location)" class="btn btn-primary">Go</button>
@@ -78,16 +78,16 @@
     <div class="col-md-3 col-sm-2"></div>
     <p>	
     </div>
-    <h3 ng-show="master.searchinggg">Finding delicious food within {{master.radius}} miles of {{master.zipcode}} ...</h3>
+    <h3 ng-show="searching">Finding delicious food within {{master.radius}} miles of {{master.zipcode}} ...</h3>
 
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food">
                 <div class="thumbnail">
-                    <a href="restaurantChooser.html?id={{foodItem.id}}"><img src="{{foodItem.img}}" alt="Masala Dosa">
+                    <a href="restaurantChooser.html?id={{foodItem.foodItemId}}"><img src="{{foodItem.foodItemImageUrl}}" alt="Masala Dosa">
                     <div class="caption">
-                        <h4>{{foodItem.title}}</h4>
-                        <p>{{foodItem.desc}}</p>
+                        <h4>{{foodItem.foodItemName}}</h4>
+                        <p>{{foodItem.foodItemDescription}}</p>
                     </div>
 		    </a>
                 </div>

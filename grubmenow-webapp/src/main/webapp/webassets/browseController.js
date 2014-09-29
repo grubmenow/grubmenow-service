@@ -1,15 +1,18 @@
 var gmnBrowse = angular.module('gmnBrowse', []);
 
 gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
-    $scope.location = {radius:5, searching:0, today:true};
+    $scope.location = {radius:5, availableDay:'TODAY'};
+    $scope.searching = 0;
 
     $scope.update = function(location) {
         $scope.master = angular.copy(location);
-        $scope.master.searching = 1;
-        var result = decodeURIComponent($.param($scope.master));
-        var ordersUrl = "orders.json?"+result;
-        $http.get(ordersUrl).success(function(data) {
+        $scope.searching = 1;
+        //var result = decodeURIComponent($.param($scope.master));
+        //var ordersUrl = "orders.json?"+result;
+        //$http.get(ordersUrl).success(function(data) {
+        $http.post("searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
             $scope.master.food = data;
+            $scope.searching = 0;
         });
     };
 });
