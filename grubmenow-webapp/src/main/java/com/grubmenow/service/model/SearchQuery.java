@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class SearchQuery {
-	String zipCode;
-	int radius; // miles
-	String availableDay;
+	private String zipCode;
+	private int radius; // miles
+	private String availableDay;
 }

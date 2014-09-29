@@ -1,7 +1,6 @@
 package com.grubmenow.service.persist;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -17,6 +16,9 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.google.common.collect.ImmutableMap;
 import com.grubmenow.service.datamodel.CustomerDAO;
@@ -33,6 +35,8 @@ import com.grubmenow.service.persist.sql.SQLReader;
 
 @CommonsLog
 public class PersistenceHandlerImpl implements PersistenceHandler {
+	
+	private static DateTimeFormatter printableDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 	
 	private SessionFactory sessionFactory;
 	
@@ -96,18 +100,33 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	
 	@Override
 	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes) {
-
-		List<String> zipCodesWithQuotes = new ArrayList<>(); 
-		for(String zipCode: zipCodes) {
-			zipCodesWithQuotes.add("'" + zipCode + "'");
-		}
 		
-		Map<String, String> tokens = new HashMap<>();
-		tokens.put("zip_codes", StringUtils.join(zipCodesWithQuotes, ", "));
+		Map<String, String> tokens = ImmutableMap.of("zip_codes", getCommaSeperatedZipCodes(zipCodes), "offer_day",
+				DateTime.now().toString(printableDateTimeFormatter));
 		
 		String sql = SQLReader.loadSQL("/find_all_food_item_with_zip_code.sql", tokens);
 		
 		return executeCustomSQL(FoodItemDAO.class, sql);
+	}
+	
+	@Override
+	public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes) {
+
+		Map<String, String> tokens = ImmutableMap.of("zip_codes", getCommaSeperatedZipCodes(zipCodes), "offer_day",
+				DateTime.now().toString(printableDateTimeFormatter), "food_item_id", foodItemId);
+		
+		String sql = SQLReader.loadSQL("/find_all_provider_offering_within_zip_codes.sql", tokens);
+		
+		return executeCustomSQL(FoodItemOfferDAO.class, sql);
+	}
+	
+	private String getCommaSeperatedZipCodes(List<String> zipCodes) {
+		List<String> zipCodesWithQuotes = new ArrayList<>(); 
+		for(String zipCode: zipCodes) {
+			zipCodesWithQuotes.add("'" + zipCode + "'");
+		}
+
+		return StringUtils.join(zipCodesWithQuotes, ", ");
 	}
 	
 	@Override

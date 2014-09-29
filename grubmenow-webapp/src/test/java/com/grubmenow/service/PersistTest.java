@@ -17,13 +17,18 @@ public class PersistTest {
 
 	public static void main(String[] args) {
 
-		List<String> zipCodes = PersistenceFactory.getInstance().getNeighbouringZipCodes("98007", 10);
-		
-		List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(zipCodes);
-		
-		System.out.println(foodItemDAOs);
+//		List<String> zipCodes = PersistenceFactory.getInstance().getNeighbouringZipCodes("98007", 10);
+//		
+//		List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(zipCodes);
+//		
+//		System.out.println(foodItemDAOs);
 		
 //		testAddFoodItemOffer();
+		
+//		FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferbyId("kyqkfbtdgp");
+//		System.out.println(foodItemOfferDAO);
+		
+		System.out.println(PersistenceFactory.getInstance().getAllFoodItemOffer());
 	}
 	
 	public static void testAddFoodItemOffer() {

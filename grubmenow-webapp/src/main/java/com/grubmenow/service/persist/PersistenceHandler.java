@@ -33,6 +33,12 @@ public interface PersistenceHandler {
 	 */
 	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes);
 	
+	
+	/**
+	 * Get All Food Item Offer within ZipCodes
+	 */
+	public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes);
+	
 	/**
 	 * Create Food Item
 	 */

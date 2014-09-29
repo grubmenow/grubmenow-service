@@ -1,7 +1,6 @@
 package com.grubmenow.service.datamodel;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,12 +9,13 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.joda.time.DateTime;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
+
+import org.hibernate.annotations.Type;
+import org.joda.time.DateTime;
 
 /**
  * Data Access Object Class to represent Food Item Offer by Provider
@@ -44,7 +44,6 @@ public class FoodItemOfferDAO {
 	@Column(name = "OFFER_DESCRIPTION")
 	private String offerDescription;
 
-	@NonNull
 	@Column(name = "OFFER_DESCRIPTION_TAGS")
 	private String offerDescriptionTags;
 
@@ -66,10 +65,12 @@ public class FoodItemOfferDAO {
 	
 	@NonNull
 	@Column(name = "OFFER_DAY")
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime offerDay;
 
 	@NonNull
 	@Column(name = "OFFER_MEAL_TYPE")
+	@Enumerated(EnumType.STRING)
 	private OfferMealType offerMealType;
 
 	@NonNull

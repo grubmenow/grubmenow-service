@@ -67,12 +67,12 @@
 	</servlet-mapping>
 
     <servlet>
-      	<servlet-name>SearchFoodItemsApi</servlet-name>
-      	<servlet-class>com.grubmenow.service.api.SearchFoodItems</servlet-class>
+      	<servlet-name>GenericAPIServlet</servlet-name>
+      	<servlet-class>com.grubmenow.service.api.GenericAPIServlet</servlet-class>
      </servlet>
      
      <servlet-mapping>
-        <servlet-name>SearchFoodItemsApi</servlet-name>
-        <url-pattern>/searchFoodItems</url-pattern>
+        <servlet-name>GenericAPIServlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
     </servlet-mapping>
 </web-app>

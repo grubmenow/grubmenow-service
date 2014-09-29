@@ -67,7 +67,7 @@
       	  <td class="table_cell"> <%= foodItemOffer.getOfferCurrency() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getOfferQuantity() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getAvailableQuantity() %> </td>
-      	  <td class="table_cell"> <%= foodItemOffer.getOfferDay() %> </td>
+      	  <td class="table_cell"> <%= foodItemOffer.getOfferDay().toString() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getOfferMealType() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getIsFoodDeliveryOptionAvailable() %> </td>
       	  <td class="table_cell"> <%= foodItemOffer.getIsFoodPickUpOptionAvailable() %> </td>

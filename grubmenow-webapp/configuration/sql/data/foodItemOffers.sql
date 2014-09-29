@@ -13,7 +13,7 @@ INSERT INTO FOOD_ITEM_OFFER(
   IS_FOOD_PICK_UP_OPTION_AVAILABLE,
   AVAILABLE_QUANTITY,
   OFFER_STATE)
-values ('FoodItemOffer1', 'ProviderId1', '245633', 'Mast Offer', null, 6.99, 'USD', 1, 	str_to_date('2014-09-22', '%Y-%m-%d'), 
+values ('FoodItemOffer1', 'ProviderId1', '245633', 'Mast Offer', null, 6.99, 'USD', 1, 	str_to_date('2014-10-22', '%Y-%m-%d'), 
 'DINNER', 1, 1, 5, 'ACTIVE');
 
 INSERT INTO FOOD_ITEM_OFFER(
@@ -31,7 +31,7 @@ INSERT INTO FOOD_ITEM_OFFER(
   IS_FOOD_PICK_UP_OPTION_AVAILABLE,
   AVAILABLE_QUANTITY,
   OFFER_STATE)
-values ('FoodItemOffer2', 'ProviderId2', '225636', 'Mast Offer2', null, 5.99, 'USD', 1, 	str_to_date('2014-09-22', '%Y-%m-%d'), 
+values ('FoodItemOffer2', 'ProviderId2', '225636', 'Mast Offer2', null, 5.99, 'USD', 1, 	str_to_date('2014-10-22', '%Y-%m-%d'), 
 'DINNER', 1, 1, 5, 'ACTIVE');
 
 INSERT INTO FOOD_ITEM_OFFER(
@@ -49,7 +49,7 @@ INSERT INTO FOOD_ITEM_OFFER(
   IS_FOOD_PICK_UP_OPTION_AVAILABLE,
   AVAILABLE_QUANTITY,
   OFFER_STATE)
-values ('FoodItemOffer3', 'ProviderId3', '475630', 'Mast Offer3', null, 4.99, 'USD', 1, 	str_to_date('2014-09-22', '%Y-%m-%d'), 
+values ('FoodItemOffer3', 'ProviderId3', '475630', 'Mast Offer3', null, 4.99, 'USD', 1, 	str_to_date('2014-10-22', '%Y-%m-%d'), 
 'DINNER', 1, 1, 5, 'ACTIVE');
 
 INSERT INTO FOOD_ITEM_OFFER(
@@ -67,7 +67,7 @@ INSERT INTO FOOD_ITEM_OFFER(
   IS_FOOD_PICK_UP_OPTION_AVAILABLE,
   AVAILABLE_QUANTITY,
   OFFER_STATE)
-values ('FoodItemOffer4', 'ProviderId4', '885637', 'Mast Offer4', null, 4.99, 'USD', 1, 	str_to_date('2014-09-22', '%Y-%m-%d'), 
+values ('FoodItemOffer4', 'ProviderId4', '885637', 'Mast Offer4', null, 4.99, 'USD', 1, 	str_to_date('2014-10-22', '%Y-%m-%d'), 
 'DINNER', 1, 1, 5, 'ACTIVE');
 
 commit;
