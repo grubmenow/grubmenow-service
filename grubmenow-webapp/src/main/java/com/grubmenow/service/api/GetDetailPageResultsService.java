@@ -32,7 +32,7 @@ public class GetDetailPageResultsService implements IService<FoodItemDetailPageR
 
 		// food item
 		FoodItemDetailPageResponse response = new FoodItemDetailPageResponse();
-
+		// TODO: zip code is not mandatory. but not providing it is breaking Arrays.asList  
 		response.setFoodItem(populateFoodItem(request.getFoodItemId()));
 		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getFoodItemId(), Arrays.asList(request.getZipCode()),
 				request.getAvailableDay()));
@@ -46,7 +46,7 @@ public class GetDetailPageResultsService implements IService<FoodItemDetailPageR
 
 	private FoodItem populateFoodItem(String foodItemId) {
 		FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemId);
-
+		
 		return ObjectPopulator.toFoodItem(foodItemDAO);
 	}
 

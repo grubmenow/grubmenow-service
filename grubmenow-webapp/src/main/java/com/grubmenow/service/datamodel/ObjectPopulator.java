@@ -34,12 +34,14 @@ public class ObjectPopulator {
 				providerDAO.getProviderAddressStreetNumber(),
 				providerDAO.getProviderAddressStreet(),
 				providerDAO.getProviderAddressCity());
+		// TODO: city, state, zipcode
 		provider.setProviderAddress(address);
 		
 		provider.setProviderImageURL(providerDAO.getProviderImageURL());
 		provider.setOnlinePaymentAccepted(providerDAO.getIsOnlinePaymentAccepted());
 		provider.setCashOnDeliverPaymentAccepted(providerDAO.getIsCashOnDeliverPaymentAccepted());
 		provider.setCardOnDeliverPaymentAccepted(providerDAO.getIsCardOnDeliverPaymentAccepted());
+		// TODO: phone number
 		
 		return provider;
 	}

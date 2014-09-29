@@ -3,7 +3,7 @@ package com.grubmenow.service.persist;
 import java.util.List;
 
 import org.joda.time.DateTime;
-
+import com.grubmenow.service.datamodel.AvailableDayDAO;
 import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
@@ -64,9 +64,10 @@ public interface PersistenceHandler {
 	/**
 	 * Get all the offers by a provider;
 	 * @param providerId
+	 * @param availableDay
 	 * @return all the offer list. A single item may be duplicated because of multiple offers
 	 */
-	public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId);
+	public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId, AvailableDayDAO availableDay);
 	
 	/**
 	 * Create Provider

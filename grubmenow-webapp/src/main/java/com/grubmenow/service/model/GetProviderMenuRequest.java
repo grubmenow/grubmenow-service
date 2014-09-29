@@ -4,5 +4,7 @@ import lombok.Data;
 
 @Data
 public class GetProviderMenuRequest {
-	String providerId;
+	private String providerId;
+	private AvailableDay availableDay;
+	private String zipCode;
 }

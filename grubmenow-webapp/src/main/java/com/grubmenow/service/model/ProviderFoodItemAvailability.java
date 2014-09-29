@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ProviderFoodItemAvailability {
 	int quantityAvailable;
-	String availableDateDescription;
-	String availableDay;
-	String mealType;
+	AvailableDay availableDay;
+	String availableDate; // actual date 2014-09-28
+	MealType mealType;
 }

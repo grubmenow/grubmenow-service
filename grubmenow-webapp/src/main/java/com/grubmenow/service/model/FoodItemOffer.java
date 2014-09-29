@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class FoodItemOffer {
-
+	
 	private String offerDescription;
 	
 	private int quantityAvailable;

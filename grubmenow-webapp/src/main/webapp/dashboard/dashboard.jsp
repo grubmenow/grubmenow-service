@@ -20,6 +20,12 @@
 				obj.availableDay = 'TODAY';
 				obj.zipCode = ['98007'];
 			}
+			
+			if(selectedAPI == 'getProviderMenu') {
+				obj.providerId = 'ProviderId1';
+				obj.availableDay = 'TODAY';
+				obj.zipCode = ['98007'];
+			}
 
 			$('#apiInput').text(JSON.stringify(obj, undefined, 2));
 		});
@@ -70,6 +76,7 @@
 	    <select id="apiSelection">
 		  <option value="searchFoodItems">SearchFoodItems</option>
 		  <option value="getDetailPageResults">GetDetailPageResults</option>
+		  <option value="getProviderMenu">GetProviderMenu</option>
 		</select>
 	</span>
   </div>
