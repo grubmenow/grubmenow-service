@@ -9,5 +9,5 @@ WHERE
   AND P.PROVIDER_STATE = 'ACTIVE'
   AND FIO.OFFER_STATE = 'ACTIVE'
   AND FIO.AVAILABLE_QUANTITY > 0
-  AND FIO.OFFER_DAY >= STR_TO_DATE('${offer_day}','%Y-%m-%d')
+  AND date(FIO.OFFER_DAY) = STR_TO_DATE('${offer_day}','%Y-%m-%d')
   AND P.PROVIDER_ADDRESS_ZIP_CODE in (${zip_codes})

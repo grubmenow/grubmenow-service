@@ -3,6 +3,7 @@ package com.grubmenow.service.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,11 +16,11 @@ import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.SearchQuery;
 import com.grubmenow.service.persist.PersistenceFactory;
 
-@RestController
+//@RestController
 public class SearchFoodItems  {
 	private static ObjectMapper objectMapper = new ObjectMapper();
 
-	@RequestMapping(value = "/searchFoodItems", method=RequestMethod.POST)
+	@RequestMapping(value = "/api/searchFoodItems", method=RequestMethod.POST)
 	@ResponseBody
 	protected List<FoodItem> doPost(@RequestBody SearchQuery searchQuery) 
 	{
@@ -48,7 +49,7 @@ public class SearchFoodItems  {
 
 	private List<FoodItemDAO> getAllFoodItemsInZipCodes(
 			List<String> neighboringZipCodes) {
-		return PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(neighboringZipCodes);
+		return PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(neighboringZipCodes, DateTime.now());
 	}
 
 	private List<String> getAllNeighboringZipCodes(String zipCode, int radius) {

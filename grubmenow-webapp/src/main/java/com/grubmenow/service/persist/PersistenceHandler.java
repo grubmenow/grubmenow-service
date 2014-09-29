@@ -2,6 +2,8 @@ package com.grubmenow.service.persist;
 
 import java.util.List;
 
+import org.joda.time.DateTime;
+
 import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
@@ -31,13 +33,13 @@ public interface PersistenceHandler {
 	/**
 	 * Get All Food Items for ZipCodes
 	 */
-	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes);
+	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes, DateTime forDate);
 	
 	
 	/**
 	 * Get All Food Item Offer within ZipCodes
 	 */
-	public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes);
+	public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes, DateTime forDate);
 	
 	/**
 	 * Create Food Item

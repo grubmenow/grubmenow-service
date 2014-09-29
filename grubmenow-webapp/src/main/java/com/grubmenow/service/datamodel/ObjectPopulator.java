@@ -51,7 +51,7 @@ public class ObjectPopulator {
 		foodItemOffer.setOfferDay(foodItemOfferDAO.getOfferDay().toString(printableDateTimeFormatter));
 		
 		DateTime today = DateTime.now();
-		DateTime tomorrow = DateTime.now().plusDays(1);
+		DateTime tomorrow = today.plusDays(1);
 		
 		AvailableDay availableDay = null;
 		

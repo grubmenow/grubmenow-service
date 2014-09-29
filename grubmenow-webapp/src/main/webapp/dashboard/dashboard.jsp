@@ -11,6 +11,7 @@
 			
 			if(selectedAPI == 'searchFoodItems') {
 				obj.zipCode = '98007';
+				obj.availableDay = 'TODAY';
 				obj.radius = 10;
 			}
 			
@@ -35,6 +36,7 @@
 		  $.ajax({
    		    type: "POST",
    			dataType: "json",
+   			contentType: "application/json",
    			url: apiURL,
    			data: inputData, 
    			success: function(res) {
@@ -76,10 +78,10 @@
   <table style="width: 100%; height: 480px">
    <tr>
      <td>
-       <textarea id="apiInput" style="width: 100%; height: 100%"></textarea>
+       <textarea id="apiInput" style="width: 100%; height: 100%; resize: vertical;"></textarea>
      </td>
      <td>
-       <textarea id="apiOutput" style="width: 100%; height: 100%"></textarea>
+       <textarea id="apiOutput" style="width: 100%; height: 100%; resize: vertical;"></textarea>
      </td>
    </tr>
    <tr>

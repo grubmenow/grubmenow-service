@@ -99,10 +99,10 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 
 	
 	@Override
-	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes) {
+	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes, DateTime forDate) {
 		
 		Map<String, String> tokens = ImmutableMap.of("zip_codes", getCommaSeperatedZipCodes(zipCodes), "offer_day",
-				DateTime.now().toString(printableDateTimeFormatter));
+				forDate.toString(printableDateTimeFormatter));
 		
 		String sql = SQLReader.loadSQL("/find_all_food_item_with_zip_code.sql", tokens);
 		
@@ -110,10 +110,10 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	}
 	
 	@Override
-	public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes) {
+	public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes, DateTime forDate) {
 
 		Map<String, String> tokens = ImmutableMap.of("zip_codes", getCommaSeperatedZipCodes(zipCodes), "offer_day",
-				DateTime.now().toString(printableDateTimeFormatter), "food_item_id", foodItemId);
+				forDate.toString(printableDateTimeFormatter), "food_item_id", foodItemId);
 		
 		String sql = SQLReader.loadSQL("/find_all_provider_offering_within_zip_codes.sql", tokens);
 		

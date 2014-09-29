@@ -65,13 +65,4 @@
 		<url-pattern>/dashboard/fooditemoffer</url-pattern>
 	</servlet-mapping>
 
-    <servlet>
-      	<servlet-name>GenericAPIServlet</servlet-name>
-      	<servlet-class>com.grubmenow.service.api.GenericAPIServlet</servlet-class>
-     </servlet>
-     
-     <servlet-mapping>
-        <servlet-name>GenericAPIServlet</servlet-name>
-        <url-pattern>/api/*</url-pattern>
-    </servlet-mapping>
 </web-app>
