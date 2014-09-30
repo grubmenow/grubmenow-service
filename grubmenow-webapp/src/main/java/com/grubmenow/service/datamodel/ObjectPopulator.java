@@ -4,7 +4,9 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import com.grubmenow.service.model.Amount;
 import com.grubmenow.service.model.AvailableDay;
+import com.grubmenow.service.model.Currency;
 import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.FoodItemOffer;
 import com.grubmenow.service.model.MealType;
@@ -52,7 +54,8 @@ public class ObjectPopulator {
 		foodItemOffer.setFoodItemId(foodItemOfferDAO.getFoodItemId());
 		foodItemOffer.setProviderId(foodItemOfferDAO.getProviderId());
 		foodItemOffer.setOfferDescription(foodItemOfferDAO.getOfferDescription());
-		foodItemOffer.setQuantityAvailable(foodItemOfferDAO.getOfferQuantity());
+		foodItemOffer.setAvailableQuantity(foodItemOfferDAO.getAvailableQuantity());
+		foodItemOffer.setPrice(new Amount(foodItemOfferDAO.getOfferUnitPrice(), Currency.valueOf(foodItemOfferDAO.getOfferCurrency())));
 		foodItemOffer.setOfferDay(foodItemOfferDAO.getOfferDay().toString(printableDateTimeFormatter));
 		
 		DateTime today = DateTime.now();

@@ -13,7 +13,9 @@ public class FoodItemOffer {
 	
 	private String offerDescription;
 	
-	private int quantityAvailable;
+	private int availableQuantity;
+	
+	private Amount price;
 	
 	private String offerDay;
 	
