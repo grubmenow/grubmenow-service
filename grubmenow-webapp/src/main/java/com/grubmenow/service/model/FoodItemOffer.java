@@ -5,6 +5,12 @@ import lombok.Data;
 @Data
 public class FoodItemOffer {
 	
+	private String foodItemOfferId;
+	
+	private String foodItemId;
+	
+	private String providerId;
+	
 	private String offerDescription;
 	
 	private int quantityAvailable;

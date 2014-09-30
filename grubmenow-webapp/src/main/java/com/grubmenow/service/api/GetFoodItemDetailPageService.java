@@ -1,9 +1,9 @@
 package com.grubmenow.service.api;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,36 +17,37 @@ import com.grubmenow.service.datamodel.ObjectPopulator;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.FoodItem;
-import com.grubmenow.service.model.FoodItemDetailPageRequest;
-import com.grubmenow.service.model.FoodItemDetailPageResponse;
+import com.grubmenow.service.model.GetFoodItemDetailPageRequest;
+import com.grubmenow.service.model.GetFoodItemDetailPageResponse;
 import com.grubmenow.service.model.ProviderFoodItemOffer;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
-public class GetDetailPageResultsService implements IService<FoodItemDetailPageRequest, FoodItemDetailPageResponse> {
+public class GetFoodItemDetailPageService extends AbstractRemoteService {
 
-	@Override
-	@RequestMapping(value = "/api/getDetailPageResults", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/getDetailPageResults", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public FoodItemDetailPageResponse executeService(@RequestBody FoodItemDetailPageRequest request) {
+	public GetFoodItemDetailPageResponse executeService(@RequestBody GetFoodItemDetailPageRequest request) {
+
+		if(StringUtils.isBlank(request.getZipCode()) || request.getRadius() == 0) {
+			request.setZipCode("98007");
+			request.setRadius(10000);
+		}
+		
+		List<String> neighboringZipCodes = getAllNeighboringZipCodes(request.getZipCode(), request.getRadius());
 
 		// food item
-		FoodItemDetailPageResponse response = new FoodItemDetailPageResponse();
-		// TODO: zip code is not mandatory. but not providing it is breaking Arrays.asList  
+		GetFoodItemDetailPageResponse response = new GetFoodItemDetailPageResponse();
+		
 		response.setFoodItem(populateFoodItem(request.getFoodItemId()));
-		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getFoodItemId(), Arrays.asList(request.getZipCode()),
-				request.getAvailableDay()));
+		
+		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getFoodItemId(), neighboringZipCodes, request.getAvailableDay()));
 		return response;
-	}
-
-	@Override
-	public Class<FoodItemDetailPageRequest> getRequestClass() {
-		return FoodItemDetailPageRequest.class;
 	}
 
 	private FoodItem populateFoodItem(String foodItemId) {
 		FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemId);
-		
+
 		return ObjectPopulator.toFoodItem(foodItemDAO);
 	}
 
@@ -63,17 +64,20 @@ public class GetDetailPageResultsService implements IService<FoodItemDetailPageR
 
 		for (FoodItemOfferDAO foodItemOfferDAO : foodItemOfferDAOs) {
 
-			ProviderFoodItemOffer providerFoodItemOffer = new ProviderFoodItemOffer();
-
 			ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(foodItemOfferDAO.getProviderId());
-			providerFoodItemOffer.setProvider(ObjectPopulator.toProvider(providerDAO));
-
-			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO));
 			
+			ProviderFoodItemOffer providerFoodItemOffer = new ProviderFoodItemOffer();
+			providerFoodItemOffer.setProvider(ObjectPopulator.toProvider(providerDAO));
+			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO));
+
 			providerFoodItemOffers.add(providerFoodItemOffer);
 		}
 
 		return providerFoodItemOffers;
+	}
+
+	private List<String> getAllNeighboringZipCodes(String zipCode, int radius) {
+		return PersistenceFactory.getInstance().getNeighbouringZipCodes(zipCode, radius);
 	}
 
 }

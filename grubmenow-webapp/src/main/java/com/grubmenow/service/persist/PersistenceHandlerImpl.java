@@ -22,7 +22,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.google.common.collect.ImmutableMap;
-import com.grubmenow.service.datamodel.AvailableDayDAO;
 import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
@@ -183,24 +182,19 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	}
 	
 	@Override
-	public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId, AvailableDayDAO availableDay)
-	{
+	public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId, DateTime forDay) {
 		String sql = "select * from FOOD_ITEM_OFFER where PROVIDER_ID=:providerId and OFFER_DAY=:offerDay ";
 		Session session = sessionFactory.openSession();
-		Query query = session.createSQLQuery(sql)
-				.addEntity(FoodItemOfferDAO.class)
-				.setString("providerId", providerId);
-		
-		if (availableDay == AvailableDayDAO.TODAY)
-		{
-			// run the JVM in PST for MVP
-			query.setDate("offerDay", DateTime.now().toDate());
+		try {
+			Query query = session.createSQLQuery(sql)
+					.addEntity(FoodItemOfferDAO.class)
+					.setString("providerId", providerId)
+					.setDate("offerDay", forDay.toDate());
+
+			return query.list();
+		} finally {
+			session.close();
 		}
-		else 
-		{
-			query.setDate("offerDay", DateTime.now().minusDays(1).toDate());
-		}
-		return query.list();
 	}
 
 	@Override
@@ -349,16 +343,6 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		}	
 	}
 	
-//	private void saveObject(Session session, Object object) {
-//		try {
-//			session.save(object);
-//		} catch (HibernateException e) {
-//			throw e;
-//		} finally {
-//			session.close();
-//		}	
-//	}
-
 	
 	private void updateObject(Object object) {
 		Transaction transaction = null;

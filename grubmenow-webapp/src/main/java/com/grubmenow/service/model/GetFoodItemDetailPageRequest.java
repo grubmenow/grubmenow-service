@@ -3,11 +3,13 @@ package com.grubmenow.service.model;
 import lombok.Data;
 
 @Data
-public class FoodItemDetailPageRequest {
+public class GetFoodItemDetailPageRequest {
 
 	private String foodItemId;
 	
 	private AvailableDay availableDay;
 	
-	private String[] zipCode;
+	private String zipCode;
+	
+	private int radius;
 }

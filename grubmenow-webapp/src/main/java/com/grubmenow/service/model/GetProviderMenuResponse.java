@@ -6,5 +6,8 @@ import lombok.Data;
 
 @Data
 public class GetProviderMenuResponse {
-	List<ProviderFoodItemOffer> providerMenuItemOffers;
+	
+	private Provider provider;
+	
+	private List<ProviderFoodItemOffer> providerFoodItemOffers;
 }

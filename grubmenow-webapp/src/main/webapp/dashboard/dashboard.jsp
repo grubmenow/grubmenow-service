@@ -9,6 +9,8 @@
 			var obj = new Object();
 			var selectedAPI = $("#apiSelection option:selected").val();
 			
+			$('#apiEndpoint').text('/' + selectedAPI);				
+			
 			if(selectedAPI == 'searchFoodItems') {
 				obj.zipCode = '98007';
 				obj.availableDay = 'TODAY';
@@ -18,16 +20,17 @@
 			if(selectedAPI == 'getDetailPageResults') {
 				obj.foodItemId = '225636';
 				obj.availableDay = 'TODAY';
-				obj.zipCode = ['98007'];
+				obj.zipCode = '98007';
+				obj.radius = 10;
 			}
 			
 			if(selectedAPI == 'getProviderMenu') {
 				obj.providerId = 'ProviderId1';
 				obj.availableDay = 'TODAY';
-				obj.zipCode = ['98007'];
 			}
 
 			$('#apiInput').text(JSON.stringify(obj, undefined, 2));
+			$('#apiOutput').text('');
 		});
 		
 		$('#apiSelection').trigger("change");
@@ -37,7 +40,7 @@
    		  $('#apiOutput').text('Processing..');
    		  var inputData = $('#apiInput').val();
 		  var selectedAPI = $("#apiSelection option:selected").val();	
-   		  var apiURL = '../api/' + selectedAPI;
+   		  var apiURL = '../' + selectedAPI;
 		  
 		  $.ajax({
    		    type: "POST",
@@ -82,6 +85,10 @@
   </div>
   <br/>
   <br/>
+  <span id="apiEndpoint" style="width: 100%">
+  	
+  </span>
+  
   <table style="width: 100%; height: 480px">
    <tr>
      <td>

@@ -48,6 +48,9 @@ public class ObjectPopulator {
 	
 	public static FoodItemOffer toFoodItemOffer(FoodItemOfferDAO foodItemOfferDAO) {
 		FoodItemOffer foodItemOffer = new FoodItemOffer();
+		foodItemOffer.setFoodItemOfferId(foodItemOfferDAO.getFoodItemOfferId());
+		foodItemOffer.setFoodItemId(foodItemOfferDAO.getFoodItemId());
+		foodItemOffer.setProviderId(foodItemOfferDAO.getProviderId());
 		foodItemOffer.setOfferDescription(foodItemOfferDAO.getOfferDescription());
 		foodItemOffer.setQuantityAvailable(foodItemOfferDAO.getOfferQuantity());
 		foodItemOffer.setOfferDay(foodItemOfferDAO.getOfferDay().toString(printableDateTimeFormatter));
