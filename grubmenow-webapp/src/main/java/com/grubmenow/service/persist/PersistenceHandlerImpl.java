@@ -121,6 +121,32 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		return executeCustomSQL(FoodItemOfferDAO.class, sql);
 	}
 	
+	@Override
+	public List<FoodItemOfferDAO> getCurrentProviderOffering(String foodItemId, DateTime forDate) {
+
+		String sql = "SELECT  FIO.* "
+					 + "FROM FOOD_ITEM_OFFER FIO, PROVIDER P, FOOD_ITEM FI "
+					 + "WHERE FIO.OFFER_STATE = 'ACTIVE' "
+					 + "AND P.PROVIDER_STATE = 'ACTIVE' AND FI.FOOD_ITEM_STATE = 'ACTIVE' AND FIO.AVAILABLE_QUANTITY > 0  "
+					 + "AND date(FIO.OFFER_DAY) = :offer_day  AND FIO.FOOD_ITEM_ID = :food_item_id "
+					 + "AND FIO.FOOD_ITEM_ID = FI.FOOD_ITEM_ID AND FIO.PROVIDER_ID = P.PROVIDER_ID" ;
+		Session session = sessionFactory.openSession();
+		try
+		{
+			Query query = session.createSQLQuery(sql)
+					.addEntity(FoodItemOfferDAO.class)
+					.setString("food_item_id", foodItemId)
+					.setDate("offer_day", forDate.toDate());
+			
+			return query.list(); 
+		}
+		finally
+		{
+			session.close();
+		}
+		
+	}
+	
 	private String getCommaSeperatedZipCodes(List<String> zipCodes) {
 		List<String> zipCodesWithQuotes = new ArrayList<>(); 
 		for(String zipCode: zipCodes) {
@@ -180,7 +206,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 
 		return getObject(ProviderDAO.class, providerId);
 	}
-	
+
 	@Override
 	public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId, DateTime forDay) {
 		String sql = "select * from FOOD_ITEM_OFFER where PROVIDER_ID=:providerId and OFFER_DAY=:offerDay ";

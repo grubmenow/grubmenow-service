@@ -20,6 +20,7 @@ import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.GetFoodItemDetailPageRequest;
 import com.grubmenow.service.model.GetFoodItemDetailPageResponse;
 import com.grubmenow.service.model.ProviderFoodItemOffer;
+import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
@@ -29,20 +30,25 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 	@ResponseBody
 	public GetFoodItemDetailPageResponse executeService(@RequestBody GetFoodItemDetailPageRequest request) {
 
-		if(StringUtils.isBlank(request.getZipCode()) || request.getRadius() == 0) {
-			request.setZipCode("98007");
-			request.setRadius(10000);
-		}
-		
-		List<String> neighboringZipCodes = getAllNeighboringZipCodes(request.getZipCode(), request.getRadius());
-
+		validateInput(request);
 		// food item
 		GetFoodItemDetailPageResponse response = new GetFoodItemDetailPageResponse();
 		
 		response.setFoodItem(populateFoodItem(request.getFoodItemId()));
 		
-		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getFoodItemId(), neighboringZipCodes, request.getAvailableDay()));
+		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getFoodItemId(), request.getAvailableDay()));
 		return response;
+	}
+
+	private void validateInput(GetFoodItemDetailPageRequest request) {
+		if (request.getAvailableDay() == null) {
+			throw new ValidationException("AvailableDay should be present");
+		}
+		
+		if (StringUtils.isBlank(request.getFoodItemId()))
+		{
+			throw new ValidationException("Food item id should be present");
+		}
 	}
 
 	private FoodItem populateFoodItem(String foodItemId) {
@@ -51,14 +57,14 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		return ObjectPopulator.toFoodItem(foodItemDAO);
 	}
 
-	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String foodItemId, List<String> zipCodes, AvailableDay availableDay) {
+	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String foodItemId, AvailableDay availableDay) {
 
 		DateTime forDate = DateTime.now();
 		if (availableDay == AvailableDay.TOMORROW) {
 			forDate = forDate.plusDays(1);
 		}
 
-		List<FoodItemOfferDAO> foodItemOfferDAOs = PersistenceFactory.getInstance().getCurrentProviderOfferingWithinZipCodes(foodItemId, zipCodes, forDate);
+		List<FoodItemOfferDAO> foodItemOfferDAOs = PersistenceFactory.getInstance().getCurrentProviderOffering(foodItemId, forDate);
 
 		List<ProviderFoodItemOffer> providerFoodItemOffers = new ArrayList<>();
 
@@ -74,10 +80,6 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		}
 
 		return providerFoodItemOffers;
-	}
-
-	private List<String> getAllNeighboringZipCodes(String zipCode, int radius) {
-		return PersistenceFactory.getInstance().getNeighbouringZipCodes(zipCode, radius);
 	}
 
 }

@@ -20,8 +20,6 @@
 			if(selectedAPI == 'getDetailPageResults') {
 				obj.foodItemId = '225636';
 				obj.availableDay = 'TODAY';
-				obj.zipCode = '98007';
-				obj.radius = 10;
 			}
 			
 			if(selectedAPI == 'getProviderMenu') {

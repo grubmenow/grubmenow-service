@@ -42,6 +42,11 @@ public interface PersistenceHandler {
 	public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes, DateTime forDate);
 	
 	/**
+	 * Get All Food Item Offer for the specified food Item irrespective of location
+	 */
+	public List<FoodItemOfferDAO> getCurrentProviderOffering(String foodItemId, DateTime forDate);
+	
+	/**
 	 * Create Food Item
 	 */
 	public void createFoodItem(FoodItemDAO foodItem);
