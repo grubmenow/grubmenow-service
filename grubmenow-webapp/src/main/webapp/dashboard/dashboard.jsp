@@ -29,15 +29,15 @@
 				obj.availableDay = 'TODAY';
 			}
 
-			$('#apiInput').text(JSON.stringify(obj, undefined, 2));
-			$('#apiOutput').text('');
+			$('#apiInput').val(JSON.stringify(obj, undefined, 2));
+			$('#apiOutput').val('');
 		});
 		
 		$('#apiSelection').trigger("change");
 		
    		$('#apiTrigger').click(function(e) {
    		  
-   		  $('#apiOutput').text('Processing..');
+   		  $('#apiOutput').val('Processing..');
    		  var inputData = $('#apiInput').val();
 		  var selectedAPI = $("#apiSelection option:selected").val();	
    		  var apiURL = '../' + selectedAPI;
@@ -49,10 +49,10 @@
    			url: apiURL,
    			data: inputData, 
    			success: function(res) {
-   						$('#apiOutput').text(JSON.stringify(res, undefined, 2));
+   						$('#apiOutput').val(JSON.stringify(res, undefined, 2));
    					},
    			error:  function(res) {
-						$('#apiOutput').text(JSON.stringify(res, undefined, 2));
+						$('#apiOutput').val(JSON.stringify(res, undefined, 2));
 					}
    		  });
         });
