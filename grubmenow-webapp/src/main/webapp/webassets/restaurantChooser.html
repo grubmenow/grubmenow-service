@@ -78,11 +78,11 @@
     <div class="clearfix"></div>
     <p/>
     <div class="panel-group" id="accordion">
-	<div class="panel panel-primary" ng-repeat="rest in restList">
+	<div class="panel panel-primary" ng-repeat="rest in restList.providerFoodItemOffers">
 	    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}">
 	        <div class="panel-heading">
 	            <h4 class="panel-title">
-	                {{rest.restName}}
+	                {{rest.provider.providerName}}
 	            </h4>
 	        </div>
 	    </a>
@@ -108,16 +108,16 @@
                         <div class="clearfix"></div>
 			
                         <div class="col-xs-3 col-md-2">
-                            <span class="foodTitle">{{rest.primaryFood.name}}</span>
+                            <span class="foodTitle">{{restList.foodItem.foodItemName}}</span>
                         </div>
                         <div class="col-xs-4 col-md-5">
-                            <span class="foodTitle">{{rest.primaryFood.desc}}</span>
+                            <span class="foodTitle">{{rest.foodItemOffer.offerDescription}}</span>
                         </div>
                         <div class="col-xs-3 col-md-3">
-                            <span class="foodTitle">${{rest.primaryFood.price | number:2}}</span>
+                            <span class="foodTitle">${{rest.foodItemOffer.price.value | number:2}}</span>
                         </div>
                         <div class="col-xs-2 col-md-2">
-                            <input type="text" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="rest.primaryFood.qty" maxlength="2">
+                            <input type="text" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2">
                         </div>
 			
                         <div class="clearfix"></div>
