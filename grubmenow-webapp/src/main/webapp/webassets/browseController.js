@@ -19,22 +19,20 @@ gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
 
 
 gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
-    $scope.getId = function() {
+    $scope.getQSP = function() {
         var url = $location.absUrl();
         var hashes = url.slice(url.indexOf('?') + 1).split('&');
-        var qsp = {};
         for(var i = 0; i < hashes.length; i++)
         {
             hash = hashes[i].split('=');
-            qsp[hash[0]] = hash[1];
+            $scope[hash[0]] = hash[1];
         }
-        return qsp.id;
     }
 
     $scope.getTotalItems = function(index) {
-        var total = isNaN(parseInt($scope.restList[index].primaryFood.qty)) ? 0 : parseInt($scope.restList[index].primaryFood.qty);
-        var restId = $scope.restList[index].restId;
-        if (!$scope.restMenu[restId]) return total;
+        var total = isNaN(parseInt($scope.restList.foodItem.foodItemQty)) ? 0 : parseInt($scope.restList.foodItem.foodItemQty);
+        var restId = $scope.restList.providerFoodItemOffers[index].restId;
+        if (!restId || !$scope.restMenu[restId]) return total;
         
         for(var i = 0; i < $scope.restMenu[restId].length; i++) {
             var product = $scope.restMenu[restId][i];
@@ -45,10 +43,11 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
     }
     
     $scope.getTotalPrice = function(index) {
-        var total = $scope.restList[index].primaryFood.qty * $scope.restList[index].primaryFood.price;
+        var primaryQty = isNaN(parseInt($scope.restList.foodItem.foodItemQty)) ? 0 : parseInt($scope.restList.foodItem.foodItemQty);
+        var total = primaryQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value;
         total = isNaN(total) ? 0 : total;
-        var restId = $scope.restList[index].restId;
-        if (!$scope.restMenu[restId]) return total;
+        var restId = $scope.restList.providerFoodItemOffers[index].restId;
+        if (!restId || !$scope.restMenu[restId]) return total;
         
         for(var i = 0; i < $scope.restMenu[restId].length; i++) {
             var product = $scope.restMenu[restId][i];
@@ -101,10 +100,13 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         });
     }
     
-    var foodId = $scope.getId();
-    var restListUrl = "restList.json?foodId="+foodId;
-    $http.get(restListUrl).success(function(data) {
+    $scope.getQSP();
+    // fake data for now
+    var requestData = {"foodItemId": "225636", "availableDay": "TODAY"};
+    var restListUrl = "getDetailPageResults";
+    $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
         $scope.restList = data;
+        $scope.restList.foodItem.foodItemQty = 1;
     });
     $scope.restMenu = {};
     $scope.showRestMenu = {};
