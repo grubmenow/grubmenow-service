@@ -31,12 +31,12 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
 
     $scope.getTotalItems = function(index) {
         var total = isNaN(parseInt($scope.restList.foodItem.foodItemQty)) ? 0 : parseInt($scope.restList.foodItem.foodItemQty);
-        var restId = $scope.restList.providerFoodItemOffers[index].restId;
+        var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
         if (!restId || !$scope.restMenu[restId]) return total;
         
-        for(var i = 0; i < $scope.restMenu[restId].length; i++) {
-            var product = $scope.restMenu[restId][i];
-            total = product.qty ? isNaN(parseInt(product.qty)) ? total : total + parseInt(product.qty) : total;
+        for(var i = 0; i < $scope.restMenu[restId].providerFoodItemOffers.length; i++) {
+            var product = $scope.restMenu[restId].providerFoodItemOffers[i];
+            total = product.foodItem.foodItemQty ? isNaN(parseInt(product.foodItem.foodItemQty)) ? total : total + parseInt(product.foodItem.foodItemQty) : total;
         }
         
         return total;
@@ -46,12 +46,12 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         var primaryQty = isNaN(parseInt($scope.restList.foodItem.foodItemQty)) ? 0 : parseInt($scope.restList.foodItem.foodItemQty);
         var total = primaryQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value;
         total = isNaN(total) ? 0 : total;
-        var restId = $scope.restList.providerFoodItemOffers[index].restId;
+        var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
         if (!restId || !$scope.restMenu[restId]) return total;
         
-        for(var i = 0; i < $scope.restMenu[restId].length; i++) {
-            var product = $scope.restMenu[restId][i];
-            total = product.qty ? isNaN(parseInt(product.qty)) ? total : total + (product.price * parseInt(product.qty)) : total;            
+        for(var i = 0; i < $scope.restMenu[restId].providerFoodItemOffers.length; i++) {
+            var product = $scope.restMenu[restId].providerFoodItemOffers[i];
+            total = product.foodItem.foodItemQty ? isNaN(parseInt(product.foodItem.foodItemQty)) ? total : total + (product.foodItemOffer.price.value * parseInt(product.foodItem.foodItemQty)) : total;            
         }
         
         return total;
@@ -62,27 +62,27 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         order.items = [];
         order.totalPrice = $scope.getTotalPrice(index);
         var i = 0;
-        if($scope.restList[index].primaryFood.qty > 0) {
+        if($scope.restList.foodItem.foodItemQty > 0) {
             order.items[i++] = {
-                "qty": $scope.restList[index].primaryFood.qty,
-                "name": $scope.restList[index].primaryFood.name,
-                "totalPrice": $scope.restList[index].primaryFood.qty * $scope.restList[index].primaryFood.price
+                "qty": $scope.restList.foodItem.foodItemQty,
+                "name": $scope.restList.foodItem.foodItemName,
+                "totalPrice": $scope.restList.foodItem.foodItemQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value
             };
         }
         
-        var restId = $scope.restList[index].restId;
+        var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
         if (!$scope.restMenu[restId]) {
             $scope.finalOrder = order;
             return;
         }
         
-        for(var j = 0; j < $scope.restMenu[restId].length; j++) {
-            var product = $scope.restMenu[restId][j];
-            if (!isNaN(parseInt(product.qty))) {
+        for(var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
+            var product = $scope.restMenu[restId].providerFoodItemOffers[j];
+            if (!isNaN(parseInt(product.foodItem.foodItemQty))) {
                 order.items[i++] = {
-                    "qty": product.qty,
-                    "name": product.name,
-                    "totalItemPrice": product.qty * product.price
+                    "qty": product.foodItem.foodItemQty,
+                    "name": product.foodItem.foodItemName,
+                    "totalItemPrice": product.foodItem.foodItemQty * product.foodItemOffer.price.value
                 };    
             }
         }
@@ -93,8 +93,10 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         if ($scope.restMenu[restId]) {
             $scope.showRestMenu[restId] = 1;
         }
-        var restMenuUrl = "restMenu.json?restId="+restId;
-        $http.get(restMenuUrl).success(function(data) {
+        // fake data for now
+        var requestData = {"providerId": "ProviderId2", "availableDay": "TODAY"};
+        var restListUrl = "getProviderMenu";
+        $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
             $scope.restMenu[restId] = data;
             $scope.showRestMenu[restId] = 1;
         });
