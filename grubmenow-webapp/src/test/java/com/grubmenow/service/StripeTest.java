@@ -11,9 +11,10 @@ public class StripeTest {
 	}
 	public void testCharge() throws PaymentProcessorException
 	{
-		StripePaymentProcessor processor = new StripePaymentProcessor("sk_test_BQokikJOvBiI2HlWgH4olfQ2");
+		// grubmenow test secret key is  sk_test_jXSLNqhMVvsziLZWgHg0vVJy 
+		StripePaymentProcessor processor = new StripePaymentProcessor("sk_test_jXSLNqhMVvsziLZWgHg0vVJy");
 		
-		Transaction id = processor.charge("tok_14jdvR2eZvKYlo2CttYz9knT", 1000, CurrencyDAO.USD, "emailId");
+		Transaction id = processor.charge("tok_14kR79CxEv9dhAFuk1wudmBu", 5000, CurrencyDAO.USD, "emailId", "orderId");
 		System.out.println(id.getTransactionId());
 		System.out.println(id.isLive());
 	}

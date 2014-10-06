@@ -2,9 +2,9 @@ package com.grubmenow.service.auth;
 
 import lombok.extern.apachecommons.CommonsLog;
 
-import org.springframework.social.RevokedAuthorizationException;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.facebook.api.Facebook;
+import org.springframework.social.facebook.api.FacebookProfile;
 import org.springframework.social.facebook.connect.FacebookConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 
@@ -18,22 +18,31 @@ public class FacebookAuthentication {
 	}
 	
 	/**
-	 * Authenticates the access token against facebook if it is valid or not. 
-	 * @param accessToken the user's access token recieved from the browser client
+	 * Validates the token against FB and returns the FacebookCustomerInfo object. 
+	 * @param accessToken the user's access token received from the browser client
 	 * @return true if the authenticated, else false
+	 * @throws AuthenticationException in case of authentication failure
 	 */
-	public boolean isAuthenticated(String accessToken)
+	public FacebookCustomerInfo validateTokenAndFetchCustomerInfo(String accessToken) throws AuthenticationException
 	{
 		AccessGrant accessGrant = new AccessGrant(accessToken);
 		try
 		{
 			Connection<Facebook> connection = fbConnectionFactory.createConnection(accessGrant);
-			return connection.test();
+			if (!connection.test())
+			{
+				throw new AuthenticationException("Token is not valid");
+			}
+			FacebookProfile fbProfile = connection.getApi().userOperations()
+					.getUserProfile();
+			FacebookCustomerInfo facebookCustomerInfo = new FacebookCustomerInfo(
+					fbProfile.getId(), fbProfile.getEmail(),
+					fbProfile.getFirstName(), fbProfile.getLastName());
+			return facebookCustomerInfo;
 		}
-		catch (RevokedAuthorizationException ex)
+		catch (Exception ex)
 		{
-			log.debug("authorization revoked: " + ex.getMessage());
-			return false;
+			throw new AuthenticationException("Authentication failure exception", ex);
 		}
 	}
 }
