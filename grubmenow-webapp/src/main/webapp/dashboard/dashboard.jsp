@@ -26,6 +26,21 @@
 				obj.providerId = 'ProviderId1';
 				obj.availableDay = 'TODAY';
 			}
+			
+			if(selectedAPI == 'placeOrder') {
+				obj.providerId = 'ProviderId1';
+				obj.websiteAuthenticationToken = 'xxx';
+				obj.onlinePaymentToken = 'zzz';
+				obj.deliveryMethod = 'CUSTOMER_PICKUP';
+				obj.paymentMethod = 'ONLINE_PAYMENT';
+
+				var orderItem = new Object();
+				orderItem.foodItemOfferId = 'mowqweoedi';
+				orderItem.quantity = 1;
+				
+				obj.orderItems = [orderItem];
+			}
+
 
 			$('#apiInput').val(JSON.stringify(obj, undefined, 2));
 			$('#apiOutput').val('');
@@ -78,6 +93,7 @@
 		  <option value="searchFoodItems">SearchFoodItems</option>
 		  <option value="getDetailPageResults">GetDetailPageResults</option>
 		  <option value="getProviderMenu">GetProviderMenu</option>
+		  <option value="placeOrder">PlaceOrder</option>
 		</select>
 	</span>
   </div>

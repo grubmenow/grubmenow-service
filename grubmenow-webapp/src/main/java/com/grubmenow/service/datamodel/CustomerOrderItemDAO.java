@@ -5,11 +5,12 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Getter;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.ToString;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 /**
@@ -19,48 +20,42 @@ import org.joda.time.DateTime;
 @Entity
 @Table(name = "CUSTOMER_ORDER_ITEM")
 @ToString
+@Data
+@NoArgsConstructor
 public class CustomerOrderItemDAO {
 
 	@Id
-	@Getter
-	@Setter
 	@NonNull
     @Column(name = "ORDER_ITEM_ID")
 	private String orderItemId;
 	
-	@Getter
-	@Setter
 	@NonNull
     @Column(name = "ORDER_ID")
 	private String orderId;
 	
-	@Getter
-	@Setter
 	@NonNull
     @Column(name = "CUSTOMER_ID")
 	private String customerId;
 
-	@Getter
-	@Setter
 	@NonNull
     @Column(name = "PROVIDER_ID")
 	private String providerId;
 
-	@Getter
-    @Setter
     @NonNull
     @Column(name = "FOOD_ITEM_ID")
 	private String foodItemId;
 
-	@Getter
-	@Setter
 	@NonNull
     @Column(name = "FOOD_ITEM_OFFER_ID")
 	private String foodItemOfferId;
+
+	@NonNull
+	@Column(name = "QUANTITY")
+	private Integer quantity;
 	
-	@Getter
-	@Setter
 	@NonNull
     @Column(name = "ORDER_CREATION_DATE")
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime orderCreationDate;
+
 }

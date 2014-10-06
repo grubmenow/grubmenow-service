@@ -1,5 +1,7 @@
 package com.grubmenow.service.datamodel;
 
+import java.util.UUID;
+
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class IDGenerator {
@@ -7,13 +9,17 @@ public class IDGenerator {
 	public static String generateFoodItemId() {
 		return RandomStringUtils.randomNumeric(4).toLowerCase();
 	}
-	
+
 	public static String generateProviderId() {
 		return RandomStringUtils.randomAlphabetic(8).toLowerCase();
 	}
-	
+
 	public static String generateFoodItemOfferId() {
 		return RandomStringUtils.randomAlphabetic(10).toLowerCase();
+	}
+
+	public static String generateOrderId() {
+		return UUID.randomUUID().toString();
 	}
 
 }

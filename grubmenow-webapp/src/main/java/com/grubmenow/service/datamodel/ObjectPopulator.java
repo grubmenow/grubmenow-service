@@ -7,6 +7,8 @@ import org.joda.time.format.DateTimeFormatter;
 import com.grubmenow.service.model.Amount;
 import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.Currency;
+import com.grubmenow.service.model.CustomerOrder;
+import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.FoodItemOffer;
 import com.grubmenow.service.model.MealType;
@@ -76,6 +78,19 @@ public class ObjectPopulator {
 		
 		return foodItemOffer;
 	}
+	
+	public static CustomerOrder toCustomerOrder(CustomerOrderDAO customerOrderDAO) {
 
+		CustomerOrder customerOrder = new CustomerOrder();
+		customerOrder.setOrderId(customerOrderDAO.getOrderId());
+		customerOrder.setOrderState(customerOrderDAO.getOrderState());
+		customerOrder.setOrderCreationDate(customerOrderDAO.getOrderCreationDate().toString(printableDateTimeFormatter));
+		return customerOrder;
+	}
 
+	public static CustomerOrderItem toCustomerOrderItem(CustomerOrderItemDAO customerOrderItemDAO) {
+		CustomerOrderItem customerOrderItem = new CustomerOrderItem();
+		customerOrderItem.setOrderItemId(customerOrderItemDAO.getOrderItemId());
+		return customerOrderItem;
+	}
 }

@@ -3,9 +3,7 @@ package com.grubmenow.service.datamodel;
 import javax.persistence.Id;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.ToString;
 
 import org.joda.time.DateTime;

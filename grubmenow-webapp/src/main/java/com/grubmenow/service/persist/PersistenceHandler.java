@@ -2,6 +2,7 @@ package com.grubmenow.service.persist;
 
 import java.util.List;
 
+import org.hibernate.Session;
 import org.joda.time.DateTime;
 
 import com.grubmenow.service.datamodel.CustomerDAO;
@@ -18,6 +19,12 @@ import com.grubmenow.service.datamodel.ProviderDAO;
  */
 public interface PersistenceHandler {
 
+	
+	/**
+	 * Returns a Hibernate Session  
+	 */
+	public Session getSession();
+	
 	/**
 	 * Get All Food Items
 	 */
@@ -114,39 +121,43 @@ public interface PersistenceHandler {
 	/**
 	 * Get Food Item Offer By id
 	 */
-	public FoodItemOfferDAO getFoodItemOfferbyId(String offerId);
+	public FoodItemOfferDAO getFoodItemOfferById(String offerId);
 
 	
 	public List<FoodItemOfferDAO> getAllFoodItemOffer();
 	/**
 	 * Create Order
 	 */
-	public void createCustomerOrder(SessionHandler sessionHandler, CustomerOrderDAO order);
+	public void createCustomerOrder(CustomerOrderDAO order);
 	
 	/**
 	 * Create Order
 	 */
-	public void createCustomerOrderItem(SessionHandler sessionHandler, CustomerOrderItemDAO orderItem);
+	public void createCustomerOrderItem(CustomerOrderItemDAO orderItem);
 	
 	/**
 	 * Update Order
 	 */
-	public void updateCustomerOrder(SessionHandler sessionHandler, CustomerOrderDAO order);
+	public void updateCustomerOrder(CustomerOrderDAO order);
 	
 	/**
 	 * Update Order Item
 	 */
-	public void updateCustomerOrderItem(SessionHandler sessionHandler, CustomerOrderItemDAO orderItem);
+	public void updateCustomerOrderItem(CustomerOrderItemDAO orderItem);
 	
 	/**
 	 * Get Order By Id
 	 */
-	public CustomerOrderDAO getCustomerOrderbyId(String orderId);
+	public CustomerOrderDAO getCustomerOrderById(String orderId);
 	
 	/**
-	 * Get Order By Id
+	 * Get Order Item By Id
 	 */
-	public CustomerOrderItemDAO getCustomerOrderItembyId(String orderId);
+	public CustomerOrderItemDAO getCustomerOrderItemById(String orderId);
 
+	/**
+	 * Get Order Item By Id
+	 */
+	public List<CustomerOrderItemDAO> getCustomerOrderItemByOrderId(String orderId);
 
 }

@@ -1,13 +1,19 @@
 package com.grubmenow.service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import org.joda.time.DateTime;
 
+import com.grubmenow.service.api.PlaceOrderService;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.OfferMealType;
 import com.grubmenow.service.datamodel.OfferState;
+import com.grubmenow.service.model.DeliveryMethod;
+import com.grubmenow.service.model.OrderItem;
+import com.grubmenow.service.model.PaymentMethod;
+import com.grubmenow.service.model.PlaceOrderRequest;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 
@@ -28,7 +34,28 @@ public class PersistTest {
 		
 //		System.out.println(PersistenceFactory.getInstance().getAllFoodItemOffer());
 		
-		populateTestFoodItemOffer();
+//		populateTestFoodItemOffer();
+		
+		testPlaceOrder();
+	}
+	
+	public static void testPlaceOrder() {
+		
+		PlaceOrderRequest placeOrderRequest = new PlaceOrderRequest();
+		placeOrderRequest.setOnlinePaymentToken("token");
+		placeOrderRequest.setPaymentMethod(PaymentMethod.ONLINE_PAYMENT);
+		placeOrderRequest.setDeliveryMethod(DeliveryMethod.CUSTOMER_PICKUP);
+		placeOrderRequest.setProviderId("ProviderId3");
+		placeOrderRequest.setWebsiteAuthenticationToken("sometoken");
+		
+		OrderItem orderItem = new OrderItem();
+		orderItem.setQuantity(10);
+		orderItem.setFoodItemOfferId("mowqweoedi");
+		placeOrderRequest.setOrderItems(Arrays.asList(orderItem));
+		
+		PlaceOrderService placeOrderService = new PlaceOrderService();
+		placeOrderService.doPost(placeOrderRequest);
+		
 	}
 	
 	public static void populateTestFoodItemOffer() {

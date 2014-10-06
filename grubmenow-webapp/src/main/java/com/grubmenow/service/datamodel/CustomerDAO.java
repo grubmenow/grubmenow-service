@@ -5,9 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.ToString;
 
 /**
@@ -17,23 +16,18 @@ import lombok.ToString;
 @Entity
 @Table(name = "CUSTOMER")
 @ToString
+@Data
 public class CustomerDAO {
 
 	@Id
-	@Getter
-	@Setter
 	@NonNull
     @Column(name = "CUSTOMER_ID")
 	private String customerId;
 	
-	@Getter
-	@Setter
 	@NonNull
     @Column(name = "CUSTOMER_NAME")
 	private String customerName;
 	
-    @Getter
-    @Setter
     @NonNull
     @Column(name = "CUSTOMER_STATE")
 	private String customerState;

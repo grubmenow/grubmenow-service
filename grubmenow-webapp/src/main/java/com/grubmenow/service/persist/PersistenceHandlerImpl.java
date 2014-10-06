@@ -78,8 +78,10 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		sessionFactory.close();
 	}
 	
-	public SessionHandler getSessionHandler() {
-		return new SessionHandler(sessionFactory.openSession());
+	
+	@Override
+	public Session getSession() {
+		return sessionFactory.openSession();
 	}
 
 	@Override
@@ -259,7 +261,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	}
 	
 	@Override
-	public FoodItemOfferDAO getFoodItemOfferbyId(String foodItemOfferId) {
+	public FoodItemOfferDAO getFoodItemOfferById(String foodItemOfferId) {
 		log.info(String.format("Retrieving food item offer: %s " , foodItemOfferId));
 		
 		return getObject(FoodItemOfferDAO.class, foodItemOfferId);
@@ -272,36 +274,36 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 
 
 	@Override
-	public void createCustomerOrder(SessionHandler sessionHandler, CustomerOrderDAO customerOrder) {
+	public void createCustomerOrder(CustomerOrderDAO customerOrder) {
 		log.info(String.format("Creating order: %s " , customerOrder));
 		
-		sessionHandler.getSession().save(customerOrder);
+		saveObject(customerOrder);
 	}
 	
 	@Override
-	public void createCustomerOrderItem(SessionHandler sessionHandler, CustomerOrderItemDAO customerOrderItem) {
+	public void createCustomerOrderItem(CustomerOrderItemDAO customerOrderItem) {
 		log.info(String.format("Creating order item: %s " , customerOrderItem));
 		
-		sessionHandler.getSession().save(customerOrderItem);
+		saveObject(customerOrderItem);
 	}
 
 	@Override
-	public void updateCustomerOrder(SessionHandler sessionHandler, CustomerOrderDAO customerOrder) {
+	public void updateCustomerOrder(CustomerOrderDAO customerOrder) {
 		log.info(String.format("Updating order: %s " , customerOrder));
 		
-		updateObject(sessionHandler.getSession(), customerOrder);
+		updateObject(customerOrder);
 	}
 	
 	@Override
-	public void updateCustomerOrderItem(SessionHandler sessionHandler, CustomerOrderItemDAO customerOrderItem) {
+	public void updateCustomerOrderItem(CustomerOrderItemDAO customerOrderItem) {
 		log.info(String.format("Updating order item: %s " , customerOrderItem));
 		
-		updateObject(sessionHandler.getSession(), customerOrderItem);
+		updateObject(customerOrderItem);
 	}
 
 	
 	@Override
-	public CustomerOrderDAO getCustomerOrderbyId(String orderId) {
+	public CustomerOrderDAO getCustomerOrderById(String orderId) {
 		log.info(String.format("Retrieving order: %s " , orderId));
 		
 		return getObject(CustomerOrderDAO.class, orderId);
@@ -309,11 +311,27 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	
 	
 	@Override
-	public CustomerOrderItemDAO getCustomerOrderItembyId(String orderItemId) {
+	public CustomerOrderItemDAO getCustomerOrderItemById(String orderItemId) {
 		log.info(String.format("Retrieving order Item: %s " , orderItemId));
 		
 		return getObject(CustomerOrderItemDAO.class, orderItemId);
 	}
+	
+	@Override
+	public List<CustomerOrderItemDAO> getCustomerOrderItemByOrderId(String orderId) {
+		String sql = "select * from CUSTOMER_ORDER_ITEM where ORDER_ID=:orderId";
+		Session session = sessionFactory.openSession();
+		try {
+			Query query = session.createSQLQuery(sql)
+					.addEntity(CustomerOrderItemDAO.class)
+					.setString("orderId", orderId);
+
+			return query.list();
+		} finally {
+			session.close();
+		}
+	}
+
 	
 	private <T> List<T> executeCustomSQL(Class<T> clazz, String sql) {
 		System.out.println(sql);
@@ -376,7 +394,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		
 		try {
 			transaction = session.beginTransaction();
-			updateObject(session, object);
+			session.update(object);
 			transaction.commit();
 		} catch (HibernateException e) {
 			if (transaction != null)
@@ -387,15 +405,15 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		}
 	}
 
-	private void updateObject(Session session, Object object) {
-		try {
-			session.update(object);
-		} catch (HibernateException e) {
-			throw e;
-		} finally {
-			session.close();
-		}	
-	}
+//	private void updateObject(Session session, Object object) {
+//		try {
+//			session.update(object);
+//		} catch (HibernateException e) {
+//			throw e;
+//		} finally {
+//			session.close();
+//		}	
+//	}
 	
 	private <T> T getObject(Class<T> clazz, String id) {
 		Validate.notNull(id);

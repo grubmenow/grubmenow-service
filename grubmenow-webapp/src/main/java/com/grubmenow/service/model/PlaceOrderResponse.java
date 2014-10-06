@@ -1,0 +1,14 @@
+package com.grubmenow.service.model;
+
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class PlaceOrderResponse {
+
+	private CustomerOrder customerOrder;
+	
+	private List<CustomerOrderItem> customerOrderItems;
+	
+}
