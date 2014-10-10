@@ -3,7 +3,6 @@ package com.grubmenow.service.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,6 @@ import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.GetFoodItemDetailPageRequest;
 import com.grubmenow.service.model.GetFoodItemDetailPageResponse;
 import com.grubmenow.service.model.ProviderFoodItemOffer;
-import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
@@ -41,14 +39,8 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 	}
 
 	private void validateInput(GetFoodItemDetailPageRequest request) {
-		if (request.getAvailableDay() == null) {
-			throw new ValidationException("AvailableDay should be present");
-		}
-		
-		if (StringUtils.isBlank(request.getFoodItemId()))
-		{
-			throw new ValidationException("Food item id should be present");
-		}
+		Validator.notNull(request.getAvailableDay(), "AvailableDay should be present");
+		Validator.notBlank(request.getFoodItemId(), "Food item id should be present");
 	}
 
 	private FoodItem populateFoodItem(String foodItemId) {

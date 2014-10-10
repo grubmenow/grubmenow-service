@@ -3,7 +3,6 @@ package com.grubmenow.service.api;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,22 +66,12 @@ public class GetProviderMenuService extends AbstractRemoteService {
 	}
 
 	private void validateProvider(String providerId, ProviderDAO providerDAO) {
-		
-		if (providerDAO == null) {
-			throw new ValidationException("Provider not found for the id" + providerId);
-		}
-		if (providerDAO.getProviderState() == ProviderState.INACTIVE) {
-			throw new ValidationException("Provider state is not Active");
-		}
+		Validator.notNull(providerDAO, "Provider not found for the id" + providerId);
+		Validator.isTrue(providerDAO.getProviderState() == ProviderState.ACTIVE, "Provider state is not Active");
 	}
 
 	private void validateInput(GetProviderMenuRequest getProviderMenuRequest) {
-		if (StringUtils.isEmpty(getProviderMenuRequest.getProviderId())) {
-			throw new ValidationException("Provider id cannot be null or empty");
-		}
-
-		if (getProviderMenuRequest.getAvailableDay() == null) {
-			throw new ValidationException("Available day cannot be null, the possible values are: " + AvailableDay.values());
-		}
+		Validator.notBlank(getProviderMenuRequest.getProviderId(), "Provider id cannot be null or empty");
+		Validator.notNull(getProviderMenuRequest.getAvailableDay(), "Available day cannot be null, the possible values are: " + AvailableDay.values());
 	}
 }
