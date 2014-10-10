@@ -5,7 +5,7 @@ import java.util.Map;
 
 import lombok.extern.apachecommons.CommonsLog;
 
-import com.grubmenow.service.datamodel.CurrencyDAO;
+import com.grubmenow.service.model.Currency;
 import com.stripe.Stripe;
 import com.stripe.model.Charge;
 
@@ -29,7 +29,7 @@ public class StripePaymentProcessor {
 	 * @return credit
 	 * @throws PaymentProcessorException
 	 */
-	public Transaction charge(String stripeCreditCardToken, int amountInCents, CurrencyDAO currency, String chargeDesc, String orderId) throws PaymentProcessorException
+	public PaymentTransaction charge(String stripeCreditCardToken, int amountInCents, Currency currency, String chargeDesc, String orderId) throws PaymentProcessorException
 	{
 		Stripe.apiKey = stripSecretKey;
 		Stripe.setVerifySSL(true);
@@ -46,14 +46,14 @@ public class StripePaymentProcessor {
 		try {
 			Charge charge =  Charge.create(chargeParams);
 			log.debug("Charged the customer: charge object: " + charge);
-			Transaction transaction = new Transaction(charge.getId(), charge.getLivemode());
+			PaymentTransaction transaction = new PaymentTransaction(charge.getId(), charge.getLivemode());
 			return transaction;
 		} catch (Exception ex) {
 			throw new PaymentProcessorException("Stripe payment failed.", ex);
 		}
 	}
 	
-	public void refund(Transaction transaction)
+	public void refund(PaymentTransaction transaction)
 	{
 		throw new UnsupportedOperationException();
 	}

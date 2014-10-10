@@ -16,8 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grubmenow.service.auth.FacebookAuthentication;
+import com.grubmenow.service.auth.FacebookCustomerInfo;
+import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
+import com.grubmenow.service.datamodel.CustomerState;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.ObjectPopulator;
@@ -33,12 +37,21 @@ import com.grubmenow.service.model.PaymentMethod;
 import com.grubmenow.service.model.PlaceOrderRequest;
 import com.grubmenow.service.model.PlaceOrderResponse;
 import com.grubmenow.service.model.exception.ValidationException;
+import com.grubmenow.service.pay.PaymentTransaction;
+import com.grubmenow.service.pay.StripePaymentProcessor;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
 @CommonsLog
 public class PlaceOrderService  extends AbstractRemoteService {
 
+	private FacebookAuthentication facebookAuthentication 
+		= new FacebookAuthentication("730291313693447", "c313676be38b8efe9baaf9b8833d3db5");
+	
+	private StripePaymentProcessor processor = new StripePaymentProcessor("sk_test_jXSLNqhMVvsziLZWgHg0vVJy");
+	
+
+	
 	private static BigDecimal TAX_PERCENTAGE = new BigDecimal("0.09");
 	
 	@RequestMapping(value = "/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
@@ -49,26 +62,54 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 		// generate ids and other constant for this order
 		String orderId = IDGenerator.generateOrderId();
-		String customerId = getCustomerId(request);
+		CustomerDAO customerDAO = saveAndFetchCustomerId(request);
 		
 		// order date
 		DateTime orderDateTime = DateTime.now();
 
 		// initialize order by adding order and order item id in it's initial state into database
 		// Also verifies if the order amount in request is as per back-end logic
-		initializeOrder(request, orderId, customerId, orderDateTime);
+		initializeOrder(request, orderId, customerDAO.getCustomerId(), orderDateTime);
 
 		// process order
-		processOrder(request, orderId);
+		processOrder(request, customerDAO, orderId);
 		
 		return generateResponse(orderId);
 	}
 	
-	private String getCustomerId(PlaceOrderRequest request) {
-		return "customerId";
+	private CustomerDAO saveAndFetchCustomerId(PlaceOrderRequest request) {
+		FacebookCustomerInfo customerInfo = null;
+		try {
+			customerInfo = facebookAuthentication.validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
+		} catch (Exception e) {
+			throw new ValidationException("Invalid authentication token");
+		}
+			
+		try{
+			// create a customer DAO
+			CustomerDAO customerDAO = new CustomerDAO();
+			customerDAO.setCustomerId(customerInfo.getFacebookUserId());
+			customerDAO.setCustomerFirstName(customerInfo.getFirstName());
+			customerDAO.setCustomerLastName(customerInfo.getLastName());
+			customerDAO.setCustomerEmailId(customerInfo.getEmailId());
+			customerDAO.setCustomerState(CustomerState.ACTIVE);
+
+			PersistenceFactory.getInstance().createCustomer(customerDAO);
+			
+			return customerDAO;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error(e);
+			// it is possible that customer is already in our database
+			CustomerDAO customerDAO = PersistenceFactory.getInstance().getCustomerById(customerInfo.getFacebookUserId());
+			Validator.notNull(customerDAO, "Error loading customer profile");
+			Validator.isTrue(customerDAO.getCustomerState() == CustomerState.ACTIVE, "Invalid Customer State");
+			
+			return customerDAO;
+		}
 	}
 	 
-	private void processOrder(PlaceOrderRequest request, String orderId) {
+	private void processOrder(PlaceOrderRequest request, CustomerDAO customerDAO, String orderId) {
 		try {
 			reserveOrder(request);
 		} catch (Exception e) {
@@ -80,7 +121,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		// Charge customer credit card
 		// if successful credit card charge, then go ahead with order success, else, unreserve the availability
 		try {
-			processPayment(request, orderId);
+			processPayment(request, customerDAO, orderId);
 		} catch (Exception e) {
 			log.error("Unable to process payment", e);
 			releaseReservedOrder(request);
@@ -93,14 +134,27 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		
 	}
 	
-	private void processPayment(PlaceOrderRequest request, String orderId) {
+	private void processPayment(PlaceOrderRequest request, CustomerDAO customerDAO, String orderId) {
 		if(request.getPaymentMethod() == PaymentMethod.CARD_ON_DELIVERY || request.getPaymentMethod() == PaymentMethod.CASH_ON_DELIVERY) {
 			return;
 		}
+
+		Amount orderAmount = request.getOrderAmount();
+		int amountInCents = orderAmount.getValue().movePointRight(2).intValueExact();
 		
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
-		customerOrderDAO.setOrderPaymentState(OrderPaymentState.AUTHORIZATION_SUCCESS);
-		PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
+		try {
+			PaymentTransaction paymentTransaction = processor.charge(request.getOnlinePaymentToken(), amountInCents, orderAmount.getCurrency(), orderId, orderId);
+			Validator.notNull(paymentTransaction, "Unable to authorize payment instrument");
+
+			CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
+			customerOrderDAO.setOrderChargeTransactionId(paymentTransaction.getTransactionId());
+			customerOrderDAO.setOrderPaymentState(OrderPaymentState.AUTHORIZATION_SUCCESS);
+			PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Unable to authorize payment instrument", e);
+			throw new ValidationException("Unable to authorize payment instrument");
+		}
 	}
 	
 	private PlaceOrderResponse generateResponse(String orderId) {
@@ -184,6 +238,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	private void processCreditCardChargeFailure(PlaceOrderRequest request, String orderId, String message) {
 		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
 		customerOrderDAO.setOrderStateMessage(message);
+		customerOrderDAO.setOrderPaymentState(OrderPaymentState.AUTHORIZATION_FAILURE);
 		customerOrderDAO.setOrderState(OrderState.FAILED);
 		PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
 	}
@@ -250,6 +305,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			
 			orderDAOs.add(orderDAO);
 		}
+		
 		
 		
 		// add tax

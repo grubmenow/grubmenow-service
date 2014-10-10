@@ -2,10 +2,13 @@ package com.grubmenow.service.datamodel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.ToString;
 
@@ -17,6 +20,7 @@ import lombok.ToString;
 @Table(name = "CUSTOMER")
 @ToString
 @Data
+@NoArgsConstructor
 public class CustomerDAO {
 
 	@Id
@@ -25,10 +29,19 @@ public class CustomerDAO {
 	private String customerId;
 	
 	@NonNull
-    @Column(name = "CUSTOMER_NAME")
-	private String customerName;
+    @Column(name = "CUSTOMER_FIRST_NAME")
+	private String customerFirstName;
+
+	@NonNull
+    @Column(name = "CUSTOMER_LAST_NAME")
+	private String customerLastName;
 	
+	@NonNull
+    @Column(name = "CUSTOMER_EMAIL_ID")
+	private String customerEmailId;
+
     @NonNull
     @Column(name = "CUSTOMER_STATE")
-	private String customerState;
+    @Enumerated(EnumType.STRING)
+	private CustomerState customerState;
 }

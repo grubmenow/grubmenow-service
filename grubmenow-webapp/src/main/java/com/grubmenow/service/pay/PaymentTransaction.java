@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Transaction {
+public class PaymentTransaction {
 	private String transactionId;
 	private boolean live;
 }

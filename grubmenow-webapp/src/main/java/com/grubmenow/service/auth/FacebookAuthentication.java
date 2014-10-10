@@ -12,6 +12,7 @@ import org.springframework.social.oauth2.AccessGrant;
 @CommonsLog
 public class FacebookAuthentication {
 	private final FacebookConnectionFactory fbConnectionFactory;
+	
 	public FacebookAuthentication(String appId, String appSecretKey) {
 		fbConnectionFactory =
 			    new FacebookConnectionFactory(appId, appSecretKey);

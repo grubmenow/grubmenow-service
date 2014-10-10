@@ -58,6 +58,14 @@ public class CustomerOrderDAO {
 	private OrderPaymentState orderPaymentState;
     
     @NonNull
+    @Column(name = "ORDER_CHARGE_TRANSACTION_ID")
+	private String orderChargeTransactionId;
+    
+    @NonNull
+    @Column(name = "ORDER_REFUND_TRANSACTION_ID")
+	private String orderRefundTransactionId;
+    
+    @NonNull
     @Column(name = "ORDER_STATE")
     @Enumerated(EnumType.STRING)
 	private OrderState orderState;
