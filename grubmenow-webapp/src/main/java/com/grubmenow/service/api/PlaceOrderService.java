@@ -1,5 +1,7 @@
 package com.grubmenow.service.api;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +21,12 @@ import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.ObjectPopulator;
+import com.grubmenow.service.datamodel.OfferState;
 import com.grubmenow.service.datamodel.OrderPaymentState;
 import com.grubmenow.service.datamodel.OrderState;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
+import com.grubmenow.service.model.Amount;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
@@ -33,8 +37,10 @@ import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
 @CommonsLog
-public class PlaceOrderService {
+public class PlaceOrderService  extends AbstractRemoteService {
 
+	private static BigDecimal TAX_PERCENTAGE = new BigDecimal("0.09");
+	
 	@RequestMapping(value = "/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public PlaceOrderResponse doPost(@RequestBody PlaceOrderRequest request) throws ValidationException {
@@ -49,6 +55,7 @@ public class PlaceOrderService {
 		DateTime orderDateTime = DateTime.now();
 
 		// initialize order by adding order and order item id in it's initial state into database
+		// Also verifies if the order amount in request is as per back-end logic
 		initializeOrder(request, orderId, customerId, orderDateTime);
 
 		// process order
@@ -215,11 +222,16 @@ public class PlaceOrderService {
 	
 	private void createOrderItemId(PlaceOrderRequest request, String orderId, DateTime orderDateTime, String customerId) {
 		List<CustomerOrderItemDAO> orderDAOs = new ArrayList<>(); 
+
+		Amount orderAmount = request.getOrderAmount();
+		
+		BigDecimal reCalculatedOrderAmount = BigDecimal.ZERO;
 		
 		for (OrderItem orderItem : request.getOrderItems()) {
 			String orderItemId = IDGenerator.generateOrderId();
 			
 			FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById(orderItem.getFoodItemOfferId());
+			Validator.isTrue(foodItemOfferDAO.getOfferState() == OfferState.ACTIVE, "Offer state is not Active");
 			
 			CustomerOrderItemDAO orderDAO = new CustomerOrderItemDAO();
 			orderDAO.setCustomerId(customerId);
@@ -232,12 +244,19 @@ public class PlaceOrderService {
 			orderDAO.setFoodItemOfferId(orderItem.getFoodItemOfferId());
 			orderDAO.setQuantity(orderItem.getQuantity());
 			
-			if(foodItemOfferDAO.getAvailableQuantity() < orderItem.getQuantity()) {
-				throw new ValidationException("Not enough quantity available for this Offer");
-			}
+			Validator.isTrue(foodItemOfferDAO.getAvailableQuantity() >= orderItem.getQuantity(), "Not enough quantity available for this Offer");
+			
+			reCalculatedOrderAmount = reCalculatedOrderAmount.add(foodItemOfferDAO.getOfferUnitPrice().multiply(new BigDecimal(orderItem.getQuantity())));
 			
 			orderDAOs.add(orderDAO);
 		}
+		
+		
+		// add tax
+		reCalculatedOrderAmount = reCalculatedOrderAmount.add(reCalculatedOrderAmount.multiply(TAX_PERCENTAGE));
+		reCalculatedOrderAmount = reCalculatedOrderAmount.setScale(2, RoundingMode.CEILING);
+		
+		Validator.isTrue(reCalculatedOrderAmount.compareTo(orderAmount.getValue()) == 0, String.format("Calculated amount is %s, where as request amount is %s", reCalculatedOrderAmount, orderAmount));
 		
 		for(CustomerOrderItemDAO customerOrderItemDAO: orderDAOs) {
 			PersistenceFactory.getInstance().createCustomerOrderItem(customerOrderItemDAO);
@@ -245,16 +264,25 @@ public class PlaceOrderService {
 	}
 
 
-	private void validateProvider(String providerId, ProviderDAO providerDAO) {
-		
-		if (providerDAO == null) {
-			throw new ValidationException("Provider not found for the id" + providerId);
-		}
-		if (providerDAO.getProviderState() == ProviderState.INACTIVE) {
-			throw new ValidationException("Provider state is not Active");
-		}
+	private void validateProvider(ProviderDAO providerDAO) {
+		Validator.isTrue(providerDAO.getProviderState() == ProviderState.ACTIVE, "Provider state is not Active");
 	}
 
 	private void validateInput(PlaceOrderRequest request) {
+		Validator.notBlank(request.getProviderId(), "Invalid Provider Id");
+		Validator.notPositiveAmount(request.getOrderAmount(), "Invalid Order Amount");
+		Validator.notNull(request.getPaymentMethod(), "Invalid Payment Method");
+		Validator.notNull(request.getDeliveryMethod(), "Invalid Delivery Method");
+		Validator.notNull(request.getWebsiteAuthenticationToken(), "Invalid Website Authentication Token");
+		Validator.notNull(request.getOrderAmount(), "Invalid Order Amount");
+		Validator.notNull(request.getOrderAmount().getValue(), "Invalid Order Amount.Value");
+		Validator.notNull(request.getOrderAmount().getCurrency(), "Invalid Order Amount.Currency");
+		
+		if(request.getPaymentMethod() == PaymentMethod.ONLINE_PAYMENT) {
+			Validator.notNull(request.getOnlinePaymentToken(), "Invalid Website Authentication Token");	
+		}
+		
+		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(request.getProviderId());
+		validateProvider(providerDAO);
 	}
 }

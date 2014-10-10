@@ -34,13 +34,16 @@
 				obj.deliveryMethod = 'CUSTOMER_PICKUP';
 				obj.paymentMethod = 'ONLINE_PAYMENT';
 
+				var amount = new Object();
+				amount.value = '15.24';
+				amount.currency = 'USD';
+				obj.orderAmount = amount;
+				
 				var orderItem = new Object();
 				orderItem.foodItemOfferId = 'mowqweoedi';
-				orderItem.quantity = 1;
-				
+				orderItem.quantity = 2;
 				obj.orderItems = [orderItem];
 			}
-
 
 			$('#apiInput').val(JSON.stringify(obj, undefined, 2));
 			$('#apiOutput').val('');

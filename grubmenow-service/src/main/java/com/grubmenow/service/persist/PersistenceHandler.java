@@ -19,6 +19,12 @@ public interface PersistenceHandler {
 	/**
 	 * Get All Food Items
 	 */
+	public List<String> getNeighbouringZipCodes(String zipCode, int numberOfMilesAround);
+
+	
+	/**
+	 * Get All Food Items
+	 */
 	public List<FoodItemDAO> getAllFoodItem();
 
 	

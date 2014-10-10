@@ -76,6 +76,10 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		return new SessionHandler(sessionFactory.openSession());
 	}
 
+	@Override
+	public List<String> getNeighbouringZipCodes(String zipCode, int numberOfMilesAround) {
+		return new ArrayList<>();
+	}
 	
 	@Override
 	public List<FoodItemDAO> getAllFoodItem() {
