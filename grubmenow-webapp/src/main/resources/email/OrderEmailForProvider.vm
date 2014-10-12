@@ -1,0 +1,56 @@
+<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+table tr:nth-child(odd) {
+   background-color:#fff;
+}
+
+</style>
+</head>
+Hello ${request.provider.providerName}, 
+<br/>
+You have a new grubmenow order that has to be ready by <b>${request.orderPickupStartTime} on $Formatter.formatDate(${request.orderFulfillmentDate})</b>.
+<p/>
+Order summary: 
+<p>
+<b>Customer Name</b>: ${request.consumer.consumerName}<br/>
+<b> Order id </b>: ${request.orderId}<br/>
+</p>
+<table>
+<tr>
+	<th>Name</td>
+	<th>Description</td>
+	<th>Item Quantity</td>
+	<th>Item price</td>
+</tr>
+#foreach( $orderItem in ${request.orderItems} )
+<tr>
+	<td> ${orderItem.foodItemName}  </td>
+	<td> ${orderItem.foodItemDescription} </td>
+	<td> ${orderItem.foodItemQuantity} </td>
+	<td> $Formatter.formatAmount(${orderItem.foodItemTotalPrice}) </td>
+</tr>
+#end
+</table>
+<p>
+Pick up address mentioned by you is:
+<br/>
+$Formatter.formatAddressFirstLine(${request.provider})<br/>
+$Formatter.formatAddressLastLine(${request.provider})
+</p>
+If you are unable to fulfil this order or need to update order, please call Grubmenow Customer Service at +1 206 883 6876 by 4PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
+Thank you,<br/> 
+Grubmenow team. <br/>
+For Customer Service call +1 206-883-6876 11AM-9PM PT daily
+</html>
