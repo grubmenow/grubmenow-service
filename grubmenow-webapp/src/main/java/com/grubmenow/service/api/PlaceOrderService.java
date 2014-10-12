@@ -52,7 +52,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	
 
 	
-	private static BigDecimal TAX_PERCENTAGE = new BigDecimal("0.09");
+	private static BigDecimal TAX_PERCENTAGE = new BigDecimal("0.095");
 	
 	@RequestMapping(value = "/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
@@ -61,6 +61,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		validateInput(request);
 
 		// generate ids and other constant for this order
+		// TODO: kapila(Oct 11 2014): Make the order id a number for easier pronunciation over phone
 		String orderId = IDGenerator.generateOrderId();
 		CustomerDAO customerDAO = saveAndFetchCustomerId(request);
 		
@@ -82,7 +83,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		try {
 			customerInfo = facebookAuthentication.validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
 		} catch (Exception e) {
-			throw new ValidationException("Invalid authentication token");
+			throw new ValidationException("Invalid fb authentication token");
 		}
 			
 		try{
@@ -98,10 +99,10 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			
 			return customerDAO;
 		} catch (Exception e) {
-			e.printStackTrace();
-			log.error(e);
+			log.info("Customer could not be created. Valid for a revisting customer. fb user id: " + customerInfo.getFacebookUserId());
 			// it is possible that customer is already in our database
 			CustomerDAO customerDAO = PersistenceFactory.getInstance().getCustomerById(customerInfo.getFacebookUserId());
+			// TODO: kapila (11th oct 2014): this will throw an ISE? 
 			Validator.notNull(customerDAO, "Error loading customer profile");
 			Validator.isTrue(customerDAO.getCustomerState() == CustomerState.ACTIVE, "Invalid Customer State");
 			
@@ -254,6 +255,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 
 	private void initializeOrder(PlaceOrderRequest request, String orderId, String customerId, DateTime orderDateTime) {
+		// TODO: kapila(11th Oct 2014) All these calls are not happening in db transaction. is that alright?
 		createOrderItemId(request, orderId, orderDateTime, customerId);
 		createOrder(request, orderId, orderDateTime, customerId);
 	}

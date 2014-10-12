@@ -1,0 +1,52 @@
+<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+table tr:nth-child(odd) {
+   background-color:#fff;
+}
+
+</style>
+</head>
+Hello <b>${request.consumer.customerFirstName}</b>, 
+<br/>
+Thank you for grubmenow order. Your order id is <b>${request.orderId}</b>.
+<p/>
+Your order summary: 
+<table>
+<tr>
+	<th>Name</td>
+	<th>Description</td>
+	<th>Item Quantity</td>
+	<th>Item price</td>
+</tr>
+#foreach( $orderItem in ${request.orderItems} )
+<tr>
+	<td> ${orderItem.foodItemName}  </td>
+	<td> ${orderItem.foodItemDescription} </td>
+	<td> ${orderItem.foodItemQuantity} </td>
+	<td> $Formatter.formatAmount(${orderItem.foodItemTotalPrice}) </td>
+</tr>
+#end
+</table>
+<!-- Click <a href="http://grubmenow.com/orderDetails/${request.orderId}">here</a> to see details. -->
+<br/>
+Please pick up from ${request.orderPickupStartTime} to ${request.orderPickupEndTime} on $Formatter.formatDate(${request.orderFulfillmentDate}) from:
+<br/>
+${request.provider.providerName}<br/>
+$Formatter.formatAddressFirstLine(${request.provider})<br/>
+$Formatter.formatAddressLastLine(${request.provider})
+<p/>
+Thank you,<br/> 
+Grubmenow team. 
+</html>
