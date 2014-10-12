@@ -54,7 +54,7 @@ public class SearchFoodItemService extends AbstractRemoteService {
 	private List<FoodItemDAO> getAllFoodItemsInZipCodes(List<String> neighboringZipCodes, AvailableDay availableDay) {
 
 		DateTime forDate = DateTime.now();
-		if (availableDay == AvailableDay.TOMORROW) {
+		if (availableDay == AvailableDay.Tomorrow) {
 			forDate = forDate.plusDays(1);
 		}
 

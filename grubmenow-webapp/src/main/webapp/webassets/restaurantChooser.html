@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">  
-<title>GrubMeNow Restaurant Selector</title>
+<title>GrubMeNow Chef Selector</title>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -70,7 +70,7 @@
     <div class="clearfix"></div>
     <div>
 	<div class="col-xs-6 text-left navLineBtn">
-	    Your options for 'Masala Dosa' for Today: 
+	    Your options for '{{foodItem.foodItemName}}' for {{availableDay}}: 
 	</div>
 	<div class="col-xs-6 text-right navLineBtn">
 	    <a href="searchForm.html">Back to food results <span class="glyphicon glyphicon-cutlery"></span></a>
@@ -94,7 +94,7 @@
 			    <p class="optionsText">{{rest.deliverOption}}</p>
 			</div>
                         <div class="col-xs-8">
-                            <span class="tableTitle">Name</span>    
+                            <span class="tableTitle">Name</span>
                         </div>
                         <div class="col-xs-2">
                             <span class="tableTitle">Price</span>    

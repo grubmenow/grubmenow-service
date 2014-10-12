@@ -35,7 +35,7 @@ public class GetProviderMenuService extends AbstractRemoteService {
 		validateProvider(request.getProviderId(), providerDAO);
 		
 		DateTime forDate = DateTime.now();
-		if (request.getAvailableDay() == AvailableDay.TOMORROW) {
+		if (request.getAvailableDay() == AvailableDay.Tomorrow) {
 			forDate = forDate.plusDays(1);
 		}
 		

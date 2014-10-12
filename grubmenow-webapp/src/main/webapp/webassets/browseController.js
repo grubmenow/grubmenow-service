@@ -1,7 +1,7 @@
 var gmnBrowse = angular.module('gmnBrowse', []);
 
 gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
-    $scope.location = {radius:5, availableDay:'TODAY'};
+    $scope.location = {radius:5, availableDay:'Today'};
     $scope.searching = 0;
 
     $scope.update = function(location) {
@@ -94,7 +94,7 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
             $scope.showRestMenu[restId] = 1;
         }
         // fake data for now
-        var requestData = {"providerId": "ProviderId2", "availableDay": "TODAY"};
+        var requestData = {"providerId": "ProviderId2", "availableDay": "Today"};
         var restListUrl = "getProviderMenu";
         $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
             $scope.restMenu[restId] = data;
@@ -103,12 +103,12 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
     }
     
     $scope.getQSP();
-    // fake data for now
-    var requestData = {"foodItemId": "225636", "availableDay": "TODAY"};
+    var requestData = {"foodItemId": $scope.id, "availableDay": $scope.availableDay};
     var restListUrl = "getDetailPageResults";
     $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
         $scope.restList = data;
-        $scope.restList.foodItem.foodItemQty = 1;
+        $scope.foodItem = data.foodItem;
+        //$scope.restList.foodItem.foodItemQty = 1;
     });
     $scope.restMenu = {};
     $scope.showRestMenu = {};

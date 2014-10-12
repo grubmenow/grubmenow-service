@@ -52,7 +52,7 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String foodItemId, AvailableDay availableDay) {
 
 		DateTime forDate = DateTime.now();
-		if (availableDay == AvailableDay.TOMORROW) {
+		if (availableDay == AvailableDay.Tomorrow) {
 			forDate = forDate.plusDays(1);
 		}
 

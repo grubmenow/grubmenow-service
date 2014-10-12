@@ -66,11 +66,11 @@ public class ObjectPopulator {
 		AvailableDay availableDay = null;
 		
 		if(foodItemOfferDAO.getOfferDay().getDayOfYear() == today.getDayOfYear() && foodItemOfferDAO.getOfferDay().getDayOfYear() == today.getDayOfYear()) {
-			availableDay = AvailableDay.TODAY;
+			availableDay = AvailableDay.Today;
 		} else if(foodItemOfferDAO.getOfferDay().getDayOfYear() == tomorrow.getDayOfYear() && foodItemOfferDAO.getOfferDay().getDayOfYear() == tomorrow.getDayOfYear()) {
-			availableDay = AvailableDay.TOMORROW;
+			availableDay = AvailableDay.Tomorrow;
 		} else {
-			availableDay = AvailableDay.LATER;
+			availableDay = AvailableDay.Later;
 		}
 		
 		foodItemOffer.setAvailableDay(availableDay);

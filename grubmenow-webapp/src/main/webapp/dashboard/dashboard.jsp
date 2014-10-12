@@ -13,18 +13,18 @@
 			
 			if(selectedAPI == 'searchFoodItems') {
 				obj.zipCode = '98007';
-				obj.availableDay = 'TODAY';
+				obj.availableDay = 'Today';
 				obj.radius = 10;
 			}
 			
 			if(selectedAPI == 'getDetailPageResults') {
 				obj.foodItemId = '225636';
-				obj.availableDay = 'TODAY';
+				obj.availableDay = 'Today';
 			}
 			
 			if(selectedAPI == 'getProviderMenu') {
 				obj.providerId = 'ProviderId1';
-				obj.availableDay = 'TODAY';
+				obj.availableDay = 'Today';
 			}
 			
 			if(selectedAPI == 'placeOrder') {

@@ -67,10 +67,10 @@
 	    <div class="form-group spacerDiv">
 		<div class="checkbox col-sm-2 hidden-xs"></div>
 		<div class="checkbox col-xs-6 col-sm-4">
-		    <label class="control-label "><input type="radio" name="dayRadio" id="dayRadio1" value="TODAY" checked ng-model="location.availableDay"> Today</label>
+		    <label class="control-label "><input type="radio" name="dayRadio" id="dayRadio1" value="Today" checked ng-model="location.availableDay"> Today</label>
 		</div>
 		<div class="checkbox col-xs-6  col-sm-4">
-		    <label class="control-label "><input type="radio" name="dayRadio" id="dayRadio2" value="TOMORROW" ng-model="location.availableDay"> Tomorrow</label>
+		    <label class="control-label "><input type="radio" name="dayRadio" id="dayRadio2" value="Tomorrow" ng-model="location.availableDay"> Tomorrow</label>
 		</div>
 	    </div>
 	    <button ng-click="update(location)" class="btn btn-primary">Go</button>
@@ -85,7 +85,7 @@
         <div class="row">
             <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food">
                 <div class="thumbnail">
-                    <a href="restaurantChooser.html?id={{foodItem.foodItemId}}"><img src="{{foodItem.foodItemImageUrl}}" alt="Masala Dosa">
+                    <a href="restaurantChooser.html?id={{foodItem.foodItemId}}&availableDay={{master.availableDay}}"><img src="{{foodItem.foodItemImageUrl}}" alt="{{foodItem.foodItemName}}">
                     <div class="caption">
                         <h4>{{foodItem.foodItemName}}</h4>
                         <p>{{foodItem.foodItemDescription}}</p>
