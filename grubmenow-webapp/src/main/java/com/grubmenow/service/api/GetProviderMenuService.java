@@ -25,7 +25,7 @@ import com.grubmenow.service.persist.PersistenceFactory;
 @RestController
 public class GetProviderMenuService extends AbstractRemoteService {
 
-	@RequestMapping(value = "/getProviderMenu", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/api/getProviderMenu", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	protected GetProviderMenuResponse doPost(@RequestBody GetProviderMenuRequest request) throws ValidationException {
 		

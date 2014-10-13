@@ -9,7 +9,7 @@
 			var obj = new Object();
 			var selectedAPI = $("#apiSelection option:selected").val();
 			
-			$('#apiEndpoint').text('/' + selectedAPI);				
+			$('#apiEndpoint').text('/api/' + selectedAPI);				
 			
 			if(selectedAPI == 'searchFoodItems') {
 				obj.zipCode = '98007';
@@ -55,7 +55,7 @@
    		  
    		  $('#apiOutput').val('Processing..');
    		  var inputData = $('#apiInput').val();
-		  var selectedAPI = $("#apiSelection option:selected").val();	
+		  var selectedAPI = 'api/' + $("#apiSelection option:selected").val();	
    		  var apiURL = '../' + selectedAPI;
 		  
 		  $.ajax({

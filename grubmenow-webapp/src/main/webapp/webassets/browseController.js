@@ -10,7 +10,7 @@ gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
         //var result = decodeURIComponent($.param($scope.master));
         //var ordersUrl = "orders.json?"+result;
         //$http.get(ordersUrl).success(function(data) {
-        $http.post("searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
+        $http.post("api/searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
             $scope.master.food = data;
             $scope.searching = 0;
         });
@@ -93,9 +93,8 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         if ($scope.restMenu[restId]) {
             $scope.showRestMenu[restId] = 1;
         }
-        // fake data for now
-        var requestData = {"providerId": "ProviderId2", "availableDay": "Today"};
-        var restListUrl = "getProviderMenu";
+        var requestData = {"providerId": restId, "availableDay": $scope.availableDay};
+        var restListUrl = "api/getProviderMenu";
         $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
             $scope.restMenu[restId] = data;
             $scope.showRestMenu[restId] = 1;
@@ -104,7 +103,7 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
     
     $scope.getQSP();
     var requestData = {"foodItemId": $scope.id, "availableDay": $scope.availableDay};
-    var restListUrl = "getDetailPageResults";
+    var restListUrl = "api/getDetailPageResults";
     $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
         $scope.restList = data;
         $scope.foodItem = data.foodItem;

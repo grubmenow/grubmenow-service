@@ -24,7 +24,7 @@ import com.grubmenow.service.persist.PersistenceFactory;
 @RestController
 public class GetFoodItemDetailPageService extends AbstractRemoteService {
 
-	@RequestMapping(value = "/getDetailPageResults", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/api/getDetailPageResults", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public GetFoodItemDetailPageResponse executeService(@RequestBody GetFoodItemDetailPageRequest request) {
 
