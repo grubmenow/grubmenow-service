@@ -7,9 +7,9 @@ import com.grubmenow.service.pay.StripePaymentProcessor;
 
 public class StripeTest {
 	public static void main(String[] args) throws PaymentProcessorException {
-		new StripeTest().testCharge();
+		new StripeTest().charge();
 	}
-	public void testCharge() throws PaymentProcessorException
+	private void charge() throws PaymentProcessorException
 	{
 		// grubmenow test secret key is  sk_test_jXSLNqhMVvsziLZWgHg0vVJy 
 		StripePaymentProcessor processor = new StripePaymentProcessor("sk_test_jXSLNqhMVvsziLZWgHg0vVJy");
