@@ -3,6 +3,10 @@ var gmnBrowse = angular.module('gmnBrowse', []);
 gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
     $scope.location = {radius:5, availableDay:'Today'};
     $scope.searching = 0;
+    $scope.showThankYouMessage = 0;
+    $scope.feedback = {generalFeedback: '', newItems: ''};
+    $scope.showFeedbackForm = 0;
+	$scope.showFoodItemSuggestionForm = 0;
 
     $scope.update = function(location) {
         $scope.master = angular.copy(location);
@@ -13,7 +17,38 @@ gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
         $http.post("api/searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
             $scope.master.food = data;
             $scope.searching = 0;
+            $scope.searchedOnce = 1;
         });
+    };
+    
+    $scope.openFeedbackForm = function() {
+    	$scope.showFeedbackForm = 1;
+    	$scope.showFoodItemSuggestionForm = 0;
+    };
+    
+    $scope.openSearchSuggestionForm = function() {
+    	$scope.showFoodItemSuggestionForm = 1;
+    	$scope.showFeedbackForm = 0;
+    };
+    
+    $scope.submitFeedbackForm = function()
+    {
+    	request = {feedbackMessage: $scope.feedback.generalFeedback};
+    	$http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data) {
+    		$scope.showFoodItemSuggestionForm = 0;
+        	$scope.showFeedbackForm = 0;
+    		$scope.showThankYouMessage = 1;
+    	})
+    };
+    
+    $scope.submitFoodItemSuggestionForm = function()
+    {
+    	request = {foodItemSuggestions: $scope.feedback.newItems};
+    	$http.post("api/submitFoodItemSuggestions", JSON.stringify(request)).success(function(data) {
+    		$scope.showFoodItemSuggestionForm = 0;
+        	$scope.showFeedbackForm = 0;
+    		$scope.showThankYouMessage = 1;
+    	})
     };
 });
 
