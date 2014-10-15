@@ -1,4 +1,5 @@
 var gmnBrowse = angular.module('gmnBrowse', []);
+var fbLoginName = null;
 
 gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
     $scope.location = {radius:5, availableDay:'Today'};
@@ -6,8 +7,8 @@ gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
     $scope.showThankYouMessage = 0;
     $scope.feedback = {generalFeedback: '', newItems: ''};
     $scope.showFeedbackForm = 0;
-	$scope.showFoodItemSuggestionForm = 0;
-
+    $scope.showFoodItemSuggestionForm = 0;
+        
     $scope.update = function(location) {
         $scope.master = angular.copy(location);
         $scope.searching = 1;
@@ -99,29 +100,29 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         var i = 0;
         if($scope.restList.foodItem.foodItemQty > 0) {
             order.items[i++] = {
-                "qty": $scope.restList.foodItem.foodItemQty,
-                "name": $scope.restList.foodItem.foodItemName,
-                "totalPrice": $scope.restList.foodItem.foodItemQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value
+                "orderQty": $scope.restList.foodItem.foodItemQty,
+                "orderName": $scope.restList.foodItem.foodItemName,
+                "orderPrice": $scope.restList.foodItem.foodItemQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value
             };
         }
         
         var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
-        if (!$scope.restMenu[restId]) {
-            $scope.finalOrder = order;
-            return;
-        }
         
-        for(var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
-            var product = $scope.restMenu[restId].providerFoodItemOffers[j];
-            if (!isNaN(parseInt(product.foodItem.foodItemQty))) {
-                order.items[i++] = {
-                    "qty": product.foodItem.foodItemQty,
-                    "name": product.foodItem.foodItemName,
-                    "totalItemPrice": product.foodItem.foodItemQty * product.foodItemOffer.price.value
-                };    
+        if ($scope.restMenu[restId]) {
+            for(var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
+                var product = $scope.restMenu[restId].providerFoodItemOffers[j];
+                if (!isNaN(parseInt(product.foodItem.foodItemQty))) {
+                    order.items[i++] = {
+                        "orderQty": product.foodItem.foodItemQty,
+                        "orderName": product.foodItem.foodItemName,
+                        "orderPrice": product.foodItem.foodItemQty * product.foodItemOffer.price.value
+                    };    
+                }
             }
         }
+        
         $scope.finalOrder = order;
+        $scope.checkFBLoginState();
     }
     
     $scope.showMenu = function(restId) {
@@ -136,18 +137,45 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         });
     }
     
+    $scope.checkFBLoginState = function() {
+        if (fbLoginName) {
+            $scope.loginState.name = fbLoginName;
+            $scope.loginState.title = "Welcome, "+fbLoginName;
+        } else {
+            $scope.loginState.title = "Please login via Facebook to proceed";
+        }
+        
+        $('#orderModal').modal('show'); 
+    }
+    
     $scope.getQSP();
     var requestData = {"foodItemId": $scope.id, "availableDay": $scope.availableDay};
     var restListUrl = "api/getDetailPageResults";
     $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
         $scope.restList = data;
         $scope.foodItem = data.foodItem;
-        //$scope.restList.foodItem.foodItemQty = 1;
+        $scope.restList.foodItem.foodItemQty = 1;
     });
     $scope.restMenu = {};
     $scope.showRestMenu = {};
+    $scope.loginState = {};
 });
 
 jQuery(function($){
-    
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId      : '107439809640',
+            cookie     : true,  // enable cookies to allow the server to access the session
+            xfbml      : true,  // parse social plugins on this page
+            version    : 'v2.1' // use version 2.1
+        });
+      
+        FB.getLoginStatus(function(response) {
+            FB.api('/me', function(response) {
+                if (response.name) {
+                    fbLoginName = response.name;
+                }
+            });
+        });
+    };
 });
