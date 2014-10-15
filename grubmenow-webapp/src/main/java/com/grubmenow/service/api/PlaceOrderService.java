@@ -46,7 +46,7 @@ import com.grubmenow.service.persist.PersistenceFactory;
 public class PlaceOrderService  extends AbstractRemoteService {
 
 	private FacebookAuthentication facebookAuthentication 
-		= new FacebookAuthentication("730291313693447", "c313676be38b8efe9baaf9b8833d3db5");
+		= new FacebookAuthentication("107439809640", "156c4b8c6ef3355ab1aa8a36c8072a3d");
 	
 	private StripePaymentProcessor processor = new StripePaymentProcessor("sk_test_jXSLNqhMVvsziLZWgHg0vVJy");
 	
