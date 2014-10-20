@@ -13,7 +13,9 @@ gmnBrowse.controller('orderDetailsController', function ($scope, $http, $locatio
     }
 
     $scope.loadOrder = function() {
-        $scope.searching = 1;
+        $scope.showOrder = 0;
+        
+        $('.loadMessage').html("Please wait.. Loading Order");
         
         var requestObj = new Object();
         requestObj.websiteAuthenticationToken = '10152843609422975';
@@ -22,13 +24,14 @@ gmnBrowse.controller('orderDetailsController', function ($scope, $http, $locatio
 
         
         $http.post("api/getCustomerOrder", JSON.stringify($scope.getCustomerOrderRequest)).success(function(data) {
+        	$('.loadMessage').hide();
             $scope.getCustomerOrderResponse = data;
-            $scope.searching = 0;
+            $scope.showOrder = 1;
         });
     };
     
     $scope.loadOrderFeedback = function() {
-        $scope.searching = 1;
+        $scope.showReview = 0;
         
         var requestObj = new Object();
         requestObj.websiteAuthenticationToken = '10152843609422975';
@@ -37,8 +40,11 @@ gmnBrowse.controller('orderDetailsController', function ($scope, $http, $locatio
 
         
         $http.post("api/getCustomerOrderFeedback", JSON.stringify($scope.getCustomerOrderFeedbackRequest)).success(function(data) {
-            $scope.getCustomerOrderFeedbackResponse = data;
-            $scope.searching = 0;
+        	$scope.review = new Object() 
+            $scope.review.feedback = data.feedback;
+            $scope.review.rating = data.rating;
+            
+            $scope.showReview = 1;
         });
     };
 
@@ -47,16 +53,20 @@ gmnBrowse.controller('orderDetailsController', function ($scope, $http, $locatio
         var requestObj = new Object();
         requestObj.websiteAuthenticationToken = '10152843609422975';
         requestObj.orderId = $scope['orderId'];
+        requestObj.rating = review.rating;
+        requestObj.feedback = review.feedback;
         
         $scope.searching = 1;
         
-        alert('Submitting..');
+        $('.feedbackMessage').show();
+        $('.feedbackMessage').html("Please wait.. Submitting feedback");
         
-        $http.post("api/submitOrderFeedback", JSON.stringify($scope.review)).success(function(data) {
-        	alert('feedback submitted');
+        $http.post("api/submitOrderFeedback", JSON.stringify(requestObj)).success(function(data) {
+        	$('.feedbackMessage').html("Thanks, Feedback Submitted").fadeOut(2000);
         });
     };
     
     $scope.getQSP();
+    $scope.loadOrderFeedback();
     $scope.loadOrder();
 });
