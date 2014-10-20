@@ -1,5 +1,7 @@
 package com.grubmenow.service.datamodel;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -12,6 +14,8 @@ import lombok.ToString;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+
+import com.grubmenow.service.model.Currency;
 
 /**
  * Data Access Object Class to represent an Order placed by Customer 
@@ -52,6 +56,14 @@ public class CustomerOrderItemDAO {
 	@NonNull
 	@Column(name = "QUANTITY")
 	private Integer quantity;
+	
+	@NonNull
+	@Column(name = "ORDER_ITEM_AMOUNT")
+	private BigDecimal orderItemAmount;
+	
+	@NonNull
+	@Column(name = "ORDER_CURRENCY")
+	private Currency orderCurrency;
 	
 	@NonNull
     @Column(name = "ORDER_CREATION_DATE")

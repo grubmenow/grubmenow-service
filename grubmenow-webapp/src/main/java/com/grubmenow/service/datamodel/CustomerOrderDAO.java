@@ -1,5 +1,7 @@
 package com.grubmenow.service.datamodel;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -15,6 +17,7 @@ import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
+import com.grubmenow.service.model.Currency;
 import com.grubmenow.service.model.DeliveryMethod;
 import com.grubmenow.service.model.PaymentMethod;
 
@@ -46,6 +49,18 @@ public class CustomerOrderDAO {
     @Column(name = "PAYMENT_METHOD")
     @Enumerated(EnumType.STRING)
 	private PaymentMethod paymentMethod;
+	
+	@NonNull
+	@Column(name = "ORDER_AMOUNT")
+	private BigDecimal orderAmount;
+	
+	@NonNull
+	@Column(name = "ORDER_CURRENCY")
+	private Currency orderCurrency;
+	
+	@NonNull
+	@Column(name = "TAX_AMOUNT")
+	private BigDecimal taxAmount;
 	
 	@NonNull
     @Column(name = "DELIVERY_METHOD")

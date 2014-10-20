@@ -29,13 +29,13 @@
 			
 			if(selectedAPI == 'placeOrder') {
 				obj.providerId = 'ProviderId1';
-				obj.websiteAuthenticationToken = 'xxx';
-				obj.onlinePaymentToken = 'zzz';
+				obj.websiteAuthenticationToken = '10152843609422975';
+				obj.onlinePaymentToken = '10152843609422975';
 				obj.deliveryMethod = 'CUSTOMER_PICKUP';
 				obj.paymentMethod = 'ONLINE_PAYMENT';
 
 				var amount = new Object();
-				amount.value = '15.24';
+				amount.value = '15.31';
 				amount.currency = 'USD';
 				obj.orderAmount = amount;
 				
@@ -43,6 +43,23 @@
 				orderItem.foodItemOfferId = 'mowqweoedi';
 				orderItem.quantity = 2;
 				obj.orderItems = [orderItem];
+			}
+			
+			if(selectedAPI == 'submitOrderFeedback') {
+				obj.websiteAuthenticationToken = '10152843609422975';
+				obj.rating = 4;
+				obj.orderId = '4a05f5f5-10da-4546-b0c2-06d332064795';
+				obj.feedback = 'Nice .!';
+			}
+			
+			if(selectedAPI == 'getCustomerOrder') {
+				obj.websiteAuthenticationToken = '10152843609422975';
+				obj.orderId = '4a05f5f5-10da-4546-b0c2-06d332064795';
+			}
+			
+			if(selectedAPI == 'getCustomerOrderFeedback') {
+				obj.websiteAuthenticationToken = '10152843609422975';
+				obj.orderId = '4a05f5f5-10da-4546-b0c2-06d332064795';
 			}
 
 			$('#apiInput').val(JSON.stringify(obj, undefined, 2));
@@ -97,6 +114,10 @@
 		  <option value="getDetailPageResults">GetDetailPageResults</option>
 		  <option value="getProviderMenu">GetProviderMenu</option>
 		  <option value="placeOrder">PlaceOrder</option>
+		  <option value="submitOrderFeedback">SubmitOrderFeedback</option>
+		  <option value="getCustomerOrder">GetCustomerOrder</option>	
+		  <option value="getCustomerOrderFeedback">GetCustomerOrderFeedback</option>		  
+		  	  
 		</select>
 	</span>
   </div>

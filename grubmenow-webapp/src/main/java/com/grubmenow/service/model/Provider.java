@@ -1,5 +1,7 @@
 package com.grubmenow.service.model;
 
+import java.math.BigDecimal;
+
 import lombok.Data;
 
 @Data
@@ -15,7 +17,7 @@ public class Provider {
 	
 	private String providerImageURL;
 	
-	private String rating;
+	private BigDecimal rating;
 	
 	private boolean isOnlinePaymentAccepted;
 	

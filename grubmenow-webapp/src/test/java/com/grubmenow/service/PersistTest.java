@@ -6,14 +6,17 @@ import java.util.Arrays;
 import org.joda.time.DateTime;
 
 import com.grubmenow.service.api.PlaceOrderService;
+import com.grubmenow.service.api.SubmitOrderFeedbackService;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.OfferMealType;
 import com.grubmenow.service.datamodel.OfferState;
+import com.grubmenow.service.model.Currency;
 import com.grubmenow.service.model.DeliveryMethod;
 import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
 import com.grubmenow.service.model.PlaceOrderRequest;
+import com.grubmenow.service.model.SubmitOrderFeedbackRequest;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 
@@ -36,7 +39,24 @@ public class PersistTest {
 		
 //		populateTestFoodItemOffer();
 		
-		testPlaceOrder();
+//		testPlaceOrder();
+		
+//		testSubmitOrderFeedback();
+		
+//		populateTestFoodItemOffer();
+	}
+	
+	public static void testSubmitOrderFeedback() {
+		SubmitOrderFeedbackService service = new SubmitOrderFeedbackService();
+		SubmitOrderFeedbackRequest request = new SubmitOrderFeedbackRequest();
+		
+		request.setOrderId("4a05f5f5-10da-4546-b0c2-06d332064795");
+		request.setFeedback("Good food");
+		request.setRating(5);
+		request.setWebsiteAuthenticationToken("10152843609422975");
+		
+		service.executeService(request);
+
 	}
 	
 	public static void testPlaceOrder() {
@@ -54,8 +74,7 @@ public class PersistTest {
 		placeOrderRequest.setOrderItems(Arrays.asList(orderItem));
 		
 		PlaceOrderService placeOrderService = new PlaceOrderService();
-		placeOrderService.doPost(placeOrderRequest);
-		
+		placeOrderService.executeService(placeOrderRequest);
 	}
 	
 	public static void populateTestFoodItemOffer() {
@@ -72,7 +91,7 @@ public class PersistTest {
 			foodItemOfferDAO1.setProviderId("ProviderId1");
 			foodItemOfferDAO1.setOfferDescription("Mast Offer");
 			foodItemOfferDAO1.setOfferUnitPrice(new BigDecimal("6.99"));
-			foodItemOfferDAO1.setOfferCurrency("USD");
+			foodItemOfferDAO1.setOfferCurrency(Currency.USD);
 			foodItemOfferDAO1.setOfferQuantity(new Integer("10"));
 			foodItemOfferDAO1.setAvailableQuantity(new Integer("10"));
 			foodItemOfferDAO1.setOfferDay(forDate);
@@ -91,7 +110,7 @@ public class PersistTest {
 			foodItemOfferDAO2.setProviderId("ProviderId2");
 			foodItemOfferDAO2.setOfferDescription("Mast Offer2");
 			foodItemOfferDAO2.setOfferUnitPrice(new BigDecimal("5.99"));
-			foodItemOfferDAO2.setOfferCurrency("USD");
+			foodItemOfferDAO2.setOfferCurrency(Currency.USD);
 			foodItemOfferDAO2.setOfferQuantity(new Integer("10"));
 			foodItemOfferDAO2.setAvailableQuantity(new Integer("10"));
 			foodItemOfferDAO2.setOfferDay(forDate);
@@ -111,7 +130,7 @@ public class PersistTest {
 			foodItemOfferDAO3.setProviderId("ProviderId3");
 			foodItemOfferDAO3.setOfferDescription("Mast Offer3");
 			foodItemOfferDAO3.setOfferUnitPrice(new BigDecimal("6.99"));
-			foodItemOfferDAO3.setOfferCurrency("USD");
+			foodItemOfferDAO3.setOfferCurrency(Currency.USD);
 			foodItemOfferDAO3.setOfferQuantity(new Integer("10"));
 			foodItemOfferDAO3.setAvailableQuantity(new Integer("10"));
 			foodItemOfferDAO3.setOfferDay(forDate);
@@ -132,7 +151,7 @@ public class PersistTest {
 			foodItemOfferDAO4.setProviderId("ProviderId4");
 			foodItemOfferDAO4.setOfferDescription("Mast Offer 4");
 			foodItemOfferDAO4.setOfferUnitPrice(new BigDecimal("2.99"));
-			foodItemOfferDAO4.setOfferCurrency("USD");
+			foodItemOfferDAO4.setOfferCurrency(Currency.USD);
 			foodItemOfferDAO4.setOfferQuantity(new Integer("10"));
 			foodItemOfferDAO4.setAvailableQuantity(new Integer("10"));
 			foodItemOfferDAO4.setOfferDay(forDate);

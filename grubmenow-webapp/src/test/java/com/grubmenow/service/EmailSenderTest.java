@@ -1,6 +1,7 @@
 package com.grubmenow.service;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import org.joda.time.DateTime;
 
@@ -17,7 +18,7 @@ public class EmailSenderTest {
 		EmailSender emailSender = new EmailSender("AKIAJ32C6BIGSSD7YL5A", "3+BkyXtniT+waUOMqUgR43oIj+IRiVpS37NKx69D");
 		CustomerDAO consumer = new CustomerDAO();
 		consumer.setCustomerFirstName("Ravi");
-		consumer.setCustomerEmailId("kapila.jain86@gmail.com");
+		consumer.setCustomerEmailId("pokar.nitin@gmail.com");
 		
 		Amount orderTotalPrice = new Amount();
 		orderTotalPrice.setCurrency(Currency.USD);
@@ -39,16 +40,16 @@ public class EmailSenderTest {
 		orderItemDetail.setFoodItemQuantity(1);
 		
 		
-		ConsumerOrderSuccessEmailRequest request = 
-			new ConsumerOrderSuccessEmailRequest.Builder()
-				.consumer(consumer)
-				.orderId("123xx")
-				.orderTotalPrice(orderTotalPrice)
-				.provider(provider)
-				.addOrderItem(orderItemDetail)
-				.orderFulfillmentDate(new DateTime().plusDays(1))
-				.build();
-		
-		emailSender.sendConsumerOrderSuccessEmail(request);
+//		ConsumerOrderSuccessEmailRequest request = 
+//			ConsumerOrderSuccessEmailRequest.builder()
+//				.consumer(consumer)
+//				.orderId("123xx")
+//				.orderTotalPrice(orderTotalPrice)
+//				.provider(provider)
+//				.orderItems(Arrays.asList(orderItemDetail))
+//				.orderFulfillmentDate(new DateTime().plusDays(1))
+//				.build();
+//		
+//		emailSender.sendConsumerOrderSuccessEmail(request);
 	}
 }

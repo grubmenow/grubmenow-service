@@ -27,6 +27,7 @@ import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
+import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.persist.sql.SQLReader;
 
@@ -65,6 +66,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	    configuration.addAnnotatedClass(CustomerOrderDAO.class);
 	    configuration.addAnnotatedClass(FoodItemOfferDAO.class);
 	    configuration.addAnnotatedClass(ProviderDAO.class);
+	    configuration.addAnnotatedClass(OrderFeedbackDAO.class);
 	    
 	    configuration.setProperties(properties);
 	    ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
@@ -196,7 +198,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 
 	@Override
 	public void updateProvider(ProviderDAO provider) {
-		log.info(String.format("Ppdating provider: %s " , provider));
+		log.info(String.format("Updating provider: %s " , provider));
 		
 		updateObject(provider);
 	}
@@ -331,7 +333,24 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 			session.close();
 		}
 	}
+	
+	public OrderFeedbackDAO getOrderFeedbackById(String orderId) {
+		log.info(String.format("Retrieving order feedback: %s " , orderId));
+		
+		return getObject(OrderFeedbackDAO.class, orderId);
+	}
 
+	public void createOrderFeedback(OrderFeedbackDAO orderFeedbackDAO) {
+		log.info(String.format("Creating order feedback: %s " , orderFeedbackDAO));
+		
+		saveObject(orderFeedbackDAO);
+	}
+	
+	public void updateOrderFeedback(OrderFeedbackDAO orderFeedbackDAO) {
+		log.info(String.format("Creating order feedback: %s " , orderFeedbackDAO));
+		
+		updateObject(orderFeedbackDAO);
+	}
 	
 	private <T> List<T> executeCustomSQL(Class<T> clazz, String sql) {
 		System.out.println(sql);

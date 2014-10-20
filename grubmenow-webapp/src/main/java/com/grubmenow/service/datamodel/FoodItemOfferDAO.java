@@ -17,6 +17,8 @@ import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
+import com.grubmenow.service.model.Currency;
+
 /**
  * Data Access Object Class to represent Food Item Offer by Provider
  */
@@ -52,8 +54,9 @@ public class FoodItemOfferDAO {
 	private BigDecimal offerUnitPrice;
 
 	@NonNull
+	@Enumerated(EnumType.STRING)
 	@Column(name = "OFFER_CURRENCY")
-	private String offerCurrency;
+	private Currency offerCurrency;
 
 	@NonNull
 	@Column(name = "OFFER_QUANTITY")

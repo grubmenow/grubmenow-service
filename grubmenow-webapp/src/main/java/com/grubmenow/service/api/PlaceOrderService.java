@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.grubmenow.service.auth.FacebookAuthentication;
 import com.grubmenow.service.auth.FacebookCustomerInfo;
+import com.grubmenow.service.auth.ServiceHandler;
 import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
@@ -38,25 +38,18 @@ import com.grubmenow.service.model.PlaceOrderRequest;
 import com.grubmenow.service.model.PlaceOrderResponse;
 import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.pay.PaymentTransaction;
-import com.grubmenow.service.pay.StripePaymentProcessor;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
 @CommonsLog
 public class PlaceOrderService  extends AbstractRemoteService {
 
-	private FacebookAuthentication facebookAuthentication 
-		= new FacebookAuthentication("730291313693447", "c313676be38b8efe9baaf9b8833d3db5");
-	
-	private StripePaymentProcessor processor = new StripePaymentProcessor("sk_test_jXSLNqhMVvsziLZWgHg0vVJy");
-	
-
 	
 	private static BigDecimal TAX_PERCENTAGE = new BigDecimal("0.095");
 	
 	@RequestMapping(value = "/api/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public PlaceOrderResponse doPost(@RequestBody PlaceOrderRequest request) throws ValidationException {
+	public PlaceOrderResponse executeService(@RequestBody PlaceOrderRequest request) throws ValidationException {
 		
 		validateInput(request);
 
@@ -81,7 +74,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	private CustomerDAO saveAndFetchCustomerId(PlaceOrderRequest request) {
 		FacebookCustomerInfo customerInfo = null;
 		try {
-			customerInfo = facebookAuthentication.validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
+			customerInfo = ServiceHandler.getInstance().getFacebookAuthentication().validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
 		} catch (Exception e) {
 			throw new ValidationException("Invalid fb authentication token");
 		}
@@ -144,7 +137,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		int amountInCents = orderAmount.getValue().movePointRight(2).intValueExact();
 		
 		try {
-			PaymentTransaction paymentTransaction = processor.charge(request.getOnlinePaymentToken(), amountInCents, orderAmount.getCurrency(), orderId, orderId);
+			PaymentTransaction paymentTransaction = ServiceHandler.getInstance().getStripeProcessor().charge(request.getOnlinePaymentToken(), amountInCents, orderAmount.getCurrency(), orderId, orderId);
 			Validator.notNull(paymentTransaction, "Unable to authorize payment instrument");
 
 			CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
@@ -253,36 +246,33 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
 	}
 
+//	private void sendSuccessEmail(CustomerDAO customerDAO, ProviderDAO providerDAO, CustomerOrderDAO customerOrderDAO, List<CustomerOrderItemDAO> customerOrderItemDAOs) {
+//		
+//		List<EmailableOrderItemDetail> orderItemDetails = new ArrayList<>();
+//		for(CustomerOrderItemDAO customerOrderItemDAO: customerOrderItemDAOs) {
+//			
+//		}
+//				
+//		
+//		// send email
+//		ConsumerOrderSuccessEmailRequest emailRequest = ConsumerOrderSuccessEmailRequest
+//					.builder()
+//					.consumer(customerDAO)
+//					.provider(providerDAO)
+//					.customerOrder(customerOrderDAO)
+//					.
+//					
+//		ServiceHandler.getInstance().getEmailSender().sendConsumerOrderSuccessEmail(emailRequest);
+//	}
 
 	private void initializeOrder(PlaceOrderRequest request, String orderId, String customerId, DateTime orderDateTime) {
 		// TODO: kapila(11th Oct 2014) All these calls are not happening in db transaction. is that alright?
-		createOrderItemId(request, orderId, orderDateTime, customerId);
-		createOrder(request, orderId, orderDateTime, customerId);
-	}
-	
-
-	private void createOrder(PlaceOrderRequest request, String orderId, DateTime orderDateTime, String customerId) {
-		CustomerOrderDAO customerOrderDAO = new CustomerOrderDAO();
-		customerOrderDAO.setCustomerId(customerId);
-		customerOrderDAO.setOrderCreationDate(DateTime.now());
-		customerOrderDAO.setOrderId(orderId);
-		customerOrderDAO.setProviderId(request.getProviderId());
-		customerOrderDAO.setDeliveryMethod(request.getDeliveryMethod());
-		customerOrderDAO.setPaymentMethod(request.getPaymentMethod());
-		customerOrderDAO.setOrderPaymentState(OrderPaymentState.PENDING);
-		customerOrderDAO.setOrderState(OrderState.PENDING);
-		customerOrderDAO.setOrderStateMessage("Creating Order");
 		
-		PersistenceFactory.getInstance().createCustomerOrder(customerOrderDAO);
-	}
-	
-	
-	private void createOrderItemId(PlaceOrderRequest request, String orderId, DateTime orderDateTime, String customerId) {
 		List<CustomerOrderItemDAO> orderDAOs = new ArrayList<>(); 
 
 		Amount orderAmount = request.getOrderAmount();
 		
-		BigDecimal reCalculatedOrderAmount = BigDecimal.ZERO;
+		BigDecimal totalOrderAmount = BigDecimal.ZERO;
 		
 		for (OrderItem orderItem : request.getOrderItems()) {
 			String orderItemId = IDGenerator.generateOrderId();
@@ -301,27 +291,48 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			orderDAO.setFoodItemOfferId(orderItem.getFoodItemOfferId());
 			orderDAO.setQuantity(orderItem.getQuantity());
 			
+			BigDecimal orderItemAmount = foodItemOfferDAO.getOfferUnitPrice().multiply(new BigDecimal(orderItem.getQuantity()));
+			orderDAO.setOrderItemAmount(orderItemAmount);
+			orderDAO.setOrderCurrency(request.getOrderAmount().getCurrency());
+			
 			Validator.isTrue(foodItemOfferDAO.getAvailableQuantity() >= orderItem.getQuantity(), "Not enough quantity available for this Offer");
 			
-			reCalculatedOrderAmount = reCalculatedOrderAmount.add(foodItemOfferDAO.getOfferUnitPrice().multiply(new BigDecimal(orderItem.getQuantity())));
-			
+			totalOrderAmount = totalOrderAmount.add(orderItemAmount);
 			orderDAOs.add(orderDAO);
 		}
 		
+		// calculate tax
+		BigDecimal taxAmount = totalOrderAmount.multiply(TAX_PERCENTAGE);
+		taxAmount = taxAmount.setScale(2, RoundingMode.CEILING);
 		
+		// total order amount
+		totalOrderAmount = totalOrderAmount.add(taxAmount);
 		
-		// add tax
-		reCalculatedOrderAmount = reCalculatedOrderAmount.add(reCalculatedOrderAmount.multiply(TAX_PERCENTAGE));
-		reCalculatedOrderAmount = reCalculatedOrderAmount.setScale(2, RoundingMode.CEILING);
-		
-		Validator.isTrue(reCalculatedOrderAmount.compareTo(orderAmount.getValue()) == 0, String.format("Calculated amount is %s, where as request amount is %s", reCalculatedOrderAmount, orderAmount));
+		Validator.isTrue(totalOrderAmount.compareTo(orderAmount.getValue()) == 0, String.format("Calculated amount is %s, where as request amount is %s", totalOrderAmount, orderAmount));
 		
 		for(CustomerOrderItemDAO customerOrderItemDAO: orderDAOs) {
 			PersistenceFactory.getInstance().createCustomerOrderItem(customerOrderItemDAO);
 		}
+		
+		
+		CustomerOrderDAO customerOrderDAO = new CustomerOrderDAO();
+		customerOrderDAO.setCustomerId(customerId);
+		customerOrderDAO.setOrderCreationDate(DateTime.now());
+		customerOrderDAO.setOrderId(orderId);
+		customerOrderDAO.setProviderId(request.getProviderId());
+		customerOrderDAO.setDeliveryMethod(request.getDeliveryMethod());
+		customerOrderDAO.setPaymentMethod(request.getPaymentMethod());
+		customerOrderDAO.setOrderAmount(totalOrderAmount);
+		customerOrderDAO.setTaxAmount(taxAmount);
+		customerOrderDAO.setOrderCurrency(request.getOrderAmount().getCurrency());
+		customerOrderDAO.setOrderPaymentState(OrderPaymentState.PENDING);
+		customerOrderDAO.setOrderState(OrderState.PENDING);
+		customerOrderDAO.setOrderStateMessage("Creating Order");
+		
+		PersistenceFactory.getInstance().createCustomerOrder(customerOrderDAO);
+
 	}
-
-
+	
 	private void validateProvider(ProviderDAO providerDAO) {
 		Validator.isTrue(providerDAO.getProviderState() == ProviderState.ACTIVE, "Provider state is not Active");
 	}

@@ -1,5 +1,8 @@
 package com.grubmenow.service.datamodel;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -59,6 +62,14 @@ public class ProviderDAO {
 	@NonNull
     @Column(name = "PROVIDER_IMAGE_URL")
 	private String providerImageURL;
+	
+	@NonNull
+    @Column(name = "TOTAL_RATING_POINTS")
+	private Integer totalRatingPoints;
+	
+	@NonNull
+    @Column(name = "NUMBER_OF_RATINGS")
+	private Integer numberOfRatings;
 	
 	@NonNull
     @Column(name = "IS_ONLINE_PAYMENT_ACCEPTED")

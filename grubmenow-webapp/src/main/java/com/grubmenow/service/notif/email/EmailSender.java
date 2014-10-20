@@ -4,19 +4,19 @@ package com.grubmenow.service.notif.email;
 import java.io.IOException;
 import java.io.StringWriter;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.exception.VelocityException;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormatterBuilder;
-
-import lombok.extern.apachecommons.CommonsLog;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -48,7 +48,10 @@ public class EmailSender
         
         // initialize velocity engine for email templates 
         velocityEngine = new VelocityEngine();
-        velocityEngine.setProperty("file.resource.loader.path", "src/main/resources/email");
+//        velocityEngine.setProperty("file.resource.loader.path", "email");
+        
+        velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
+        velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 		velocityEngine.init();
 		
 		// initialize the various templates
@@ -56,6 +59,13 @@ public class EmailSender
 	}
 
     public void sendConsumerOrderSuccessEmail(ConsumerOrderSuccessEmailRequest request) throws EmailSendException {
+    	
+		Validate.notNull(request.getConsumer(), "Consumer cannot be null");
+		Validate.notNull(request.getCustomerOrder(), "Order fulfilment date cannot be null");
+		Validate.notNull(request.getProvider(), "Provider cannot be null");
+		Validate.notEmpty(request.getOrderItems(), "Order items cannot be empty");
+
+    	
     	String toAddress = request.getConsumer().getCustomerEmailId();
     	try
     	{

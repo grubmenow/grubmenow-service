@@ -10,6 +10,7 @@ import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
+import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 
 
@@ -159,5 +160,21 @@ public interface PersistenceHandler {
 	 * Get Order Item By Id
 	 */
 	public List<CustomerOrderItemDAO> getCustomerOrderItemByOrderId(String orderId);
+	
+	/**
+	 * get Order Feedback
+	 */
+	public OrderFeedbackDAO getOrderFeedbackById(String orderId);
+
+	
+	/**
+	 * Create Order Feedback
+	 */
+	public void createOrderFeedback(OrderFeedbackDAO orderFeedbackDAO);
+
+	/**
+	 * Create Order Feedback
+	 */
+	public void updateOrderFeedback(OrderFeedbackDAO orderFeedbackDAO);
 
 }

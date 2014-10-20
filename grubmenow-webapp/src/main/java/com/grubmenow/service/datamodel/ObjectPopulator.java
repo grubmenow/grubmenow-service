@@ -1,12 +1,14 @@
 package com.grubmenow.service.datamodel;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import com.grubmenow.service.model.Amount;
 import com.grubmenow.service.model.AvailableDay;
-import com.grubmenow.service.model.Currency;
 import com.grubmenow.service.model.CustomerOrder;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.FoodItem;
@@ -42,6 +44,16 @@ public class ObjectPopulator {
 		provider.setProviderAddress(address);
 		
 		provider.setProviderImageURL(providerDAO.getProviderImageURL());
+	
+		BigDecimal totalRatingPoints = new BigDecimal(providerDAO.getTotalRatingPoints());
+		BigDecimal numberOfRatings = new BigDecimal(providerDAO.getNumberOfRatings());
+		
+		if(numberOfRatings.compareTo(BigDecimal.ZERO) == 0) {
+			BigDecimal rating = totalRatingPoints.divide(numberOfRatings).setScale(2, RoundingMode.CEILING);
+			provider.setRating(rating);
+		}
+		
+		provider.setProviderImageURL(providerDAO.getProviderImageURL());
 		provider.setOnlinePaymentAccepted(providerDAO.getIsOnlinePaymentAccepted());
 		provider.setCashOnDeliverPaymentAccepted(providerDAO.getIsCashOnDeliverPaymentAccepted());
 		provider.setCardOnDeliverPaymentAccepted(providerDAO.getIsCardOnDeliverPaymentAccepted());
@@ -57,7 +69,7 @@ public class ObjectPopulator {
 		foodItemOffer.setProviderId(foodItemOfferDAO.getProviderId());
 		foodItemOffer.setOfferDescription(foodItemOfferDAO.getOfferDescription());
 		foodItemOffer.setAvailableQuantity(foodItemOfferDAO.getAvailableQuantity());
-		foodItemOffer.setPrice(new Amount(foodItemOfferDAO.getOfferUnitPrice(), Currency.valueOf(foodItemOfferDAO.getOfferCurrency())));
+		foodItemOffer.setPrice(new Amount(foodItemOfferDAO.getOfferUnitPrice(), foodItemOfferDAO.getOfferCurrency()));
 		foodItemOffer.setOfferDay(foodItemOfferDAO.getOfferDay().toString(printableDateTimeFormatter));
 		
 		DateTime today = DateTime.now();
@@ -84,6 +96,9 @@ public class ObjectPopulator {
 		CustomerOrder customerOrder = new CustomerOrder();
 		customerOrder.setOrderId(customerOrderDAO.getOrderId());
 		customerOrder.setOrderState(customerOrderDAO.getOrderState());
+		customerOrder.setDeliveryMethod(customerOrderDAO.getDeliveryMethod());
+		customerOrder.setOrderAmount(new Amount(customerOrderDAO.getOrderAmount(), customerOrderDAO.getOrderCurrency()));
+		customerOrder.setTaxAmount(new Amount(customerOrderDAO.getTaxAmount(), customerOrderDAO.getOrderCurrency()));
 		customerOrder.setOrderCreationDate(customerOrderDAO.getOrderCreationDate().toString(printableDateTimeFormatter));
 		return customerOrder;
 	}
@@ -91,6 +106,8 @@ public class ObjectPopulator {
 	public static CustomerOrderItem toCustomerOrderItem(CustomerOrderItemDAO customerOrderItemDAO) {
 		CustomerOrderItem customerOrderItem = new CustomerOrderItem();
 		customerOrderItem.setOrderItemId(customerOrderItemDAO.getOrderItemId());
+		customerOrderItem.setQuantity(customerOrderItemDAO.getQuantity());
+		customerOrderItem.setOrderItemAmount(new Amount(customerOrderItemDAO.getOrderItemAmount(), customerOrderItemDAO.getOrderCurrency()));
 		return customerOrderItem;
 	}
 }

@@ -12,4 +12,10 @@ public class CustomerOrder {
 	private OrderState orderState;
 
 	private String orderCreationDate;
+	
+	private Amount orderAmount;
+	
+	private Amount taxAmount;
+	
+	private DeliveryMethod deliveryMethod;
 }
