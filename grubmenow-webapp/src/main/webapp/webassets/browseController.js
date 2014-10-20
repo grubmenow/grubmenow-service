@@ -1,5 +1,4 @@
 var gmnBrowse = angular.module('gmnBrowse', []);
-var fbLoginName = null;
 
 gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
     $scope.location = {radius:5, availableDay:'Today'};
@@ -96,14 +95,22 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
     $scope.getFinalOrder = function(index) {
         var order = {};
         order.items = [];
-        order.totalPrice = $scope.getTotalPrice(index);
+        order.orderItems = [];
+        order.tax = $scope.getTotalPrice(index) * 0.095;
+        order.totalPrice = $scope.getTotalPrice(index) + order.tax;
+        order.providerId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
         var i = 0;
         if($scope.restList.foodItem.foodItemQty > 0) {
-            order.items[i++] = {
+        	order.items[i] = {
                 "orderQty": $scope.restList.foodItem.foodItemQty,
                 "orderName": $scope.restList.foodItem.foodItemName,
                 "orderPrice": $scope.restList.foodItem.foodItemQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value
             };
+            order.orderItems[i] = {
+                "quantity": $scope.restList.foodItem.foodItemQty,
+                "foodItemOfferId": $scope.restList.providerFoodItemOffers[index].foodItemOffer.foodItemOfferId
+            };
+            i++;
         }
         
         var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
@@ -112,11 +119,16 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
             for(var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
                 var product = $scope.restMenu[restId].providerFoodItemOffers[j];
                 if (!isNaN(parseInt(product.foodItem.foodItemQty))) {
-                    order.items[i++] = {
+                    order.items[i] = {
                         "orderQty": product.foodItem.foodItemQty,
                         "orderName": product.foodItem.foodItemName,
                         "orderPrice": product.foodItem.foodItemQty * product.foodItemOffer.price.value
-                    };    
+                    };
+                    order.orderItems[i] = {
+                        "quantity": product.foodItem.foodItemQty,
+                        "foodItemOfferId": product.foodItemOffer.foodItemOfferId
+                    };
+                    i++;
                 }
             }
         }
@@ -138,9 +150,9 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
     }
     
     $scope.checkFBLoginState = function() {
-        if (fbLoginName) {
-            $scope.loginState.name = fbLoginName;
-            $scope.loginState.title = "Welcome, "+fbLoginName;
+        if ($scope.FB.name) {
+            $scope.loginState.name = $scope.FB.name;
+            $scope.loginState.title = "Welcome, "+$scope.FB.name;
         } else {
             $scope.loginState.title = "Please login via Facebook to proceed";
         }
@@ -148,7 +160,52 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         $('#orderModal').modal('show'); 
     }
     
+    $scope.placeOrder = function() {
+    	var orderObject = {};
+    	orderObject.orderAmount = {};
+    	orderObject.orderAmount.currency = "USD";
+    	orderObject.orderAmount.value = Math.round($scope.finalOrder.totalPrice*100)/100;
+    	orderObject.providerId = $scope.finalOrder.providerId;
+    	orderObject.websiteAuthenticationToken = $scope.FB.accessToken;
+    	orderObject.deliveryMethod = "CUSTOMER_PICKUP";
+    	orderObject.paymentMethod = "CASH_ON_DELIVERY"
+    	orderObject.orderItems = $scope.finalOrder.orderItems;
+    	var orderUrl = "api/placeOrder";
+    	$http.post(orderUrl, JSON.stringify(orderObject)).success(function(data) {
+            console.log("Order Placed successfully");
+        });
+    }
+    
+    $scope.initialize = function() {
+    	window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '107439809640',
+                cookie     : true,  // enable cookies to allow the server to access the session
+                xfbml      : true,  // parse social plugins on this page
+                version    : 'v2.1' // use version 2.1
+            });
+          
+            FB.getLoginStatus(function(response) {
+            	if(response.status != "connected") {
+            		return;
+            	}
+            	$scope.FB.accessToken = response.authResponse.accessToken;
+                FB.api('/me', function(response) {
+                    if (response.name) {
+                        fbLoginName = response.name;
+                        $scope.FB.name = response.name;
+                    }
+                });
+            });
+        };
+    }
+    
+    $scope.restMenu = {};
+    $scope.showRestMenu = {};
+    $scope.loginState = {};
+    $scope.FB = {};
     $scope.getQSP();
+    $scope.initialize();
     var requestData = {"foodItemId": $scope.id, "availableDay": $scope.availableDay};
     var restListUrl = "api/getDetailPageResults";
     $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
@@ -156,26 +213,8 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         $scope.foodItem = data.foodItem;
         $scope.restList.foodItem.foodItemQty = 1;
     });
-    $scope.restMenu = {};
-    $scope.showRestMenu = {};
-    $scope.loginState = {};
 });
 
 jQuery(function($){
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId      : '107439809640',
-            cookie     : true,  // enable cookies to allow the server to access the session
-            xfbml      : true,  // parse social plugins on this page
-            version    : 'v2.1' // use version 2.1
-        });
-      
-        FB.getLoginStatus(function(response) {
-            FB.api('/me', function(response) {
-                if (response.name) {
-                    fbLoginName = response.name;
-                }
-            });
-        });
-    };
+    
 });

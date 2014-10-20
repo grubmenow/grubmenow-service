@@ -63,6 +63,9 @@
 	padding: 0px !important;
 	margin: 0px !important;
     }
+    .modal-content {
+    height: 400px;
+    }
 </style>
 </head>
 <body>
@@ -163,20 +166,28 @@
 		</div>
 		<div class="modal-body">
 		    <div class="col-xs-12 text-info optionsText">
-			Your order details
+			Your order details:
 		    </div>
 		    <p/>
 		    <div ng-repeat="order in finalOrder.items">
 			<div class="col-xs-10">
 			    {{order.orderQty}} X {{order.orderName}}
 			</div>
-			<div class="col-xs-2">
+			<div class="col-xs-2 text-right">
 			    {{order.orderPrice | number:2 }}
 			</div>
 		    </div>
 		    <p/>
 		    <div class="col-xs-12 text-right">
+			<strong>Tax: ${{finalOrder.tax | number:2 }}</strong>
+		    </div>
+		    <p/>
+		    <div class="col-xs-12 text-right">
 			<strong>Total: ${{finalOrder.totalPrice | number:2 }}</strong>
+		    </div>
+		    <p>
+		    <div class="col-xs-12 text-center">
+		    	<button type="button" class="btn btn-primary" ng-click="placeOrder()">Place Order</button>
 		    </div>
 		    <div class="col-xs-12 text-center" ng-show="!loginState.name">
 			<div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div>
