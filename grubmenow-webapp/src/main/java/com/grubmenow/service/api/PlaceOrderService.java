@@ -44,7 +44,6 @@ import com.grubmenow.service.persist.PersistenceFactory;
 @CommonsLog
 public class PlaceOrderService  extends AbstractRemoteService {
 
-	
 	private static BigDecimal TAX_PERCENTAGE = new BigDecimal("0.095");
 	
 	@RequestMapping(value = "/api/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")

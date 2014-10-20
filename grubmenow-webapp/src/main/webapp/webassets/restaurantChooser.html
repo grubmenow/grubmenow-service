@@ -10,7 +10,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="http://connect.facebook.net/en_US/sdk.js"></script>
 <script src="browseController.js"></script>
 <style type="text/css">
     body {
@@ -59,6 +59,10 @@
 	color: #0A549C;
 	font-weight: bold;
     }
+    .tableCtr {
+	padding: 0px !important;
+	margin: 0px !important;
+    }
 </style>
 </head>
 <body>
@@ -94,7 +98,7 @@
 			    <p class="optionsText">{{rest.deliverOption}}</p>
 			</div>
                         <div class="col-xs-8">
-                            <span class="tableTitle">Name</span>
+                            <span class="tableTitle">Name</span>    
                         </div>
                         <div class="col-xs-2">
                             <span class="tableTitle">Price</span>    
@@ -149,11 +153,39 @@
             </div>
         </div>
     </div>
-    <div ng-show="finalOrder">
-	hello
-	{{finalOrder}}
+    
+    <div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+	<div class="modal-dialog">
+	    <div class="modal-content">
+		<div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
+		    <h4 class="modal-title">{{loginState.title}}</h4>
+		</div>
+		<div class="modal-body">
+		    <div class="col-xs-12 text-info optionsText">
+			Your order details
+		    </div>
+		    <p/>
+		    <div ng-repeat="order in finalOrder.items">
+			<div class="col-xs-10">
+			    {{order.orderQty}} X {{order.orderName}}
+			</div>
+			<div class="col-xs-2">
+			    {{order.orderPrice | number:2 }}
+			</div>
+		    </div>
+		    <p/>
+		    <div class="col-xs-12 text-right">
+			<strong>Total: ${{finalOrder.totalPrice | number:2 }}</strong>
+		    </div>
+		    <div class="col-xs-12 text-center" ng-show="!loginState.name">
+			<div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div>
+		    </div>
+		</div>
+	    </div>
+	</div>
     </div>
-</div>
+    
 </body>
 </html>
 
