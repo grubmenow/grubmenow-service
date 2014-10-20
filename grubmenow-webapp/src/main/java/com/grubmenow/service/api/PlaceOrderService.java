@@ -22,6 +22,7 @@ import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.CustomerState;
+import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.ObjectPopulator;
@@ -31,12 +32,16 @@ import com.grubmenow.service.datamodel.OrderState;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
 import com.grubmenow.service.model.Amount;
+import com.grubmenow.service.model.Currency;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
 import com.grubmenow.service.model.PlaceOrderRequest;
 import com.grubmenow.service.model.PlaceOrderResponse;
 import com.grubmenow.service.model.exception.ValidationException;
+import com.grubmenow.service.notif.email.ConsumerOrderSuccessEmailRequest;
+import com.grubmenow.service.notif.email.EmailSendException;
+import com.grubmenow.service.notif.email.EmailableOrderItemDetail;
 import com.grubmenow.service.pay.PaymentTransaction;
 import com.grubmenow.service.persist.PersistenceFactory;
 
@@ -62,10 +67,14 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 		// initialize order by adding order and order item id in it's initial state into database
 		// Also verifies if the order amount in request is as per back-end logic
-		initializeOrder(request, orderId, customerDAO.getCustomerId(), orderDateTime);
+		OrderObjects orderObjects = initializeOrder(request, orderId, customerDAO.getCustomerId(), orderDateTime);
 
 		// process order
-		processOrder(request, customerDAO, orderId);
+		try {
+			processOrder(request, customerDAO, orderObjects);
+		} catch (EmailSendException ex) {
+			log.error("Not able to send email", ex);
+		}
 		
 		return generateResponse(orderId);
 	}
@@ -102,7 +111,8 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		}
 	}
 	 
-	private void processOrder(PlaceOrderRequest request, CustomerDAO customerDAO, String orderId) {
+	private void processOrder(PlaceOrderRequest request, CustomerDAO customerDAO, OrderObjects orderObjects) throws EmailSendException {
+		String orderId = orderObjects.customerOrderDAO.getOrderId();
 		try {
 			reserveOrder(request);
 		} catch (Exception e) {
@@ -122,8 +132,12 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			return;
 		}
 
-		// Update Order Status and send Emails
-		processOrderSuccess(request, orderId, "Order Processed");
+		// Update Order Status
+		CustomerOrderDAO customerOrderDAO = processOrderSuccess(request, orderId, "Order Processed");
+		
+		// send success emails
+		
+		sendSuccessEmail(customerDAO, customerOrderDAO, orderObjects.customerOrderItemDAOs);
 		
 	}
 	
@@ -142,6 +156,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
 			customerOrderDAO.setOrderChargeTransactionId(paymentTransaction.getTransactionId());
 			customerOrderDAO.setOrderPaymentState(OrderPaymentState.AUTHORIZATION_SUCCESS);
+			
 			PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -238,33 +253,58 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 	
 	
-	private void processOrderSuccess(PlaceOrderRequest request, String orderId, String message) {
+	private CustomerOrderDAO processOrderSuccess(PlaceOrderRequest request, String orderId, String message) {
 		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
 		customerOrderDAO.setOrderState(OrderState.SUCCESS);
 		customerOrderDAO.setOrderStateMessage(message);
 		PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
+		return customerOrderDAO;
 	}
 
-//	private void sendSuccessEmail(CustomerDAO customerDAO, ProviderDAO providerDAO, CustomerOrderDAO customerOrderDAO, List<CustomerOrderItemDAO> customerOrderItemDAOs) {
-//		
-//		List<EmailableOrderItemDetail> orderItemDetails = new ArrayList<>();
-//		for(CustomerOrderItemDAO customerOrderItemDAO: customerOrderItemDAOs) {
-//			
-//		}
-//				
-//		
-//		// send email
-//		ConsumerOrderSuccessEmailRequest emailRequest = ConsumerOrderSuccessEmailRequest
-//					.builder()
-//					.consumer(customerDAO)
-//					.provider(providerDAO)
-//					.customerOrder(customerOrderDAO)
-//					.
-//					
+	private void sendSuccessEmail(CustomerDAO customerDAO, CustomerOrderDAO customerOrderDAO, List<CustomerOrderItemDAO> customerOrderItemDAOs) throws EmailSendException {
+		String providerId = customerOrderDAO.getProviderId();
+		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(providerId);
+		List<EmailableOrderItemDetail> orderItemDetails = new ArrayList<>();
+		for(CustomerOrderItemDAO customerOrderItemDAO: customerOrderItemDAOs) {
+			EmailableOrderItemDetail emailOrderItemDetail = new EmailableOrderItemDetail();
+			
+			// fill food item name
+			String foodItemId = customerOrderItemDAO.getFoodItemId();
+			FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemId);
+			emailOrderItemDetail.setFoodItemName(foodItemDAO.getFoodItemName());
+			
+			// fill food item description
+			String foodItemOfferId = customerOrderItemDAO.getFoodItemOfferId();
+			FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById(foodItemOfferId);
+			emailOrderItemDetail.setFoodItemDescription(foodItemOfferDAO.getOfferDescription());
+			
+			// fill quantity
+			emailOrderItemDetail.setFoodItemQuantity(customerOrderItemDAO.getQuantity());
+			
+			// fill food item amount
+			Amount foodItemAmount = new Amount();
+			foodItemAmount.setCurrency(customerOrderItemDAO.getOrderCurrency());
+			foodItemAmount.setValue(customerOrderItemDAO.getOrderItemAmount());
+			emailOrderItemDetail.setFoodItemTotalPrice(foodItemAmount);
+			
+			orderItemDetails.add(emailOrderItemDetail);
+		}
+				
+		
+		// send email
+		ConsumerOrderSuccessEmailRequest emailRequest = ConsumerOrderSuccessEmailRequest
+					.builder()
+					.consumer(customerDAO)
+					.provider(providerDAO)
+					.customerOrder(customerOrderDAO)
+					.orderItems(orderItemDetails)
+					.build();
+					
+		// send email to consumer
 //		ServiceHandler.getInstance().getEmailSender().sendConsumerOrderSuccessEmail(emailRequest);
-//	}
+	}
 
-	private void initializeOrder(PlaceOrderRequest request, String orderId, String customerId, DateTime orderDateTime) {
+	private OrderObjects initializeOrder(PlaceOrderRequest request, String orderId, String customerId, DateTime orderDateTime) {
 		// TODO: kapila(11th Oct 2014) All these calls are not happening in db transaction. is that alright?
 		
 		List<CustomerOrderItemDAO> orderDAOs = new ArrayList<>(); 
@@ -302,7 +342,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		
 		// calculate tax
 		BigDecimal taxAmount = totalOrderAmount.multiply(TAX_PERCENTAGE);
-		taxAmount = taxAmount.setScale(2, RoundingMode.CEILING);
+		taxAmount = taxAmount.setScale(2, RoundingMode.DOWN);
 		
 		// total order amount
 		totalOrderAmount = totalOrderAmount.add(taxAmount);
@@ -329,7 +369,11 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		customerOrderDAO.setOrderStateMessage("Creating Order");
 		
 		PersistenceFactory.getInstance().createCustomerOrder(customerOrderDAO);
-
+		
+		OrderObjects orderObjects = new OrderObjects();
+		orderObjects.customerOrderDAO = customerOrderDAO;
+		orderObjects.customerOrderItemDAOs = orderDAOs;
+		return orderObjects;
 	}
 	
 	private void validateProvider(ProviderDAO providerDAO) {
@@ -352,5 +396,11 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		
 		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(request.getProviderId());
 		validateProvider(providerDAO);
+	}
+	
+	private static class OrderObjects 
+	{
+		List<CustomerOrderItemDAO> customerOrderItemDAOs;
+		CustomerOrderDAO customerOrderDAO;
 	}
 }

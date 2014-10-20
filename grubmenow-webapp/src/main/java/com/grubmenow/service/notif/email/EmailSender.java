@@ -38,6 +38,7 @@ public class EmailSender
     private final AmazonSimpleEmailServiceClient sesClient;
     private final VelocityEngine velocityEngine;
     private final Template customerOrderEmailTemplate;
+	private final Template providerOrderEmailTemplate;
     
     public EmailSender(String awsAccessKey, String awsSecretKey) throws Exception {
     	AWSCredentials creds = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
@@ -56,6 +57,7 @@ public class EmailSender
 		
 		// initialize the various templates
 		customerOrderEmailTemplate = velocityEngine.getTemplate("OrderEmailForConsumer.vm");
+		providerOrderEmailTemplate = velocityEngine.getTemplate("OrderEmailForProvider.vm");
 	}
 
     public void sendConsumerOrderSuccessEmail(ConsumerOrderSuccessEmailRequest request) throws EmailSendException {
@@ -64,7 +66,6 @@ public class EmailSender
 		Validate.notNull(request.getCustomerOrder(), "Order fulfilment date cannot be null");
 		Validate.notNull(request.getProvider(), "Provider cannot be null");
 		Validate.notEmpty(request.getOrderItems(), "Order items cannot be empty");
-
     	
     	String toAddress = request.getConsumer().getCustomerEmailId();
     	try
@@ -83,7 +84,7 @@ public class EmailSender
     		SendEmailRequest sendEmailRequest = new SendEmailRequest().withSource(FROM).withDestination(destination).withMessage(message);
     		
             log.debug("Attempting to send a an order email to consumer ["+toAddress+"]");
-            sesClient.sendEmail(sendEmailRequest);
+//            sesClient.sendEmail(sendEmailRequest);
             log.debug("Email sent!");
         }
         catch (Exception ex) 
