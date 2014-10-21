@@ -12,26 +12,38 @@
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
 <script src="browseController.js"></script>
 <style type="text/css">
-    .bs-example {
-    	margin: 20px;
+    
+   	.logoImage {
+		margin: 20px 0px;
     }
-    .logoImage {
-	margin-bottom: 20px;
+    .formBox {
+    	padding: 15px;
+		background: rgba(0, 0, 0, 0.3);
+		border-radius: 5px;
     }
-    .zipForm {
-	margin: 20px;
-    }
-    body {
-	background:#e9e8e4 url(img/bg-grid.png);
+    .btnGo {
+		background-color: #FF8246;
+		color: white;
+		border: 1px solid #FF8246;
+		margin: 0px 7px;
     }
     @-ms-viewport {
-	width: device-width;
+		width: device-width;
     }
     
     .formElem {
-	display: inline-block !important;
-	width: 200px;
-    }
+		border: 1px solid #000000;
+		margin: 0px 7px;
+	}
+	
+	.formElem:focus {
+		border: 1px solid #000000;
+	}
+	
+	.formInput {
+		color: #000000;
+		font-weight: bold;
+	}
         
     .cbTitle {
 	padding-top: 2px;
@@ -41,42 +53,37 @@
 </head>
 <body>
 <div class="food-finder text-center" ng-controller="ZipcodeCtrl">
-    <div class="container">
-    <div class="col-md-3 col-sm-2"></div>
-    <div class="col-md-6 col-sm-8">
-	<img src="logo.png" class="logoImage"/>
+	<div class="col-xs-12 text-center">
+		<img src="logo.png" class="logoImage"/>
+	</div>
+	<div class="container">
+	<div class="col-xs-2"></div>
+	<div class="col-xs-8 text-center formBox">
+		<form class="form-inline" role="form" novalidate>
+			<div class="form-group">
+            	<input type="text" class="form-control formElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="location.zipCode" maxlength="5">
+	   		</div>
+	   		<div class="form-group">
+	   			<select class="form-control formElem formInput" id="inputRadius" ng-model="location.radius">
+		        	<option value=0>Search Radius</option>
+		        	<option value=5>Within 5 miles</option>
+		        	<option value=10>Within 10 miles</option>
+		        	<option value=25>Within 25 miles</option>
+		    	</select>
+		    </div>
+		    <div class="form-group">
+	   			<select class="form-control formElem formInput" id="inputRadius" ng-model="location.availableDay">
+		        	<option value=0>When do you want it?</option>
+		        	<option value=Today>Today</option>
+		        	<option value=Tomorrow>Tomorrow</option>
+		    	</select>
+		    </div>
+	   		<button ng-click="update(location)" class="btn btnGo">Go</button>
+	   	</form>
+	</div>
+	<div class="col-xs-2"></div>
+	</div>
 	
-	<h4>Let's find you some good food! </h4>
-    	<form class="form-horizontal zipForm" role="form" novalidate>
-	    <input type="text" class="form-control formElem zipCode" id="inputZipcode" placeholder="Enter your zipcode" ng-model="location.zipCode" maxlength="5">
-	    <p/>
-	    <div class="form-group formElem">
-	        <label for="inputRadius" class="control-label">Search radius: </label>
-		
-		    <select class="form-control" id="inputRadius" ng-model="location.radius">
-		        <option value=5>Within 5 miles</option>
-		        <option value=10>Within 10 miles</option>
-		        <option value=25>Within 25 miles</option>
-		    </select>
-		
-	    </div>
-	    <p/>
-	    <div class="formElem">
-	        <label class="control-label">When do you want it: </label>
-	    </div>
-	    <div class="form-group spacerDiv">
-		<div class="checkbox col-sm-2 hidden-xs"></div>
-		<div class="checkbox col-xs-6 col-sm-4">
-		    <label class="control-label "><input type="radio" name="dayRadio" id="dayRadio1" value="Today" checked ng-model="location.availableDay"> Today</label>
-		</div>
-		<div class="checkbox col-xs-6  col-sm-4">
-		    <label class="control-label "><input type="radio" name="dayRadio" id="dayRadio2" value="Tomorrow" ng-model="location.availableDay"> Tomorrow</label>
-		</div>
-	    </div>
-	    <button ng-click="update(location)" class="btn btn-primary">Go</button>
-	</form>
-    </div>
-    <div class="col-md-3 col-sm-2"></div>
     <p>	
     </div>
     <h3 ng-show="searching">Finding delicious food within {{master.radius}} miles of {{master.zipcode}} ...</h3>
