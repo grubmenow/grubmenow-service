@@ -10,15 +10,21 @@ gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
         
     $scope.update = function(location) {
         $scope.master = angular.copy(location);
-        $scope.searching = 1;
-        //var result = decodeURIComponent($.param($scope.master));
-        //var ordersUrl = "orders.json?"+result;
-        //$http.get(ordersUrl).success(function(data) {
-        $http.post("api/searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
-            $scope.master.food = data;
-            $scope.searching = 0;
-            $scope.searchedOnce = 1;
-        });
+        $scope.badZipcode = $scope.badRadius = $scope.badDay = $scope.searching = 0;
+        if($scope.location.zipCode == 0) {
+        	$scope.badZipcode = 1;
+        } else if($scope.location.radius == 0){
+        	$scope.badRadius = 1;
+        } else if($scope.location.availableDay == 0){
+        	$scope.badDay = 1;
+        } else {
+        	$scope.searching = 1;
+        	$http.post("api/searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
+        		$scope.master.food = data;
+            	$scope.searching = 0;
+            	$scope.searchedOnce = 1;
+        	});
+        }
     };
     
     $scope.openFeedbackForm = function() {
