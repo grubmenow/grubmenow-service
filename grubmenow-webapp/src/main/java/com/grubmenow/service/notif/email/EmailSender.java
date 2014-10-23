@@ -49,21 +49,21 @@ public class EmailSender
         
         // initialize velocity engine for email templates 
         velocityEngine = new VelocityEngine();
-//        velocityEngine.setProperty("file.resource.loader.path", "email");
         
         velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
 		velocityEngine.init();
 		
 		// initialize the various templates
-		customerOrderEmailTemplate = velocityEngine.getTemplate("OrderEmailForConsumer.vm");
-		providerOrderEmailTemplate = velocityEngine.getTemplate("OrderEmailForProvider.vm");
+		customerOrderEmailTemplate = velocityEngine.getTemplate("email/OrderEmailForConsumer.vm");
+		providerOrderEmailTemplate = velocityEngine.getTemplate("email/OrderEmailForProvider.vm");
 	}
 
     public void sendConsumerOrderSuccessEmail(ConsumerOrderSuccessEmailRequest request) throws EmailSendException {
     	
 		Validate.notNull(request.getConsumer(), "Consumer cannot be null");
-		Validate.notNull(request.getCustomerOrder(), "Order fulfilment date cannot be null");
+		Validate.notNull(request.getCustomerOrder(), "Customer order cannot be null");
+		Validate.notNull(request.getOrderFulfillmentDate(), "Order fulfillment date cannot be null");
 		Validate.notNull(request.getProvider(), "Provider cannot be null");
 		Validate.notEmpty(request.getOrderItems(), "Order items cannot be empty");
     	
@@ -84,7 +84,7 @@ public class EmailSender
     		SendEmailRequest sendEmailRequest = new SendEmailRequest().withSource(FROM).withDestination(destination).withMessage(message);
     		
             log.debug("Attempting to send a an order email to consumer ["+toAddress+"]");
-//            sesClient.sendEmail(sendEmailRequest);
+            sesClient.sendEmail(sendEmailRequest);
             log.debug("Email sent!");
         }
         catch (Exception ex) 
@@ -117,6 +117,10 @@ public class EmailSender
 		
 		public static String formatDate(DateTime dateTime)
 		{
+			if (dateTime == null)
+			{
+				throw new IllegalStateException("The dateTime object cannot be null while formatting date");
+			}
 			return dateFormatter.print(dateTime);
 		}
 		

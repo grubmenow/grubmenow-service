@@ -20,7 +20,7 @@ table tr:nth-child(odd) {
 </head>
 Hello <b>${request.consumer.customerFirstName}</b>, 
 <br/>
-Thank you for your grubmenow order. Your order id is <b>${request.orderId}</b>.
+Thank you for your grubmenow order. Your order id is <b>${request.customerOrder.orderId}</b>.
 <p/>
 Your order summary: 
 <table>
@@ -39,7 +39,7 @@ Your order summary:
 </tr>
 #end
 </table>
-<!-- Click <a href="http://grubmenow.com/orderDetails/${request.orderId}">here</a> to see details. -->
+<!-- Click <a href="http://grubmenow.com/orderDetails/${request.customerOrder.orderId}">here</a> to see details. -->
 <br/>
 Please pick up your order between <b>${request.orderPickupStartTime} and ${request.orderPickupEndTime} on $Formatter.formatDate(${request.orderFulfillmentDate})</b> from this location:
 <br/>

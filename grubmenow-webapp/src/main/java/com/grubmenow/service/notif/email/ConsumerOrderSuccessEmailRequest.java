@@ -25,7 +25,7 @@ public class ConsumerOrderSuccessEmailRequest
 	private CustomerDAO consumer;
 	private ProviderDAO provider;
 	private CustomerOrderDAO customerOrder;
-//	private DateTime orderFulfillmentDate;
+	private DateTime orderFulfillmentDate;
 	private List<EmailableOrderItemDetail> orderItems = new ArrayList<>();
 //	private Amount orderTotalPrice;
 	private String orderPickupStartTime = "7 PM";
