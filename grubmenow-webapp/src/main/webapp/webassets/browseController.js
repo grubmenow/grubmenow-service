@@ -1,7 +1,7 @@
 var gmnBrowse = angular.module('gmnBrowse', []);
 
 gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
-    $scope.location = {radius:0, availableDay:0};
+    $scope.location = {radius:5, availableDay:"Today"};
     $scope.searching = 0;
     $scope.showThankYouMessage = 0;
     $scope.feedback = {generalFeedback: '', newItems: ''};
@@ -21,7 +21,8 @@ gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
     	}
     });
     $scope.validateForm = function() {
-    	$scope.badZipcode = $scope.badRadius = $scope.badDay = $scope.searching = 0;
+    	$scope.badZipcode = $scope.searching = 0;
+    	$scope.badRadius = $scope.badDay = 0;
         if(!$scope.location.zipCode || isNaN($scope.location.zipCode)) {
         	$scope.badZipcode = 1;
         }
