@@ -7,17 +7,36 @@ gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
     $scope.feedback = {generalFeedback: '', newItems: ''};
     $scope.showFeedbackForm = 0;
     $scope.showFoodItemSuggestionForm = 0;
-        
+    $( ".formElem" ).change(function (e) {
+    	var id = e.target.id;
+    	if(id != "inputZipcode" && $('#'+id).val() !=0) {
+    		$('#'+id).removeClass('redBorder');
+    	}
+    });
+    $('#inputZipcode').keyup(function(){
+    	if($('#inputZipcode').val().length == 5 && !isNaN($('#inputZipcode').val())) {
+    		$('#inputZipcode').removeClass('redBorder');
+    	} else {
+    		$('#inputZipcode').addClass('redBorder');
+    	}
+    });
+    $scope.validateForm = function() {
+    	$scope.badZipcode = $scope.badRadius = $scope.badDay = $scope.searching = 0;
+        if(!$scope.location.zipCode || isNaN($scope.location.zipCode)) {
+        	$scope.badZipcode = 1;
+        }
+        if($scope.location.radius == 0){
+        	$scope.badRadius = 1;
+        } 
+        if($scope.location.availableDay == 0){
+        	$scope.badDay = 1;
+        }
+    }
+    
     $scope.update = function(location) {
         $scope.master = angular.copy(location);
-        $scope.badZipcode = $scope.badRadius = $scope.badDay = $scope.searching = 0;
-        if($scope.location.zipCode == 0) {
-        	$scope.badZipcode = 1;
-        } else if($scope.location.radius == 0){
-        	$scope.badRadius = 1;
-        } else if($scope.location.availableDay == 0){
-        	$scope.badDay = 1;
-        } else {
+        $scope.validateForm(); 
+        if($scope.location.zipCode && $scope.location.radius != 0 && $scope.location.availableDay != 0) {
         	$scope.searching = 1;
         	$http.post("api/searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
         		$scope.master.food = data;

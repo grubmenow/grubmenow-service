@@ -45,7 +45,7 @@
 	}
 	
     .formContainer {
-    	background-image: url("https://s3.amazonaws.com/plumdistrict.com-production/perks/30233/image/original.jpg?1345764204");
+    	background-image: url("img/bg-grid.png");
 		background-repeat: no-repeat;
 		background-position: center;
 		height: 350px;
@@ -61,7 +61,10 @@
     	border: 5px solid #FFD446;
     }
     .spacer {
-    	margin-top: 40px;
+    	margin-top: 35px;
+    }
+    .redBorder {
+    	border: 3px solid red;
     }
 </style>
 </head>
@@ -78,10 +81,10 @@
 		<div class="formBox">
 		<form class="form-inline" role="form" novalidate>
 			<div class="form-group">
-            	<input type="text" class="form-control formElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="location.zipCode" maxlength="5">
+            	<input type="text" class="form-control formElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="location.zipCode" maxlength="5" ng-class="{redBorder:badZipcode==1}">
 	   		</div>
 	   		<div class="form-group">
-	   			<select class="form-control formElem" id="inputRadius" ng-model="location.radius">
+	   			<select class="form-control formElem" ng-class="{redBorder:badRadius==1}" id="inputRadius" ng-model="location.radius">
 		        	<option value=0>Search Radius</option>
 		        	<option value=5>Within 5 miles</option>
 		        	<option value=10>Within 10 miles</option>
@@ -89,7 +92,7 @@
 		    	</select>
 		    </div>
 		    <div class="form-group">
-	   			<select class="form-control formElem" id="inputRadius" ng-model="location.availableDay">
+	   			<select class="form-control formElem" ng-class="{redBorder:badDay==1}" id="inputDay" ng-model="location.availableDay">
 		        	<option value=0>When do you want it?</option>
 		        	<option value=Today>Today</option>
 		        	<option value=Tomorrow>Tomorrow</option>
@@ -101,9 +104,7 @@
 	</div>
 	</div>
 	<div class="clearfix"></div>
-    <h3 ng-show="badRadius" class="spacer">Please select a search radius</h3>
-	<h3 ng-show="badZipcode" class="spacer">Please enter a valid zipcode</h3>
-	<h3 ng-show="badDay" class="spacer">Please select when do you want the food by</h3>
+    <h3 ng-show="badRadius || badZipcode || badDay" class="spacer">Please enter all the required fields</h3>
 	<h3 ng-show="searching" class="spacer">Finding delicious food within {{master.radius}} miles of {{master.zipcode}} ...</h3>
 	
     <div class="container spacer">
