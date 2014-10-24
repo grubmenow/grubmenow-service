@@ -86,7 +86,7 @@
 	   		<div class="form-group">
 	   			<select class="form-control formElem" ng-class="{redBorder:badRadius==1}" id="inputRadius" ng-model="location.radius">
 		        	<option value=0>Search Radius</option>
-		        	<option value=5>Within 5 miles</option>
+		        	<option value=5 ng-selected="true">Within 5 miles</option>
 		        	<option value=10>Within 10 miles</option>
 		        	<option value=25>Within 25 miles</option>
 		    	</select>
@@ -94,7 +94,7 @@
 		    <div class="form-group">
 	   			<select class="form-control formElem" ng-class="{redBorder:badDay==1}" id="inputDay" ng-model="location.availableDay">
 		        	<option value=0>When do you want it?</option>
-		        	<option value=Today>Today</option>
+		        	<option ng-selected="true" value=Today>Today</option>
 		        	<option value=Tomorrow>Tomorrow</option>
 		    	</select>
 		    </div>
