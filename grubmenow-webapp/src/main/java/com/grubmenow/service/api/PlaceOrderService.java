@@ -310,8 +310,8 @@ public class PlaceOrderService  extends AbstractRemoteService {
 					.build();
 					
 		// send email to consumer
-		ServiceHandler.getInstance().getEmailSender().sendConsumerOrderSuccessEmail(emailRequest);
-		ServiceHandler.getInstance().getEmailSender().sendProviderOrderSuccessEmail(emailRequest);
+//		ServiceHandler.getInstance().getEmailSender().sendConsumerOrderSuccessEmail(emailRequest);
+//		ServiceHandler.getInstance().getEmailSender().sendProviderOrderSuccessEmail(emailRequest);
 	}
 
 	private Order initializeOrder(PlaceOrderRequest request, String orderId, String customerId, DateTime orderDateTime) {
