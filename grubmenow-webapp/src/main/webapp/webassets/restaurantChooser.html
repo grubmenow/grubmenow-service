@@ -10,7 +10,6 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-<script src="http://connect.facebook.net/en_US/sdk.js"></script>
 <script src="browseController.js"></script>
 <script src="restaurantChooser.js"></script>
 
@@ -125,7 +124,7 @@
                             <span class="foodTitle">${{rest.foodItemOffer.price.value | number:2}}</span>
                         </div>
                         <div class="col-xs-2">
-                            <input type="number" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2" style="width: 80px" min="0" max="{{rest.foodItemOffer.availableQuantity}}" required>
+                            <input type="number" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2" style="width: 60px" min="0" max="{{rest.foodItemOffer.availableQuantity}}" required>
                             
                             <span ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px">Hurry, {{rest.foodItemOffer.availableQuantity}} items left !</span>
                         </div>

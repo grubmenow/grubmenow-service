@@ -310,8 +310,15 @@ public class PlaceOrderService  extends AbstractRemoteService {
 					.build();
 					
 		// send email to consumer
-//		ServiceHandler.getInstance().getEmailSender().sendConsumerOrderSuccessEmail(emailRequest);
-//		ServiceHandler.getInstance().getEmailSender().sendProviderOrderSuccessEmail(emailRequest);
+		try
+		{
+			ServiceHandler.getInstance().getEmailSender().sendConsumerOrderSuccessEmail(emailRequest);
+			ServiceHandler.getInstance().getEmailSender().sendProviderOrderSuccessEmail(emailRequest);
+		}
+		catch (Exception ex)
+		{
+			log.error("Cannot send email, gulping the exception", ex);
+		}
 	}
 
 	private Order initializeOrder(PlaceOrderRequest request, String orderId, String customerId, DateTime orderDateTime) {
