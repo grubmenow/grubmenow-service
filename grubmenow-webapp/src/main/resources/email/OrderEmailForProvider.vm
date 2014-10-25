@@ -24,7 +24,7 @@ You have a new grubmenow order that has to be ready by <b>${request.orderPickupS
 <p/>
 Order summary: 
 <p>
-<b>Customer Name</b>: ${request.consumer.consumerName}<br/>
+<b>Customer Name</b>: ${request.consumer.customerFirstName} ${request.consumer.customerLastName}<br/>
 <b> Order id </b>: ${request.customerOrder.orderId}<br/>
 </p>
 <table>

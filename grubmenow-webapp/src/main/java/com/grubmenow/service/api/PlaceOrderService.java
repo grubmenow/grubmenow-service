@@ -352,8 +352,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		}
 		
 		// calculate tax
-		BigDecimal taxAmount = totalOrderAmount.multiply(TAX_PERCENTAGE);
-		taxAmount = taxAmount.setScale(2, RoundingMode.DOWN);
+		BigDecimal taxAmount = totalOrderAmount.multiply(TAX_PERCENTAGE).setScale(2, RoundingMode.DOWN);
 		
 		// total order amount
 		totalOrderAmount = totalOrderAmount.add(taxAmount);
