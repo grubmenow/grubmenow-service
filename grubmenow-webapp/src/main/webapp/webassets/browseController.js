@@ -186,6 +186,16 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         $('#orderModal').modal('show'); 
     }
     
+    $scope.onCheckoutButtonMouseOver = function()
+    {
+//    	console.log("On mouse hover start" + $scope.FB.init + ":" + $scope.FB.name);
+//    	if ($scope.FB.init && !$scope.FB.name) {
+//    		$('#checkoutButton').fadeOut();
+//    		$('#fbCheckoutButtonDiv').fadeIn();
+//    	}
+//    	console.log("On mouse hover end");
+    }
+    
     $scope.placeOrder = function() {
     	var orderObject = {};
     	orderObject.orderAmount = {};
@@ -203,33 +213,48 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
     }
     
     $scope.initialize = function() {
+    	console.log("inside controller initialize");
     	window.fbAsyncInit = function() {
+    		console.log("inside fbAsyncInit method");
             FB.init({
                 appId      : '107439809640',
+//                appId	   : '85199433896',
                 cookie     : true,  // enable cookies to allow the server to access the session
                 xfbml      : true,  // parse social plugins on this page
                 version    : 'v2.1' // use version 2.1
             });
-          
+            
             FB.getLoginStatus(function(response) {
             	if(response.status != "connected") {
+            		console.log("fb app not connected");
+            		$scope.FB.init = true;
             		return;
             	}
             	$scope.FB.accessToken = response.authResponse.accessToken;
                 FB.api('/me', function(response) {
+                	console.log("fb app response of /me: " + response);
                     if (response.name) {
                         fbLoginName = response.name;
                         $scope.FB.name = response.name;
+                        $scope.FB.init = true;
                     }
                 });
             });
         };
+        
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+          }(document, 'script', 'facebook-jssdk'));
     }
     
     $scope.restMenu = {};
     $scope.showRestMenu = {};
     $scope.loginState = {};
-    $scope.FB = {};
+    $scope.FB = {init: false};
     $scope.getQSP();
     $scope.initialize();
     var requestData = {"foodItemId": $scope.id, "availableDay": $scope.availableDay};
