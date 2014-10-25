@@ -217,8 +217,8 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
     	window.fbAsyncInit = function() {
     		console.log("inside fbAsyncInit method");
             FB.init({
-                appId      : '107439809640',
-//                appId	   : '85199433896',
+//                appId      : '107439809640',
+                appId	   : '85199433896',
                 cookie     : true,  // enable cookies to allow the server to access the session
                 xfbml      : true,  // parse social plugins on this page
                 version    : 'v2.1' // use version 2.1

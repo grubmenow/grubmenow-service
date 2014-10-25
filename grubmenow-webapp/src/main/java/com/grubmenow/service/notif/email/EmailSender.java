@@ -52,6 +52,9 @@ public class EmailSender
         
         velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+        velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
+        velocityEngine.setProperty("runtime.log.logsystem.log4j.category", "velocity");
+        velocityEngine.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
 		velocityEngine.init();
 		
 		// initialize the various templates

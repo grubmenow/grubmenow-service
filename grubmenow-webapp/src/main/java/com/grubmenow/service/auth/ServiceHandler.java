@@ -22,7 +22,8 @@ public class ServiceHandler {
 	@SneakyThrows
 	public ServiceHandler() {
 		try {
-			facebookAuthentication = new FacebookAuthentication("107439809640", "156c4b8c6ef3355ab1aa8a36c8072a3d");
+			//facebookAuthentication = new FacebookAuthentication("107439809640", "156c4b8c6ef3355ab1aa8a36c8072a3d");
+			facebookAuthentication = new FacebookAuthentication("85199433896", "0873346ed405a566314a00be1b221432");
 
 			stripeProcessor = new StripePaymentProcessor("sk_test_jXSLNqhMVvsziLZWgHg0vVJy");
 
