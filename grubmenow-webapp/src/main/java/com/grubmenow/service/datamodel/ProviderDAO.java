@@ -34,6 +34,10 @@ public class ProviderDAO {
 	@NonNull
     @Column(name = "PROVIDER_NAME")
 	private String providerName;
+
+	@NonNull
+    @Column(name = "PROVIDER_EMAIL_ID")
+	private String providerEmailId;
 	
 	@NonNull
     @Column(name = "PROVIDER_ADDRESS_STREET_NUMBER")

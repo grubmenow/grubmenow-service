@@ -59,7 +59,7 @@ public class EmailSender
 		providerOrderEmailTemplate = velocityEngine.getTemplate("email/OrderEmailForProvider.vm");
 	}
 
-    public void sendConsumerOrderSuccessEmail(ConsumerOrderSuccessEmailRequest request) throws EmailSendException {
+    public void sendConsumerOrderSuccessEmail(OrderSuccessEmailRequest request) throws EmailSendException {
     	
 		Validate.notNull(request.getConsumer(), "Consumer cannot be null");
 		Validate.notNull(request.getCustomerOrder(), "Customer order cannot be null");
@@ -73,7 +73,7 @@ public class EmailSender
     		// Construct an object to contain the recipient address.
     		Destination destination = new Destination().withToAddresses(new String[]{toAddress});
     		
-    		Content subject = new Content().withData("Thank you for your grubmenow order");
+    		Content subject = new Content().withData("Thank you for your grubmenow order. Order Id: " + request.getCustomerOrder().getOrderId());
     		Content htmlBody = new Content().withData(generateHtmlBodyForConsumerOrderSuccessEmail(request));
     		Body body = new Body().withHtml(htmlBody);
     		
@@ -94,13 +94,61 @@ public class EmailSender
         }
     }
 
-	private String generateHtmlBodyForConsumerOrderSuccessEmail(ConsumerOrderSuccessEmailRequest request) throws VelocityException, IOException {
+    public void sendProviderOrderSuccessEmail(OrderSuccessEmailRequest request) throws EmailSendException {
+    	
+		Validate.notNull(request.getConsumer(), "Consumer cannot be null");
+		Validate.notNull(request.getCustomerOrder(), "Customer order cannot be null");
+		Validate.notNull(request.getOrderFulfillmentDate(), "Order fulfillment date cannot be null");
+		Validate.notNull(request.getProvider(), "Provider cannot be null");
+		Validate.notEmpty(request.getOrderItems(), "Order items cannot be empty");
+    	
+    	String toAddress = request.getProvider().getProviderEmailId();
+    	
+    	try
+    	{
+    		// Construct an object to contain the recipient address.
+			Destination destination = new Destination().withToAddresses(new String[] { toAddress });
+    		
+    		Content subject = new Content().withData("You received an order to fulfill. Order Id: " + request.getCustomerOrder().getOrderId());
+    		Content htmlBody = new Content().withData(generateHtmlBodyForProviderOrderSuccessEmail(request));
+    		Body body = new Body().withHtml(htmlBody);
+    		
+    		// Create a message with the specified subject and body.
+    		Message message = new Message().withSubject(subject).withBody(body);
+    		
+    		// Assemble the email.
+    		SendEmailRequest sendEmailRequest = new SendEmailRequest().withSource(FROM).withDestination(destination).withMessage(message);
+    		
+            log.debug("Attempting to send a an order email to provider ["+toAddress+"]");
+            sesClient.sendEmail(sendEmailRequest);
+            log.debug("Email sent!");
+        }
+        catch (Exception ex) 
+        {
+            String errMsg = "The email to email Id ["+toAddress+"] was not sent";
+            throw new EmailSendException(errMsg, ex);
+        }
+    }
+
+    
+	private String generateHtmlBodyForConsumerOrderSuccessEmail(OrderSuccessEmailRequest request) throws VelocityException, IOException {
 		
 		VelocityContext context = new VelocityContext();
 		context.put("request", request);
 		context.put("Formatter", Formatter.class);
 		StringWriter writer = new StringWriter();
         customerOrderEmailTemplate.merge(context, writer);
+        System.out.println(writer.toString());
+        return writer.toString();
+	}
+	
+	private String generateHtmlBodyForProviderOrderSuccessEmail(OrderSuccessEmailRequest request) throws VelocityException, IOException {
+		
+		VelocityContext context = new VelocityContext();
+		context.put("request", request);
+		context.put("Formatter", Formatter.class);
+		StringWriter writer = new StringWriter();
+        providerOrderEmailTemplate.merge(context, writer);
         System.out.println(writer.toString());
         return writer.toString();
 	}

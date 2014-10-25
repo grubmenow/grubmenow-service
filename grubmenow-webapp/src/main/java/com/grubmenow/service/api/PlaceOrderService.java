@@ -39,7 +39,7 @@ import com.grubmenow.service.model.PaymentMethod;
 import com.grubmenow.service.model.PlaceOrderRequest;
 import com.grubmenow.service.model.PlaceOrderResponse;
 import com.grubmenow.service.model.exception.ValidationException;
-import com.grubmenow.service.notif.email.ConsumerOrderSuccessEmailRequest;
+import com.grubmenow.service.notif.email.OrderSuccessEmailRequest;
 import com.grubmenow.service.notif.email.EmailSendException;
 import com.grubmenow.service.notif.email.EmailableOrderItemDetail;
 import com.grubmenow.service.pay.PaymentTransaction;
@@ -298,7 +298,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 				
 		
 		// send email
-		ConsumerOrderSuccessEmailRequest emailRequest = ConsumerOrderSuccessEmailRequest
+		OrderSuccessEmailRequest emailRequest = OrderSuccessEmailRequest
 					.builder()
 					.consumer(customerDAO)
 					.provider(providerDAO)
@@ -311,6 +311,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 					
 		// send email to consumer
 		ServiceHandler.getInstance().getEmailSender().sendConsumerOrderSuccessEmail(emailRequest);
+		ServiceHandler.getInstance().getEmailSender().sendProviderOrderSuccessEmail(emailRequest);
 	}
 
 	private Order initializeOrder(PlaceOrderRequest request, String orderId, String customerId, DateTime orderDateTime) {

@@ -1,7 +1,5 @@
 package com.grubmenow.service.datamodel;
 
-import java.util.UUID;
-
 import org.apache.commons.lang3.RandomStringUtils;
 
 public class IDGenerator {
@@ -19,7 +17,7 @@ public class IDGenerator {
 	}
 
 	public static String generateOrderId() {
-		return UUID.randomUUID().toString();
+		return RandomStringUtils.randomNumeric(10);
 	}
 
 }

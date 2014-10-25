@@ -9,7 +9,7 @@ import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.model.Amount;
 import com.grubmenow.service.model.Currency;
-import com.grubmenow.service.notif.email.ConsumerOrderSuccessEmailRequest;
+import com.grubmenow.service.notif.email.OrderSuccessEmailRequest;
 import com.grubmenow.service.notif.email.EmailSender;
 import com.grubmenow.service.notif.email.EmailableOrderItemDetail;
 
