@@ -118,50 +118,204 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         return total;
     }
     
-    $scope.getFinalOrder = function(index) {
-        var order = {};
-        order.items = [];
-        order.orderItems = [];
-        order.tax = $scope.getTotalPrice(index) * 0.095;
-        order.totalPrice = $scope.getTotalPrice(index) + order.tax;
-        order.providerId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
-        var i = 0;
-        if($scope.restList.foodItem.foodItemQty > 0) {
-        	order.items[i] = {
-                "orderQty": $scope.restList.foodItem.foodItemQty,
-                "orderName": $scope.restList.foodItem.foodItemName,
-                "orderPrice": $scope.restList.foodItem.foodItemQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value
-            };
-            order.orderItems[i] = {
-                "quantity": $scope.restList.foodItem.foodItemQty,
-                "foodItemOfferId": $scope.restList.providerFoodItemOffers[index].foodItemOffer.foodItemOfferId
-            };
-            i++;
-        }
-        
-        var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
-        
-        if ($scope.restMenu[restId]) {
-            for(var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
-                var product = $scope.restMenu[restId].providerFoodItemOffers[j];
-                if (!isNaN(parseInt(product.foodItem.foodItemQty))) {
-                    order.items[i] = {
-                        "orderQty": product.foodItem.foodItemQty,
-                        "orderName": product.foodItem.foodItemName,
-                        "orderPrice": product.foodItem.foodItemQty * product.foodItemOffer.price.value
-                    };
-                    order.orderItems[i] = {
-                        "quantity": product.foodItem.foodItemQty,
-                        "foodItemOfferId": product.foodItemOffer.foodItemOfferId
-                    };
-                    i++;
-                }
-            }
-        }
-        
-        $scope.finalOrder = order;
-        $scope.checkFBLoginState();
-    }
+
+    $scope.placeOrder = function() {
+		/**
+		 * Create the order object to be sent to the server, and
+		 * validate as much as possible without checking that
+		 * the user is fb authenticated
+		 */
+		var orderObject = {};
+		orderObject.orderAmount = {};
+		orderObject.orderAmount.currency = "USD";
+		orderObject.orderAmount.value = Math
+				.round($scope.finalOrder.totalPrice * 100) / 100;
+		orderObject.providerId = $scope.finalOrder.providerId;
+		orderObject.deliveryMethod = "CUSTOMER_PICKUP";
+		orderObject.paymentMethod = "CASH_ON_DELIVERY"
+		orderObject.orderItems = $scope.finalOrder.orderItems;
+		// Check fb authentication, and provide the callback
+		// function and callback argument
+		$scope.loginToFbAndInvokeCallback(1, false,
+				$scope.placeOrderCallback, orderObject);
+	}
+
+	$scope.placeOrderCallback = function(isFBAuthenticated,
+			username, fbAccessToken, orderObject) {
+		if (isFBAuthenticated) {
+			orderObject.websiteAuthenticationToken = fbAccessToken;
+			var orderUrl = "api/placeOrder";
+			$http
+					.post(orderUrl, JSON.stringify(orderObject))
+					.success(
+							function(data) {
+								alert("Order successful");
+								console
+										.log("Order Placed successfully");
+							});
+		} else {
+			$scope.orderSummaryTitle = "Please login via Facebook to proceed";
+		}
+
+		// apply the change in angular js state. Does not happen
+		// automatically since we are inside our own javascript
+		// function
+		// when this method is called
+		$scope.safeApply(function() {
+		});
+	}
+
+	$scope.loginToFbAndInvokeCallback = function(
+			facebookLoginTryCount, isUsernameRequired,
+			callbackFunction, callbackArgument) {
+		if (!$scope.FB.init) {
+			// if FB is not initialized, do not try to connect
+			// to FB, rather just open the order modal without
+			// login info
+			console.log("FB API not initialized yet");
+			$scope.loginState.loggedIn = false;
+			$scope.loginState.name = null;
+			callbackFunction(false, null, null,
+					callbackArgument);
+			return;
+		}
+
+		// first check if the user is logged in.
+		FB
+				.getLoginStatus(function(response) {
+					console.log("facebook check login status response:" + response);
+					if (response.status == 'connected') {
+						console .log("facebook login: user connected");
+						$scope.loginState.loggedIn = true;
+						if (isUsernameRequired) {
+							FB.api(
+								'/me',
+								function(meResponse) {
+									console.log('Successful login for: ' + meResponse.name);
+									$scope.loginState.name = meResponse.name;
+									callbackFunction(
+											true,
+											meResponse.name,
+											response.authResponse.accessToken,
+											callbackArgument);
+								});
+						} else {
+							// avoids unnecessary call by having the isUsernameRequired set to false
+							callbackFunction(true, null, response.authResponse.accessToken, callbackArgument);
+						}
+					} else if (facebookLoginTryCount <= 0
+							|| response.status === 'not_authorized') {
+						$scope.loginState.loggedIn = false;
+						$scope.loginState.name = null;
+						// The person is logged into Facebook, but not your app.
+
+						// if more facebook authentication tries available use them
+						if (facebookLoginTryCount > 0)
+						{
+							FB.login(function(response) {
+								$scope.loginToFbAndInvokeCallback(
+										facebookLoginTryCount - 1,
+										isUsernameRequired,
+										callbackFunction,
+										callbackArgument);
+							},
+							{
+								scope : 'public_profile,email'
+							});
+						}
+						else
+						{
+							console.log("User has not authorized the app");
+							callbackFunction(false, null, null, callbackArgument);
+						}
+					} else {
+						$scope.loginState.loggedIn = false;
+						$scope.loginState.name = null;
+						// The person is not logged into Facebook, so we're not sure if they are logged into this app or not.
+						FB.login(function(response) {
+							$scope.loginToFbAndInvokeCallback(
+									facebookLoginTryCount - 1,
+									isUsernameRequired,
+									callbackFunction,
+									callbackArgument);
+						},
+						{
+							scope : 'public_profile,email'
+						});
+					}
+				});
+	};
+
+	$scope.goToOrderSummary = function(isFBAuthenticated,
+			username, fbAccessToken, providerIndex) {
+		if (isFBAuthenticated) {
+			$scope.orderSummaryTitle = "Welcome, " + username;
+		} else {
+			$scope.orderSummaryTitle = "Please login via Facebook to proceed";
+		}
+
+		// prepare the order
+		$scope.prepareOrder(providerIndex);
+
+		// apply the change in angular js state. Does not happen
+		// automatically since we are inside our own javascript
+		// function
+		// when this method is called
+		$scope.safeApply(function() {
+			$('#orderModal').modal('show');
+		});
+	}
+
+	$scope.getFinalOrder = function(providerIndex) {
+		$scope.loginToFbAndInvokeCallback(1, true,
+				$scope.goToOrderSummary, providerIndex);
+	};
+
+	$scope.prepareOrder = function(providerIndex) {
+		var order = {};
+		order.items = [];
+		order.orderItems = [];
+		order.tax = $scope.getTotalPrice(providerIndex) * 0.095;
+		order.totalPrice = $scope.getTotalPrice(providerIndex)
+				+ order.tax;
+		order.providerId = $scope.restList.providerFoodItemOffers[providerIndex].provider.providerId;
+		var i = 0;
+		if ($scope.restList.foodItem.foodItemQty > 0) {
+			order.items[i] = {
+				"orderQty" : $scope.restList.foodItem.foodItemQty,
+				"orderName" : $scope.restList.foodItem.foodItemName,
+				"orderPrice" : $scope.restList.foodItem.foodItemQty
+						* $scope.restList.providerFoodItemOffers[providerIndex].foodItemOffer.price.value
+			};
+			order.orderItems[i] = {
+				"quantity" : $scope.restList.foodItem.foodItemQty,
+				"foodItemOfferId" : $scope.restList.providerFoodItemOffers[providerIndex].foodItemOffer.foodItemOfferId
+			};
+			i++;
+		}
+
+		var restId = $scope.restList.providerFoodItemOffers[providerIndex].provider.providerId;
+
+		if ($scope.restMenu[restId]) {
+			for (var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
+				var product = $scope.restMenu[restId].providerFoodItemOffers[j];
+				if (!isNaN(parseInt(product.foodItem.foodItemQty))) {
+					order.items[i] = {
+						"orderQty" : product.foodItem.foodItemQty,
+						"orderName" : product.foodItem.foodItemName,
+						"orderPrice" : product.foodItem.foodItemQty
+								* product.foodItemOffer.price.value
+					};
+					order.orderItems[i] = {
+						"quantity" : product.foodItem.foodItemQty,
+						"foodItemOfferId" : product.foodItemOffer.foodItemOfferId
+					};
+					i++;
+				}
+			}
+		}
+		$scope.finalOrder = order;
+	}
     
     $scope.showMenu = function(restId) {
         if ($scope.restMenu[restId]) {
@@ -175,50 +329,35 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         });
     }
     
-    $scope.checkFBLoginState = function() {
-        if ($scope.FB.name) {
-            $scope.loginState.name = $scope.FB.name;
-            $scope.loginState.title = "Welcome, "+$scope.FB.name;
-        } else {
-            $scope.loginState.title = "Please login via Facebook to proceed";
-        }
-        
-        $('#orderModal').modal('show'); 
-    }
-    
-    $scope.onCheckoutButtonMouseOver = function()
-    {
-//    	console.log("On mouse hover start" + $scope.FB.init + ":" + $scope.FB.name);
-//    	if ($scope.FB.init && !$scope.FB.name) {
-//    		$('#checkoutButton').fadeOut();
-//    		$('#fbCheckoutButtonDiv').fadeIn();
-//    	}
-//    	console.log("On mouse hover end");
-    }
-    
-    $scope.placeOrder = function() {
-    	var orderObject = {};
-    	orderObject.orderAmount = {};
-    	orderObject.orderAmount.currency = "USD";
-    	orderObject.orderAmount.value = Math.round($scope.finalOrder.totalPrice*100)/100;
-    	orderObject.providerId = $scope.finalOrder.providerId;
-    	orderObject.websiteAuthenticationToken = $scope.FB.accessToken;
-    	orderObject.deliveryMethod = "CUSTOMER_PICKUP";
-    	orderObject.paymentMethod = "CASH_ON_DELIVERY"
-    	orderObject.orderItems = $scope.finalOrder.orderItems;
-    	var orderUrl = "api/placeOrder";
-    	$http.post(orderUrl, JSON.stringify(orderObject)).success(function(data) {
-            console.log("Order Placed successfully");
-        });
-    }
+
+
+    $scope.onCheckoutButtonMouseOver = function() {
+		// console.log("On mouse hover start" + $scope.FB.init +
+		if ($scope.FB.init && !$scope.FB.name) {
+			$('#checkoutButton').fadeOut("fast", function() {
+				$('#loginButton').fadeIn("fast");
+			});
+		}
+		// console.log("On mouse hover end");
+	}
+
+	$scope.onCheckoutButtonMouseLeave = function() {
+		// console.log("On mouse leave start" + $scope.FB.init +
+		if ($scope.FB.init && !$scope.FB.name) {
+			$('#loginButton').fadeOut("fast", function() {
+				$('#checkoutButton').fadeIn("fast");
+			});
+		}
+		// console.log("On mouse leave end");
+	}
     
     $scope.initialize = function() {
     	console.log("inside controller initialize");
     	window.fbAsyncInit = function() {
     		console.log("inside fbAsyncInit method");
             FB.init({
-//                appId      : '107439809640',
-                appId	   : '85199433896',
+                appId      : '591805167609392',
+//                appId	   : '85199433896',
                 cookie     : true,  // enable cookies to allow the server to access the session
                 xfbml      : true,  // parse social plugins on this page
                 version    : 'v2.1' // use version 2.1
@@ -251,9 +390,22 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
           }(document, 'script', 'facebook-jssdk'));
     }
     
+	// Does the $scope.$apply() in a safe manner such that
+	// exceptions don't get thrown
+	$scope.safeApply = function(fn) {
+		var phase = this.$root.$$phase;
+		if (phase == '$apply' || phase == '$digest') {
+			if (fn && (typeof (fn) === 'function')) {
+				fn();
+			}
+		} else {
+			$scope.$apply(fn);
+		}
+	}
+
     $scope.restMenu = {};
     $scope.showRestMenu = {};
-    $scope.loginState = {};
+    $scope.loginState = {loggedIn: false, name: null};
     $scope.FB = {init: false};
     $scope.getQSP();
     $scope.initialize();
