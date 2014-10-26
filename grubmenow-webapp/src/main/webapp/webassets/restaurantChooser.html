@@ -124,7 +124,8 @@
                             <span class="foodTitle">${{rest.foodItemOffer.price.value | number:2}}</span>
                         </div>
                         <div class="col-xs-2">
-                            <input type="number" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2" style="width: 55px" min="0" max="{{rest.foodItemOffer.availableQuantity}}" required>
+                            <!--  Removing the type="number" and size elements because they are not playing well with the mobile chrome browser -->
+                            <input class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2" min="0" max="{{rest.foodItemOffer.availableQuantity}}" required>
                             
                             <span ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px">Hurry, {{rest.foodItemOffer.availableQuantity}} items left !</span>
                         </div>
