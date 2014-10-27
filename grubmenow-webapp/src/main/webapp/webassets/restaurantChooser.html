@@ -201,10 +201,13 @@
 		    <p>
 		    <div class="col-xs-12 text-center">
                 <!--  it has to be an html button if we want to open facebook login popup here -->
-                <input type="button" class="btn btn-primary" ng-click="placeOrder()" id="placeOrderButton" value="Place Order" ng-show="loginState.loggedIn"/>
+                <input type="button" class="btn btn-primary" ng-click="placeOrder()" id="placeOrderButton" value="Place Order" ng-show="loginState.loggedIn"
+                    ng-disabled="orderAPICallInProgress"/>
                 <input type="button" class="btn btn-primary"
 					ng-click="placeOrder()" id="placeOrderLoginButton"
-					value="Log In &amp; Place Order" ng-hide="loginState.loggedIn" />
+					value="Log In &amp; Place Order" ng-hide="loginState.loggedIn"
+					ng-disabled="orderAPICallInProgress"/>
+				<img ng-src="img/ajax-loader.gif" ng-show="orderAPICallInProgress"/>
 			</div>
 		</div>
 	    </div>

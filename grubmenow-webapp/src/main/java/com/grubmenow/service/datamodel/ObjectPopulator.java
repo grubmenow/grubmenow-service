@@ -49,7 +49,7 @@ public class ObjectPopulator {
 		BigDecimal numberOfRatings = new BigDecimal(providerDAO.getNumberOfRatings());
 		
 		if(numberOfRatings.compareTo(BigDecimal.ZERO) != 0) {
-			BigDecimal rating = totalRatingPoints.divide(numberOfRatings).setScale(2, RoundingMode.CEILING);
+			BigDecimal rating = totalRatingPoints.divide(numberOfRatings, 2, RoundingMode.HALF_UP).setScale(2, RoundingMode.CEILING);
 			provider.setRating(rating);
 		}
 		

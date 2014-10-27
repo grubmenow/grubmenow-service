@@ -1,6 +1,7 @@
 var gmnBrowse = angular.module('gmnBrowse', []);
 
-gmnBrowse.controller('ZipcodeCtrl', function ($scope, $http) {
+gmnBrowse
+.controller('ZipcodeCtrl', function ($scope, $http) {
     $scope.location = {radius:5, availableDay:"Today"};
     $scope.searching = 0;
     $scope.showThankYouMessage = 0;
@@ -145,22 +146,35 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
 		if (isFBAuthenticated) {
 			orderObject.websiteAuthenticationToken = fbAccessToken;
 			var orderUrl = "api/placeOrder";
+			$scope.orderAPICallInProgress = true;
 			$http
 					.post(orderUrl, JSON.stringify(orderObject))
 					.success(
 							function(data) {
-								alert("Order successful");
-								console
-										.log("Order Placed successfully");
-							});
+								$scope.orderAPICallInProgress = false;
+								console.log("Order Placed successfully");
+								window.location.href = 'http://grubmenow.com/orderDetails.html?orderId='+
+//										'orderId' +
+										data.customerOrder.orderId+
+										'&orderPlacedSuccessful=true&allowReview=false&websiteAuthenticationToken='+fbAccessToken;
+								$scope.safeApply(function() {
+								});
+							})
+					.error(function(data, status, headers, config) {
+						$scope.orderAPICallInProgress = false;
+						console.log("Order failed");
+						$scope.safeApply(function() {
+							alert("Order failed: \n" + data);
+						})
+					})
+					;
 		} else {
 			$scope.orderSummaryTitle = "Please login via Facebook to proceed";
 		}
 
 		// apply the change in angular js state. Does not happen
 		// automatically since we are inside our own javascript
-		// function
-		// when this method is called
+		// function when this method is called
 		$scope.safeApply(function() {
 		});
 	}
@@ -181,69 +195,67 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
 		}
 
 		// first check if the user is logged in.
-		FB
-				.getLoginStatus(function(response) {
-					console.log("facebook check login status response:" + response);
-					if (response.status == 'connected') {
-						console .log("facebook login: user connected");
-						$scope.loginState.loggedIn = true;
-						if (isUsernameRequired) {
-							FB.api(
-								'/me',
-								function(meResponse) {
-									console.log('Successful login for: ' + meResponse.name);
-									$scope.loginState.name = meResponse.name;
-									callbackFunction(
-											true,
-											meResponse.name,
-											response.authResponse.accessToken,
-											callbackArgument);
-								});
-						} else {
-							// avoids unnecessary call by having the isUsernameRequired set to false
-							callbackFunction(true, null, response.authResponse.accessToken, callbackArgument);
-						}
-					} else if (facebookLoginTryCount <= 0
-							|| response.status === 'not_authorized') {
-						$scope.loginState.loggedIn = false;
-						$scope.loginState.name = null;
-						// The person is logged into Facebook, but not your app.
-
-						// if more facebook authentication tries available use them
-						if (facebookLoginTryCount > 0)
-						{
-							FB.login(function(response) {
-								$scope.loginToFbAndInvokeCallback(
-										facebookLoginTryCount - 1,
-										isUsernameRequired,
-										callbackFunction,
-										callbackArgument);
-							},
-							{
-								scope : 'public_profile,email'
-							});
-						}
-						else
-						{
-							console.log("User has not authorized the app");
-							callbackFunction(false, null, null, callbackArgument);
-						}
-					} else {
-						$scope.loginState.loggedIn = false;
-						$scope.loginState.name = null;
-						// The person is not logged into Facebook, so we're not sure if they are logged into this app or not.
-						FB.login(function(response) {
-							$scope.loginToFbAndInvokeCallback(
-									facebookLoginTryCount - 1,
-									isUsernameRequired,
-									callbackFunction,
+		FB.getLoginStatus(function(response) {
+			console.log("facebook check login status response:" + response);
+			if (response.status == 'connected') {
+				console .log("facebook login: user connected");
+				$scope.loginState.loggedIn = true;
+				if (isUsernameRequired) {
+					FB.api(
+						'/me',
+						function(meResponse) {
+							console.log('Successful login for: ' + meResponse.name);
+							$scope.loginState.name = meResponse.name;
+							callbackFunction(
+									true,
+									meResponse.name,
+									response.authResponse.accessToken,
 									callbackArgument);
-						},
-						{
-							scope : 'public_profile,email'
 						});
-					}
+				} else {
+					// avoids unnecessary call by having the isUsernameRequired set to false
+					callbackFunction(true, null, response.authResponse.accessToken, callbackArgument);
+				}
+			} else if (facebookLoginTryCount <= 0
+					|| response.status === 'not_authorized') {
+				$scope.loginState.loggedIn = false;
+				$scope.loginState.name = null;
+				// The person is logged into Facebook, but not your app.
+				// if more facebook authentication tries available use them
+				if (facebookLoginTryCount > 0)
+				{
+					FB.login(function(response) {
+						$scope.loginToFbAndInvokeCallback(
+								facebookLoginTryCount - 1,
+								isUsernameRequired,
+								callbackFunction,
+								callbackArgument);
+					},
+					{
+						scope : 'public_profile,email'
+					});
+				}
+				else
+				{
+					console.log("User has not authorized the app");
+					callbackFunction(false, null, null, callbackArgument);
+				}
+			} else {
+				$scope.loginState.loggedIn = false;
+				$scope.loginState.name = null;
+				// The person is not logged into Facebook, so we're not sure if they are logged into this app or not.
+				FB.login(function(response) {
+					$scope.loginToFbAndInvokeCallback(
+							facebookLoginTryCount - 1,
+							isUsernameRequired,
+							callbackFunction,
+							callbackArgument);
+				},
+				{
+					scope : 'public_profile,email'
 				});
+			}
+		});
 	};
 
 	$scope.goToOrderSummary = function(isFBAuthenticated,
@@ -416,8 +428,13 @@ gmnBrowse.controller('RestuarantCtrl', function ($scope, $http, $location) {
         $scope.foodItem = data.foodItem;
         $scope.restList.foodItem.foodItemQty = 1;
     });
+})
+.config(function($locationProvider)
+	{
+		$locationProvider.html5Mode(true)
+			.hashPrefix('!');
 });
 
 jQuery(function($){
     
-});
+})

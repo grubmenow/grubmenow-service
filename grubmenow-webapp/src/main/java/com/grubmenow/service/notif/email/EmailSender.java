@@ -3,6 +3,7 @@ package com.grubmenow.service.notif.email;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.NumberFormat;
 
 import lombok.extern.apachecommons.CommonsLog;
 
@@ -177,7 +178,7 @@ public class EmailSender
 		
 		public static String formatAmount(Amount amount)
 		{
-			return amount.getCurrency() + " " + amount.getValue();
+			return amount.getCurrency() + " " + NumberFormat.getCurrencyInstance().format(amount.getValue());
 		}
 		
 		public static String formatAddressFirstLine(ProviderDAO provider)

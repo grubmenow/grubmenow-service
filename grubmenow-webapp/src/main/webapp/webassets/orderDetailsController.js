@@ -18,7 +18,14 @@ gmnBrowse.controller('orderDetailsController', function ($scope, $http, $locatio
         $('.loadMessage').html("Please wait.. Loading Order");
         
         var requestObj = new Object();
-        requestObj.websiteAuthenticationToken = '10152843609422975';
+        if ($scope.websiteAuthenticationToken != null)
+        {
+        	requestObj.websiteAuthenticationToken = $scope.websiteAuthenticationToken;
+        }
+        else
+        {
+        	requestObj.websiteAuthenticationToken = '10152843609422975';
+        }
         requestObj.orderId = $scope['orderId'];
         $scope.getCustomerOrderRequest = requestObj;
 
