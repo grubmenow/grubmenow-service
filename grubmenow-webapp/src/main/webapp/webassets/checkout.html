@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="gmnBrowse">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">  
+<title>GrubMeNow Chef Selector</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+<script src="mainController.js"></script>
+<script src="checkoutController.js"></script>
+</head>
+<body>
+<!--  fb-root required on every page where we want to have fb login. otherwise there is a warning -->
+<div id="fb-root"/>
+<div class="rest-sel" ng-controller="CheckoutCtrl">
+
+<div class="col-xs-12  text-center">
+    <img src="logo.png" class="logoImage"/>
+</div>
+    
+<div class="container">
+    <div class="col-xs-12 text-info optionsText">
+	   Your order details:
+    </div>
+    <p/>
+    <div ng-repeat="order in finalOrder.items">
+        <div class="col-xs-10">
+            {{order.orderQty}} X {{order.orderName}}
+		</div>
+		<div class="col-xs-2 text-right">
+			{{order.orderPrice | number:2 }}
+		</div>
+    </div>
+    <p/>
+    <div class="col-xs-12 text-right">
+	   <strong>Tax: ${{finalOrder.tax | number:2 }}</strong>
+	</div>
+    <p/>
+    <div class="col-xs-12 text-right">
+	   <strong>Total: ${{finalOrder.totalPrice | number:2 }}</strong>
+	</div>
+	<p/>
+    <div class="col-xs-12 text-center">
+                <!--  it has to be an html button if we want to open facebook login popup here -->
+                <input type="button" class="btn btn-primary" ng-click="" id="placeOrderButton" value="Place Order" />
+				
+	</div>
+</div>
+</div>
+</body>
+</html>
