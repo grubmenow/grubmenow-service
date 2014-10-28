@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="orderDetails">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">  
+<title>GrubMeNow Order</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+<script src="orderDetailsController.js"></script>
+<style type="text/css">
+    .bs-example {
+    	margin: 20px;
+    }
+    
+    .logoImage {
+		margin-bottom: 20px;
+    }
+    .zipForm {
+		margin: 20px;
+    }
+    
+    body {
+		color: black;
+		font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode",
+			"Luxi Sans", Tahoma, sans-serif;
+		margin: 0;
+		padding: 0;
+		
+    }
+    
+    @-ms-viewport {
+		width: device-width;
+    }
+    
+</style>
+</head>
+<body>
+	<div class="text-center">
+	    <img src="logo.png" class="logoImage"/>
+		  <div class="text-left container">
+		  	<span style="font-size: 28px">Frequently Asked Questions</span>
+			<div class="panel-group" id="faq">
+				<div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse1">
+		         				What is grubmenow?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse1" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                     Grubmenow is a place to order fresh, home cooked food. If you are looking to escape the mass produced food sold elsewhere, Grubmenow is where you should order your next lunch. Grubmenow ‘chefs’ prepare food at home. The food is made to order and is guaranteed to be fresh.
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse2">
+		         				How does it work?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse2" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                     First you provide your delivery zip code. Then select if you want the food same day or next day. We will show you the items that match your search. We will also display the chef address information as well. Select one or more items listed by chef, enter your payment information and you are done. You will get a notification once the food is ready, you can pick it up in a 2 hour time window.
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse3">
+		         				What locations do you currently serve?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse3" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                     We currently have chefs in Seattle downtown, Bellevue, Redmond and Kirkland zip codes. More locations will be added soon.
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse4">
+		         				When can I order and when is the food ready?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse4" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                    Order by 5PM and pick up between 7 to 9PM.
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse5">
+		         				Is the food ready to eat?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse5" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                    Absolutely. If you wish, you can heat the food in microwave before you consume. Our food containers are microwave safe.
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse6">
+		         				Can I cancel my order?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse6" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                    Absolutely. You can cancel by 5PM on the date for which you ordered. 
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse7">
+		         				Will you deliver?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse7" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                    Sorry, at this time we do not provide delivery. 
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse8">
+		         				What if I am not happy with the quality of the food? Can I get a refund?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse8" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                    We are sorry that you are not happy. Contact us with your order details. We will do the best we can to resolve it for you, including providing a refund. We cannot refund for orders that you fail to pick up.
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse9">
+		         				Where can I find food allergy information?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse9" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                    At this stage, we are unable to provide food allergy information. Our chefs prepare food in their kitchens where allergens might be present. If you have food allergies, please contact chef for ingredient information.
+		                 </div>
+		             </div>
+		         </div>
+		         
+		         
+		         <div class="panel panel-default">
+		             <div class="panel-heading">
+		                 <h4 class="panel-title">
+		                     <a class="accordion-toggle collapsed" data-toggle="collapse" href="#collapse10">
+		         				How do you check the quality of the food?
+		       				</a>
+		                 </h4>
+		             </div>
+		             <div id="collapse10" class="panel-collapse collapse" style="height: 0px;">
+		                 <div class="panel-body">
+		                    Food safety is very important to us. We take it very seriously. We take multiple steps to verify quality - we prescreen the cooking facility and food prepared by every chef before they get listed. We do random checks on the food as well as the cooking facility. We request every customer to rate chefs and provide feedback. We take every complaint seriously. When we are notified of any problems, we immediately take down the chef(s).
+		                 </div>
+		             </div>
+		         </div>
+		         
+			</div>
+		  </div>
+  </div>
+</body>
+</html>     

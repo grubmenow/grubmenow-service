@@ -3,6 +3,7 @@ package com.grubmenow.service.notif.email;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.NumberFormat;
 
 import lombok.extern.apachecommons.CommonsLog;
 
@@ -52,6 +53,9 @@ public class EmailSender
         
         velocityEngine.setProperty(RuntimeConstants.RESOURCE_LOADER, "classpath");
         velocityEngine.setProperty("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+        velocityEngine.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.SimpleLog4JLogSystem");
+        velocityEngine.setProperty("runtime.log.logsystem.log4j.category", "velocity");
+        velocityEngine.setProperty("runtime.log.logsystem.log4j.logger", "velocity");
 		velocityEngine.init();
 		
 		// initialize the various templates
@@ -174,7 +178,7 @@ public class EmailSender
 		
 		public static String formatAmount(Amount amount)
 		{
-			return amount.getCurrency() + " " + amount.getValue();
+			return amount.getCurrency() + " " + NumberFormat.getCurrencyInstance().format(amount.getValue());
 		}
 		
 		public static String formatAddressFirstLine(ProviderDAO provider)

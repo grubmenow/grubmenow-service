@@ -10,7 +10,6 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-<script src="http://connect.facebook.net/en_US/sdk.js"></script>
 <script src="browseController.js"></script>
 <script src="restaurantChooser.js"></script>
 
@@ -125,7 +124,14 @@
                             <span class="foodTitle">${{rest.foodItemOffer.price.value | number:2}}</span>
                         </div>
                         <div class="col-xs-2">
-                            <input type="number" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2" style="width: 80px" min="0" max="{{rest.foodItemOffer.availableQuantity}}" required>
+                            <!--  Removing the type="number" and size elements because they are not playing well with the mobile chrome browser -->
+                            <div class="input-group">
+                            	<input class="form-control qtyBox uneditable-input" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2" min="0" max="{{rest.foodItemOffer.availableQuantity}}">
+                            	<div class="input-group-btn">
+                            	  <button type="button" class="btn btn-default">+</button>
+                            	  <button type="button" class="btn btn-default">-</button>
+                            	</div>
+                            </div>  	
                             
                             <span ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px">Hurry, {{rest.foodItemOffer.availableQuantity}} items left !</span>
                         </div>
@@ -153,10 +159,16 @@
 			</div>
 			<div class="clearfix"></div>
                         <p/>
-			
                         <div class="col-xs-12 text-right atcButton">
 			    <span class="totalInfo"><strong>Total: {{getTotalItems($index)}} items  @ ${{getTotalPrice($index) | number:2 }} &nbsp;</strong></span>
-                            <button type="button" class="btn btn-primary" ng-click="getFinalOrder($index)" id="checkoutButton" ng-mouseover="onCheckoutButtonMouseOver()">Checkout</button>
+                            <!--  it has to be an html button if we want to open facebook login popup here -->
+                            <input type="button" class="btn btn-primary" ng-click="getFinalOrder($index)" id="loginButton"
+                                style="display: none"
+                                ng-mouseleave="onCheckoutButtonMouseLeave()"
+                                value="&nbsp;&nbsp;Log In&nbsp;&nbsp;&nbsp;"/>
+                            <input type="button" class="btn btn-primary" ng-click="getFinalOrder($index)" id="checkoutButton"
+                                ng-mouseover="onCheckoutButtonMouseOver()"
+                                value="Checkout"/>
                         </div>
                     </div>
                 </div>
@@ -169,7 +181,7 @@
 	    <div class="modal-content">
 		<div class="modal-header">
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">X</button>
-		    <h4 class="modal-title">{{loginState.title}}</h4>
+		    <h4 class="modal-title">{{orderSummaryTitle}}</h4>
 		</div>
 		<div class="modal-body">
 		    <div class="col-xs-12 text-info optionsText">
@@ -193,14 +205,16 @@
 			<strong>Total: ${{finalOrder.totalPrice | number:2 }}</strong>
 		    </div>
 		    <p>
-		    <div class="col-xs-12 text-center" ng-show="loginState.name">
-		    	<button type="button" class="btn btn-primary" ng-click="placeOrder()">Place Order</button>
-		    </div>
-		    <div class="col-xs-12 text-center" ng-show="!loginState.name">
-		    	<fb:login-button scope="public_profile,email" onlogin="checkFBLoginState();">
-		    	</fb:login-button>
-			<!-- <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="false" data-auto-logout-link="false"></div> -->
-		    </div>
+		    <div class="col-xs-12 text-center">
+                <!--  it has to be an html button if we want to open facebook login popup here -->
+                <input type="button" class="btn btn-primary" ng-click="placeOrder()" id="placeOrderButton" value="Place Order" ng-show="loginState.loggedIn"
+                    ng-disabled="orderAPICallInProgress"/>
+                <input type="button" class="btn btn-primary"
+					ng-click="placeOrder()" id="placeOrderLoginButton"
+					value="Log In &amp; Place Order" ng-hide="loginState.loggedIn"
+					ng-disabled="orderAPICallInProgress"/>
+				<img ng-src="img/ajax-loader.gif" ng-show="orderAPICallInProgress"/>
+			</div>
 		</div>
 	    </div>
 	</div>
