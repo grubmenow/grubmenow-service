@@ -13,9 +13,9 @@
 <script src="mainController.js"></script>
 <script src="checkoutController.js"></script>
 </head>
+
 <body>
-<!--  fb-root required on every page where we want to have fb login. otherwise there is a warning -->
-<div id="fb-root"/>
+<div id="fb-root"></div>
 <div class="rest-sel" ng-controller="CheckoutCtrl">
 
 <div class="col-xs-12  text-center">
@@ -44,10 +44,18 @@
 	   <strong>Total: ${{finalOrder.totalPrice | number:2 }}</strong>
 	</div>
 	<p/>
-    <div class="col-xs-12 text-center">
-                <!--  it has to be an html button if we want to open facebook login popup here -->
-                <input type="button" class="btn btn-primary" ng-click="" id="placeOrderButton" value="Place Order" />
-				
+    <div ng-show="!FB.name && !FB.notRecognized" class="col-xs-12 text-center">
+        Figuring out which button to show
+    </div>
+    <div ng-show="FB.name" class="col-xs-12 text-center">
+        <h4>Welcome {{FB.name}}.</h4>
+        <p/>
+        <input type="button" class="btn btn-primary" ng-click="" id="placeOrderButton" value="Place Order" />
+    </div>
+    <div ng-show="FB.notRecognized" class="col-xs-12 text-center">
+        <h4>Please login via Facebook to place the order.</h4>
+        <p/>
+        <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>			
 	</div>
 </div>
 </div>

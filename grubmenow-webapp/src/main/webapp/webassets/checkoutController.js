@@ -17,33 +17,61 @@ angular.module('gmnBrowse').controller('CheckoutCtrl', function ($scope, $http, 
     }
     
     $scope.getFinalOrder = function() {
-	$scope.finalOrder = JSON.parse(localStorage.getItem('gmn.finalOrder'));
-	
-    }
+    	$scope.finalOrder = JSON.parse(localStorage.getItem('gmn.finalOrder'));
+	}
     
     $scope.initialize = function() {
-    	window.fbAsyncInit = function() {
+    	// Load the SDK asynchronously
+    	(function(d, s, id) {
+    		var js, fjs = d.getElementsByTagName(s)[0];
+    		if (d.getElementById(id)) return;
+    		js = d.createElement(s); js.id = id;
+    		js.src = "//connect.facebook.net/en_US/sdk.js";
+    		fjs.parentNode.insertBefore(js, fjs);
+    	}(document, 'script', 'facebook-jssdk'));
+	  
+        window.fbAsyncInit = function() {
             FB.init({
-                appId      : '107439809640',
+//                appId      : '85199433896',
+                appId      : '591805167609392', 
                 cookie     : true,  // enable cookies to allow the server to access the session
                 xfbml      : true,  // parse social plugins on this page
                 version    : 'v2.1' // use version 2.1
             });
           
-            FB.getLoginStatus(function(response) {
-            	if(response.status != "connected") {
-            		return;
-            	}
-            	$scope.FB.accessToken = response.authResponse.accessToken;
-                FB.api('/me', function(response) {
+            function getName(response) {
+            	$scope.$apply(function() {
+            		$scope.FB.accessToken = response.authResponse.accessToken;
+            	});            	
+            	FB.api('/me', function(response) {
                     if (response.name) {
-                        fbLoginName = response.name;
-                        $scope.FB.name = response.name;
+                    	$scope.$apply(function() {
+                    		$scope.FB.name = response.name;
+                    	});                        
                     }
                 });
+            }	
+            
+            FB.getLoginStatus(function(response) {
+            	if(response.status != "connected") {
+            		$scope.$apply(function() {
+                		$scope.FB.notRecognized = 1;
+                	});
+            		return;
+            	}
+            	getName(response);
+            });
+            
+            FB.Event.subscribe('auth.authResponseChange', function(response) {
+            	if(response.status == "connected") {
+            		$scope.FB.notRecognized = 0;
+            		getName(response);
+            	}
             });
         };
     }
     
+    $scope.FB = {};
+    $scope.initialize();
     $scope.getFinalOrder();
 });
