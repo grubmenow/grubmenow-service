@@ -2,7 +2,7 @@ angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http
     $scope.location = {radius:5, availableDay:"Today"};
     $scope.searching = 0;
     $scope.showThankYouMessage = 0;
-    $scope.feedback = {generalFeedback: '', newItems: ''};
+    $scope.feedback = {generalFeedback: '', newItems: '', emailId: ""};
     $scope.showFeedbackForm = 0;
     $scope.showFoodItemSuggestionForm = 0;
     $( ".formElem" ).change(function (e) {
@@ -67,7 +67,7 @@ angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http
     
     $scope.submitFoodItemSuggestionForm = function()
     {
-    	request = {foodItemSuggestions: $scope.feedback.newItems};
+    	request = {foodItemSuggestions: $scope.feedback.newItems, zipCode: $scope.location.zipCode, emailId: $scope.feedback.emailId};
     	$http.post("api/submitFoodItemSuggestions", JSON.stringify(request)).success(function(data) {
     		$scope.showFoodItemSuggestionForm = 0;
         	$scope.showFeedbackForm = 0;

@@ -29,6 +29,7 @@ import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
+import com.grubmenow.service.datamodel.SearchSuggestionFeedbackDAO;
 import com.grubmenow.service.persist.sql.SQLReader;
 
 /**
@@ -67,6 +68,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	    configuration.addAnnotatedClass(FoodItemOfferDAO.class);
 	    configuration.addAnnotatedClass(ProviderDAO.class);
 	    configuration.addAnnotatedClass(OrderFeedbackDAO.class);
+	    configuration.addAnnotatedClass(SearchSuggestionFeedbackDAO.class);
 	    
 	    configuration.setProperties(properties);
 	    ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
@@ -201,6 +203,13 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		log.info(String.format("Updating provider: %s " , provider));
 		
 		updateObject(provider);
+	}
+
+	@Override
+	public void createSearchSuggestionFeedback(SearchSuggestionFeedbackDAO searchSuggestion)
+	{
+	    log.info(String.format("Adding search suggestion: %s", searchSuggestion));
+	    saveObject(searchSuggestion);
 	}
 
 	

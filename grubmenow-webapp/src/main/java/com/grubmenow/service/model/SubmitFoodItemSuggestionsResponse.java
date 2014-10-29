@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class SubmitFoodItemSuggestionsResponse {
-	private String feedbackMessage; 
+	private String feedbackMessage;
 }

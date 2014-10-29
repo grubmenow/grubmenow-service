@@ -131,11 +131,12 @@
   			<button ng-click="openSearchSuggestionForm()" class="btn btn-secondary">No</button>
 		</div>
 		<div ng-show="showFeedbackForm">
-			<textarea class="form-control" rows="3" ng-model="feedback.generalFeedback" placeholder="Your feedback goes here" style="width:50%"></textarea>
+			<input type="text" class="form-control formElem"  ng-model="feedback.generalFeedback" placeholder="Your feedback goes here" style="width:50%"></input>
 			<button ng-click="submitFeedbackForm()" class="btn btn-secondary">Submit</button>
 		</div>
 		<div ng-show="showFoodItemSuggestionForm">
-			<textarea class="form-control" rows="3" ng-model="feedback.newItems" placeholder="comma separated food items you are looking for" style="width:50%"></textarea>
+			<input type="text" class="form-control formElem"  ng-model="feedback.newItems" placeholder="comma separated food items you are looking for" style="width:40%"></input>
+			<input type="text" class="form-control formElem"  ng-model="feedback.emailId" placeholder="emailId" style="width:40%"></input>
 			<button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary">Submit</button>
 		</div>
 		<div ng-show="showThankYouMessage" class="text-left">

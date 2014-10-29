@@ -12,6 +12,7 @@ import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
+import com.grubmenow.service.datamodel.SearchSuggestionFeedbackDAO;
 
 
 /**
@@ -176,5 +177,10 @@ public interface PersistenceHandler {
 	 * Create Order Feedback
 	 */
 	public void updateOrderFeedback(OrderFeedbackDAO orderFeedbackDAO);
+
+	/**
+	 * Create Search suggestion feedback object in database
+	 */
+    void createSearchSuggestionFeedback(SearchSuggestionFeedbackDAO searchSuggestion);
 
 }
