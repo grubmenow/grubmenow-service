@@ -20,7 +20,7 @@ angular.module('gmnBrowse').controller('CheckoutCtrl', function ($scope, $http, 
     	$scope.finalOrder = JSON.parse(localStorage.getItem('gmn.finalOrder'));
 	}
     
-    $scope.initialize = function() {
+    $scope.initializeFB = function() {
     	// Load the SDK asynchronously
     	(function(d, s, id) {
     		var js, fjs = d.getElementsByTagName(s)[0];
@@ -71,7 +71,31 @@ angular.module('gmnBrowse').controller('CheckoutCtrl', function ($scope, $http, 
         };
     }
     
+    
+    $scope.makePayment = function() {
+    	var $form = $('#payment-form');
+    	$scope.stripe.disableSubmit = 1;
+    	Stripe.card.createToken($form, $scope.stripeResponseHandler);
+    }
+    
+    $scope.stripeResponseHandler = function(status, response) {
+    	$scope.$apply(function() {
+    		$scope.stripe.disableSubmit = 0;
+    		var $form = $('#payment-form');
+
+    		if (response.error) {
+    			$scope.stripe.error = response.error;
+    		} else {
+    			// token contains id, last4, and card type
+    			$scope.stripe.token = response.id;
+    			$scope.stripe.error = {};
+    		}
+    	});
+    }
+    
     $scope.FB = {};
-    $scope.initialize();
+    $scope.stripe = {};
+    $scope.initializeFB();
+    Stripe.setPublishableKey('pk_test_CJPjqWuObYi705eii41Faeq7');
     $scope.getFinalOrder();
 });
