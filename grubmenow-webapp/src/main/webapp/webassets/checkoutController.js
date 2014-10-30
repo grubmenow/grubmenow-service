@@ -1,14 +1,15 @@
 angular.module('gmnBrowse').controller('CheckoutCtrl', function ($scope, $http, $location) {
     
-    $scope.placeOrder = function() {
+    $scope.placeOrder = function(token) {
     	var orderObject = {};
     	orderObject.orderAmount = {};
     	orderObject.orderAmount.currency = "USD";
     	orderObject.orderAmount.value = Math.round($scope.finalOrder.totalPrice*100)/100;
     	orderObject.providerId = $scope.finalOrder.providerId;
     	orderObject.websiteAuthenticationToken = $scope.FB.accessToken;
+    	orderObject.onlinePaymentToken = token;
     	orderObject.deliveryMethod = "CUSTOMER_PICKUP";
-    	orderObject.paymentMethod = "CASH_ON_DELIVERY"
+    	orderObject.paymentMethod = token ? "ONLINE_PAYMENT" : "CASH_ON_DELIVERY"
     	orderObject.orderItems = $scope.finalOrder.orderItems;
     	var orderUrl = "api/placeOrder";
     	$http.post(orderUrl, JSON.stringify(orderObject)).success(function(data) {
@@ -89,6 +90,7 @@ angular.module('gmnBrowse').controller('CheckoutCtrl', function ($scope, $http, 
     			// token contains id, last4, and card type
     			$scope.stripe.token = response.id;
     			$scope.stripe.error = {};
+    			$scope.placeOrder(response.id);
     		}
     	});
     }

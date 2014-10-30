@@ -76,9 +76,11 @@
                             data-stripe="exp-year" />
                     </div>
 
-                    <input type="button" class="btn btn-primary" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="placeOrderButton" value="Place Order" />
+                    <input type="button" class="btn btn-primary" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="makePaymentButton" value="Pay Online and place order" />
                 </form>
-                <p/>        
+                <p/> <p><p><p><p>       <p>
+    
+    <input type="button" class="btn btn-primary" ng-click="placeOrder()" id="placeOrderButton" value="Place Order for COD" />
     </div>
     <div ng-show="FB.notRecognized" class="col-xs-12 text-center">
         <h4>Please login via Facebook to place the order.</h4>
