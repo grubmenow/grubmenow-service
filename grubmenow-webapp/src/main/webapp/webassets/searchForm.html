@@ -123,24 +123,28 @@
     	</div>
     </div>
     
-    <div ng-show="searchedOnce" class="text-left">
-    	<h4>Search Feedback</h4>
-		Did you find what you were looking for?
-		<div class="btn-toolbar">
-  			<button ng-click="openFeedbackForm()" class="btn btn-secondary">Yes</button>
-  			<button ng-click="openSearchSuggestionForm()" class="btn btn-secondary">No</button>
-		</div>
-		<div ng-show="showFeedbackForm">
-			<input type="text" class="form-control formElem"  ng-model="feedback.generalFeedback" placeholder="Your feedback goes here" style="width:50%"></input>
-			<button ng-click="submitFeedbackForm()" class="btn btn-secondary">Submit</button>
-		</div>
-		<div ng-show="showFoodItemSuggestionForm">
-			<input type="text" class="form-control formElem"  ng-model="feedback.newItems" placeholder="comma separated food items you are looking for" style="width:40%"></input>
-			<input type="text" class="form-control formElem"  ng-model="feedback.emailId" placeholder="emailId" style="width:40%"></input>
-			<button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary">Submit</button>
-		</div>
-		<div ng-show="showThankYouMessage" class="text-left">
-			Thank you for your feedback!
+    <div class="container spacer">
+	    <div ng-show="searchedOnce" class="text-left">
+	    	<h4>Search Feedback</h4>
+			Did you find what you were looking for?
+			<div class="btn-toolbar">
+	  			<button ng-click="openFeedbackForm()" class="btn btn-secondary">Yes</button> &nbsp;
+	  			<button ng-click="openSearchSuggestionForm()" class="btn btn-secondary">No</button>
+			</div>
+			<div ng-show="showFeedbackForm">
+			    <b>Leave us some comments about your search; your comments will help make our site better for everyone.</b>
+				<input type="text" class="form-control formElem"  ng-model="feedback.generalFeedback" placeholder="Your feedback goes here" style="width:50%"></input>
+				<button ng-click="submitFeedbackForm()" class="btn btn-secondary">Submit</button>
+			</div>
+			<div ng-show="showFoodItemSuggestionForm">
+			    <b>Leave us some comments about food items you were looking for; your comments will help make our site better for everyone.</b>
+				<input type="text" class="form-control formElem"  ng-model="feedback.newItems" placeholder="comma separated food items you are looking for" style="width:40%"></input>
+				<input type="text" class="form-control formElem"  ng-model="feedback.emailId" placeholder="emailId" style="width:40%"></input>
+				<button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary">Submit</button>
+			</div>
+			<div ng-show="showThankYouMessage" class="text-left">
+				Thank you for your feedback!
+			</div>
 		</div>
 	</div>
 </div>

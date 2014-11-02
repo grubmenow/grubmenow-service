@@ -3,6 +3,8 @@ package com.grubmenow.service.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +17,10 @@ import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.SearchFoodItemRequest;
 import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandlerImpl;
 
 @RestController
+@CommonsLog
 public class SearchFoodItemService extends AbstractRemoteService {
 
 	@RequestMapping(value = "/api/searchFoodItems", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
@@ -25,11 +29,16 @@ public class SearchFoodItemService extends AbstractRemoteService {
 
 		validateInput(request);
 
+		List<FoodItem> foodItems = new ArrayList<FoodItem>();
 		List<String> neighboringZipCodes = getAllNeighboringZipCodes(request.getZipCode(), request.getRadius());
-
+		if (neighboringZipCodes == null || neighboringZipCodes.isEmpty())
+		{
+		    log.info("No neighboring zip codes found around ["+request.getZipCode()+"] in ["+request.getRadius()+"]");
+		    log.info("Returning empty food items");
+		    return foodItems;
+		}
 		// get all the distinct food items in the related zip code
 		List<FoodItemDAO> foodItemsAround = getAllFoodItemsInZipCodes(neighboringZipCodes, request.getAvailableDay());
-		List<FoodItem> foodItems = new ArrayList<FoodItem>();
 
 		if (foodItemsAround != null) {
 			for (FoodItemDAO dao : foodItemsAround) {
