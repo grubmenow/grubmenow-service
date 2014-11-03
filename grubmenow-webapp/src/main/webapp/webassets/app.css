@@ -1,0 +1,121 @@
+.logoImage {
+     margin: 20px 0px;
+}
+
+.formBox {
+     padding: 15px;
+     background: rgba(0, 0, 0, 0.7);
+     border-radius: 5px;
+     display: inline-block;
+}
+
+.btnGo, .btnGo:hover, .btnGo:focus {
+     background-color: #FF8246;
+     color: white;
+     border: 1px solid #FF8246;
+     margin: 0px 7px;
+     outline: none;
+}
+
+@
+-ms-viewport {
+     width: device-width;
+}
+
+.formElem {
+     border: 1px solid #000000;
+     margin: 0px 14px 0px 0px;
+     color: #000000;
+     font-weight: bold;
+}
+
+.formElem:focus {
+     border: 1px solid #000000;
+}
+
+.formContainer {
+     background-image: url("img/bg-grid.png");
+     background-repeat: no-repeat;
+     background-position: center;
+     height: 350px;
+     background-size: 100%;
+}
+
+.filler {
+     height: 150px;
+}
+
+.fillerxs {
+     height: 70px;
+}
+
+.thumbnail {
+     border: 5px solid #FFD446;
+}
+
+.spacer {
+     margin-top: 35px;
+}
+
+.redBorder {
+     border: 3px solid red;
+}
+
+.rest-sel {
+     margin: 10px 20px;
+}
+
+.restIcon {
+     float: right;
+}
+
+.tableTitle {
+     font-weight: bold;
+     text-decoration: underline;
+}
+
+.qtyBox {
+     width: 45px;
+}
+
+.foodTitle {
+     line-height: 24px;
+}
+
+.panel-heading {
+     background-color: #0A549C !important;
+     color: #FFFFFF;
+     cursor: pointer;
+}
+
+.panelLink {
+     color: #FFFFFF !important;
+}
+
+.atcButton {
+     border-top: 1px solid #E1EEF5;
+     padding-top: 10px;
+}
+
+.showhideBtn {
+     margin-left: -14px;
+}
+
+.optionsText {
+     color: #F04E00;
+     font-weight: bold;
+}
+
+.navLineBtn {
+     color: #0A549C;
+     font-weight: bold;
+}
+
+.tableCtr {
+     padding: 0px !important;
+     margin: 0px !important;
+}
+
+.modal-content {
+     height: 400px;
+}

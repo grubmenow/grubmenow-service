@@ -1,168 +1,134 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="gmnBrowse">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">  
-<title>GrubMeNow Chef Selector</title>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-<script src="mainController.js"></script>
-<script src="restaurantChooserController.js"></script>
-
-<style type="text/css">
-    @-ms-viewport {
-	width: device-width;
-    }
-    .rest-sel {
-        margin:10px 20px;
-    }
-    .panel-heading {
-        cursor: pointer;
-    }
-    .restIcon {
-        float: right;
-    }
-    .tableTitle {
-        font-weight: bold;
-        text-decoration: underline;
-    }
-    .qtyBox {
-        width: 45px;
-    }
-    .foodTitle {
-        line-height: 24px;
-    }
-    .panel-heading {
-        background-color: #E1EEF5 !important;
-    }
-    .atcButton {
-        border-top: 1px solid #E1EEF5;
-        padding-top: 10px;
-    }
-    .showhideBtn {
-	margin-left: -14px;
-    }
-    .logoImage {
-	margin-bottom: 20px;
-    }
-    .optionsText {
-	color: #F04E00;
-	font-weight: bold;
-    }
-    .navLineBtn {
-	color: #0A549C;
-	font-weight: bold;
-    }
-    .tableCtr {
-	padding: 0px !important;
-	margin: 0px !important;
-    }
-    .modal-content {
-    height: 400px;
-    }
-</style>
-</head>
-<body>
-<!--  fb-root required on every page where we want to have fb login. otherwise there is a warning -->
-<div id="fb-root"/>
 <div class="rest-sel" ng-controller="RestuarantCtrl">
-    <div class="col-xs-12  text-center">
-	   <img src="logo.png" class="logoImage"/>
-    </div>
     <div class="clearfix"></div>
     <div>
-	<div class="col-xs-6 text-left navLineBtn">
-	    Your options for '{{foodItem.foodItemName}}' for {{availableDay}}: 
-	</div>
-	<div class="col-xs-6 text-right navLineBtn">
-	    <a href="searchForm.html">Back to food results <span class="glyphicon glyphicon-cutlery"></span></a>
-	</div>
+        <div class="col-xs-6 text-left navLineBtn">Your options
+            for '{{foodItem.foodItemName}}' for {{availableDay}}:</div>
+        <div class="col-xs-6 text-right navLineBtn">
+            <span class="glyphicon glyphicon-chevron-left"></span> Back
+            to food results
+        </div>
     </div>
     <div class="clearfix"></div>
-    <p/>
+    <p />
     <div class="panel-group" id="accordion">
-	<div class="panel panel-primary" ng-repeat="rest in restList.providerFoodItemOffers">
-	    <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}">
-	        <div class="panel-heading">
-	            <h4 class="panel-title">
-	                {{rest.provider.providerName}}
-	            </h4>
-	        </div>
-	    </a>
-	    <div id="collapse{{$index}}" class="panel-collapse collapse" ng-class="{in:$index==0}">
+        <div class="panel panel-primary"
+            ng-repeat="rest in restList.providerFoodItemOffers">
+            <a data-toggle="collapse" data-parent="#accordion"
+                href="#collapse{{$index}}" class="panelLink">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        {{rest.provider.providerName}}</h4>
+                </div>
+            </a>
+            <div id="collapse{{$index}}" class="panel-collapse collapse"
+                ng-class="{in:$index==0}">
                 <div class="panel-body">
                     <div class="container tableCtr">
-			<div class="col-xs-12">
-			    <p class="optionsText">{{rest.deliverOption}}</p>
-			</div>
+                        <div class="col-xs-12">
+                            <p class="optionsText">{{rest.deliverOption}}</p>
+                        </div>
                         <div class="col-xs-8">
-                            <span class="tableTitle">Name</span>    
+                            <span class="tableTitle">Name</span>
                         </div>
                         <div class="col-xs-2">
-                            <span class="tableTitle">Price</span>    
+                            <span class="tableTitle">Price</span>
                         </div>
                         <div class="col-xs-2">
-                            <span class="tableTitle">Qty</span>    
+                            <span class="tableTitle">Qty</span>
                         </div>
-			
+
                         <div class="clearfix"></div>
-			
+
                         <div class="col-xs-8">
-                            <span class="foodTitle">{{restList.foodItem.foodItemName}}</span><p/>
+                            <span class="foodTitle">{{restList.foodItem.foodItemName}}</span>
+                            <p />
                             <span class="foodDesc text-muted">{{rest.foodItemOffer.offerDescription}}</span>
                         </div>
                         <div class="col-xs-2">
-                            <span class="foodTitle">${{rest.foodItemOffer.price.value | number:2}}</span>
+                            <span class="foodTitle">${{rest.foodItemOffer.price.value
+                                | number:2}}</span>
                         </div>
                         <div class="col-xs-2">
                             <!--  Removing the type="number" and size elements because they are not playing well with the mobile chrome browser -->
                             <div class="input-group">
-                            	<input class="form-control qtyBox uneditable-input" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2" min="0" max="{{rest.foodItemOffer.availableQuantity}}">
-                            	<div class="input-group-btn">
-                            	  <button type="button" class="btn btn-default">+</button>
-                            	  <button type="button" class="btn btn-default">-</button>
-                            	</div>
-                            </div>  	
-                            
-                            <span ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px">Hurry, {{rest.foodItemOffer.availableQuantity}} items left !</span>
+                                <input
+                                    class="form-control qtyBox uneditable-input"
+                                    id="primaryQty{{$index}}"
+                                    ng-model="restList.foodItem.foodItemQty"
+                                    maxlength="2" min="0"
+                                    max="{{rest.foodItemOffer.availableQuantity}}">
+                                <div class="input-group-btn">
+                                    <button type="button"
+                                        class="btn btn-default">+</button>
+                                    <button type="button"
+                                        class="btn btn-default">-</button>
+                                </div>
+                            </div>
+
+                            <span
+                                ng-if="rest.foodItemOffer.availableQuantity < 10"
+                                style="color: maroon; font-size: 10px">Hurry,
+                                {{rest.foodItemOffer.availableQuantity}}
+                                items left !</span>
                         </div>
-                        
+
                         <div class="clearfix"></div>
-                        <p/>
+                        <p />
                         <div class="col-xs-12 text-left">
-                            <button type="button" id="showMore{{$index}}" ng-show="!showRestMenu[rest.provider.providerId]" class="btn btn-link showhideBtn optionsText" ng-click="showMenu(rest.provider.providerId)">More from this seller <span class="glyphicon glyphicon-chevron-down"></span></button>
-			    <button type="button" id="showMore{{$index}}" ng-show="showRestMenu[rest.provider.providerId]" class="btn btn-link showhideBtn optionsText" ng-click="showRestMenu[rest.provider.providerId]=0">Hide <span class="glyphicon glyphicon-chevron-up"></span></button>
+                            <button type="button"
+                                id="showMore{{$index}}"
+                                ng-show="!showRestMenu[rest.provider.providerId]"
+                                class="btn btn-link showhideBtn optionsText"
+                                ng-click="showMenu(rest.provider.providerId)">
+                                More from this seller <span
+                                    class="glyphicon glyphicon-chevron-down"></span>
+                            </button>
+                            <button type="button"
+                                id="showMore{{$index}}"
+                                ng-show="showRestMenu[rest.provider.providerId]"
+                                class="btn btn-link showhideBtn optionsText"
+                                ng-click="showRestMenu[rest.provider.providerId]=0">
+                                Hide <span
+                                    class="glyphicon glyphicon-chevron-up"></span>
+                            </button>
                         </div>
-                        
-			<div ng-repeat="restMenuItem in restMenu[rest.provider.providerId].providerFoodItemOffers" ng-show="showRestMenu[rest.provider.providerId]">
-			    <div class="col-xs-8">
-			        <span class="foodTitle">{{restMenuItem.foodItem.foodItemName}}</span><p/>
-			        <span class="foodDesc text-muted">{{restMenuItem.foodItem.foodItemDescription}}</span>
-			    </div>
-			    <div class="col-xs-2">
-			        <span class="foodTitle">${{restMenuItem.foodItemOffer.price.value | number:2}}</span>
-			    </div>
-			    <div class="col-xs-2">
-			        <input type="text" class="form-control qtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.foodItem.foodItemQty" maxlength="2">
-			    </div>
-			    <div class="clearfix"></div>
-			    <p/>
-			</div>
-			<div class="clearfix"></div>
-                        <p/>
+
+                        <div
+                            ng-repeat="restMenuItem in restMenu[rest.provider.providerId].providerFoodItemOffers"
+                            ng-show="showRestMenu[rest.provider.providerId]">
+                            <div class="col-xs-8">
+                                <span class="foodTitle">{{restMenuItem.foodItem.foodItemName}}</span>
+                                <p />
+                                <span class="foodDesc text-muted">{{restMenuItem.foodItem.foodItemDescription}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <span class="foodTitle">${{restMenuItem.foodItemOffer.price.value
+                                    | number:2}}</span>
+                            </div>
+                            <div class="col-xs-2">
+                                <input type="text"
+                                    class="form-control qtyBox"
+                                    id="menuQty{{$index}}"
+                                    ng-model="restMenuItem.foodItem.foodItemQty"
+                                    maxlength="2">
+                            </div>
+                            <div class="clearfix"></div>
+                            <p />
+                        </div>
+                        <div class="clearfix"></div>
+                        <p />
                         <div class="col-xs-12 text-right atcButton">
-			                <span class="totalInfo"><strong>Total: {{getTotalItems($index)}} items  @ ${{getTotalPrice($index) | number:2 }} &nbsp;</strong></span>
-                            <input type="button" class="btn btn-primary" ng-click="getFinalOrder($index)" id="checkoutButton" value="Checkout"/>
+                            <span class="totalInfo"><strong>Total:
+                                    {{getTotalItems($index)}} items @
+                                    ${{getTotalPrice($index) | number:2
+                                    }} &nbsp;</strong></span> <input type="button"
+                                class="btn btn-primary"
+                                ng-click="getFinalOrder($index)"
+                                id="checkoutButton" value="Checkout" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
-
+</div>

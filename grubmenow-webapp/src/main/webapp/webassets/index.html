@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="gmnApp">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GrubMeNow - Find Good Food Now!</title>
+<link rel="stylesheet"
+    href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet"
+    href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+<link rel="stylesheet" href="app.css" />
+<script src="https://js.stripe.com/v2/"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+<script src="app.js"></script>
+<script src="mainController.js"></script>
+<script src="checkoutController.js"></script>
+</head>
+<body>
+    <div class="col-xs-12 text-center">
+        <img src="logo.png" class="logoImage" />
+    </div>
+    <div ng-view></div>
+
+</body>
+</html>

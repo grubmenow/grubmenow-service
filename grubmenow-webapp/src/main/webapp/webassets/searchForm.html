@@ -1,79 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="gmnBrowse">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">  
-<title>GrubMeNow Browse Food</title>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
-<script src="mainController.js"></script>
-<script src="searchFormController.js"></script>
-<style type="text/css">
-    
-   	.logoImage {
-		margin: 20px 0px;
-    }
-    .formBox {
-    	padding: 15px;
-		background: rgba(0, 0, 0, 0.7);
-		border-radius: 5px;
-		display: inline-block;
-    }
-    .btnGo, .btnGo:hover, .btnGo:focus {
-		background-color: #FF8246;
-		color: white;
-		border: 1px solid #FF8246;
-		margin: 0px 7px;
-		outline: none;
-    }
-    @-ms-viewport {
-		width: device-width;
-    }
-    
-    .formElem {
-		border: 1px solid #000000;
-		margin: 0px 14px 0px 0px;
-		color: #000000;
-		font-weight: bold;
-	}
-	
-	.formElem:focus {
-		border: 1px solid #000000;
-	}
-	
-    .formContainer {
-    	background-image: url("img/bg-grid.png");
-		background-repeat: no-repeat;
-		background-position: center;
-		height: 350px;
-		background-size: 100%;
-    }
-    .filler {
-    	height: 150px;
-    }
-    .fillerxs {
-    	height: 70px;
-    }
-    .thumbnail {
-    	border: 5px solid #FFD446;
-    }
-    .spacer {
-    	margin-top: 35px;
-    }
-    .redBorder {
-    	border: 3px solid red;
-    }
-</style>
-</head>
-<body>
 <div class="food-finder text-center" ng-controller="SearchFormCtrl">
-	<div class="col-xs-12 text-center">
-		<img src="logo.png" class="logoImage"/>
-	</div>
 	<div class="clearfix"></div>
 	<div class="formContainer">
 	<div class="hidden-xs filler"></div>
@@ -112,7 +37,7 @@
         <div class="row">
             <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food" id="searchResults">
                 <div class="thumbnail">
-                    <a href="restaurantChooser.html?id={{foodItem.foodItemId}}&availableDay={{master.availableDay}}"><img src="{{foodItem.foodItemImageUrl}}" alt="{{foodItem.foodItemName}}">
+                    <a href="index.html#/chefs?id={{foodItem.foodItemId}}&availableDay={{master.availableDay}}"><img src="{{foodItem.foodItemImageUrl}}" alt="{{foodItem.foodItemName}}">
                     <div class="caption">
                         <h4>{{foodItem.foodItemName}}</h4>
                         <p>{{foodItem.foodItemDescription}}</p>
@@ -148,6 +73,4 @@
 		</div>
 	</div>
 </div>
-
-</body>
-</html>     
+ 

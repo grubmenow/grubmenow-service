@@ -1,4 +1,4 @@
-angular.module('gmnBrowse').controller('CheckoutCtrl', function ($scope, $http, $location) {
+angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $http, $location) {
     
     $scope.placeOrder = function(token) {
     	var orderObject = {};
