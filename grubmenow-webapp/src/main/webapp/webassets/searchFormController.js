@@ -1,4 +1,4 @@
-angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http) {
+angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http, $location, $anchorScroll) {
     $scope.location = {radius:5, availableDay:"Today"};
     $scope.searching = 0;
     $scope.showThankYouMessage = 0;
@@ -41,6 +41,9 @@ angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http
         		$scope.master.food = data;
             	$scope.searching = 0;
             	$scope.searchedOnce = 1;
+                // auto scroll to the search results
+                $location.hash("searchResults");
+                $anchorScroll();
         	});
         }
     };
@@ -48,11 +51,17 @@ angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http
     $scope.openFeedbackForm = function() {
     	$scope.showFeedbackForm = 1;
     	$scope.showFoodItemSuggestionForm = 0;
+        // auto scroll to the opened suggestion form
+        $location.hash("generalFeedbackForm");
+        $anchorScroll();
     };
     
     $scope.openSearchSuggestionForm = function() {
     	$scope.showFoodItemSuggestionForm = 1;
     	$scope.showFeedbackForm = 0;
+        // auto scroll to the opened search suggestion form
+        $location.hash("searchSuggestionForm");
+        $anchorScroll();
     };
     
     $scope.submitFeedbackForm = function()
@@ -62,6 +71,8 @@ angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http
     		$scope.showFoodItemSuggestionForm = 0;
         	$scope.showFeedbackForm = 0;
     		$scope.showThankYouMessage = 1;
+            $location.hash("thankYouMessage");
+            $anchorScroll();
     	})
     };
     
@@ -72,6 +83,8 @@ angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http
     		$scope.showFoodItemSuggestionForm = 0;
         	$scope.showFeedbackForm = 0;
     		$scope.showThankYouMessage = 1;
+            $location.hash("thankYouMessage");
+            $anchorScroll();
     	})
     };
 });
