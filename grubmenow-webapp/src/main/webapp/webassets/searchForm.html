@@ -59,13 +59,19 @@
 			<div ng-show="showFeedbackForm" id="generalFeedbackForm">
 			    <b>Leave us some comments about your search; your comments will help make our site better for everyone.</b>
 				<input type="text" class="form-control formElem"  ng-model="feedback.generalFeedback" placeholder="Your feedback goes here" style="width:50%"></input>
-				<button ng-click="submitFeedbackForm()" class="btn btn-secondary">Submit</button>
+				<div class="btn-toolbar">
+				    <button ng-click="submitFeedbackForm()" class="btn btn-secondary">Submit</button>
+				    <button ng-click="cancelFeedbackForms()" class="btn btn-secondary">Cancel</button>
+				</div>
 			</div>
 			<div ng-show="showFoodItemSuggestionForm" id="searchSuggestionForm">
 			    <b>Leave us some comments about food items you were looking for; your comments will help make our site better for everyone.</b>
 				<input type="text" class="form-control formElem"  ng-model="feedback.newItems" placeholder="comma separated food items you are looking for" style="width:40%"></input>
 				<input type="text" class="form-control formElem"  ng-model="feedback.emailId" placeholder="emailId" style="width:40%"></input>
-				<button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary">Submit</button>
+				<div class="btn-toolbar">
+				    <button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary">Submit</button>
+				    <button ng-click="cancelFeedbackForms()" class="btn btn-secondary">Cancel</button>
+				</div>
 			</div>
 			<div ng-show="showThankYouMessage" class="text-left" id="thankYouMessage">
 				Thank you for your feedback!

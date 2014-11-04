@@ -87,4 +87,10 @@ angular.module('gmnBrowse').controller('SearchFormCtrl', function ($scope, $http
             $anchorScroll();
     	})
     };
+
+    $scope.cancelFeedbackForms = function()
+    {
+        $scope.showFoodItemSuggestionForm = 0;
+        $scope.showFeedbackForm = 0;
+    }
 });
