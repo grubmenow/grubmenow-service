@@ -102,7 +102,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         return total;
     }
     
-    $scope.getTotalPrice = function(index) {
+    $scope.getTotalPriceInCents = function(index) {
         var primaryQty = isNaN(parseInt($scope.restList.foodItem.foodItemQty)) ? 0 : parseInt($scope.restList.foodItem.foodItemQty);
         var total = primaryQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value;
         total = isNaN(total) ? 0 : total;
@@ -121,8 +121,8 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         var order = {};
         order.items = [];
         order.orderItems = [];
-        order.tax = $scope.getTotalPrice(index) * 0.095;
-        order.totalPrice = $scope.getTotalPrice(index) + order.tax;
+        order.tax = Math.floor($scope.getTotalPriceInCents(index) * 0.095);
+        order.totalPrice = $scope.getTotalPriceInCents(index) + order.tax;
         order.providerId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
         var i = 0;
         if($scope.restList.foodItem.foodItemQty > 0) {

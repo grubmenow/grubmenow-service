@@ -1,7 +1,5 @@
 package com.grubmenow.service.api;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +47,7 @@ import com.grubmenow.service.persist.PersistenceFactory;
 @CommonsLog
 public class PlaceOrderService  extends AbstractRemoteService {
 
-	private static BigDecimal TAX_PERCENTAGE = new BigDecimal("0.095");
+	private static float TAX_PERCENTAGE = 0.095f;
 	
 	@RequestMapping(value = "/api/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
@@ -150,7 +148,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		}
 
 		Amount orderAmount = request.getOrderAmount();
-		int amountInCents = orderAmount.getValue().movePointRight(2).intValueExact();
+		int amountInCents = orderAmount.getValue();
 		
 		try {
 			PaymentTransaction paymentTransaction = ServiceHandler.getInstance().getStripeProcessor().charge(request.getOnlinePaymentToken(), amountInCents, orderAmount.getCurrency(), orderId, orderId);
@@ -328,7 +326,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 		Amount orderAmount = request.getOrderAmount();
 		
-		BigDecimal totalOrderAmount = BigDecimal.ZERO;
+		int totalOrderAmountInCents = 0;
 		List<FoodItemOfferDAO> foodItemOfferDAOs = new ArrayList<>();
 		for (OrderItem orderItem : request.getOrderItems()) {
 			String orderItemId = IDGenerator.generateOrderId();
@@ -347,24 +345,25 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			orderDAO.setFoodItemOfferId(orderItem.getFoodItemOfferId());
 			orderDAO.setQuantity(orderItem.getQuantity());
 			
-			BigDecimal orderItemAmount = foodItemOfferDAO.getOfferUnitPrice().multiply(new BigDecimal(orderItem.getQuantity()));
-			orderDAO.setOrderItemAmount(orderItemAmount);
+			int orderItemAmountInCents = foodItemOfferDAO.getOfferUnitPrice() * orderItem.getQuantity();
+			orderDAO.setOrderItemAmount(orderItemAmountInCents);
 			orderDAO.setOrderCurrency(request.getOrderAmount().getCurrency());
 			
 			Validator.isTrue(foodItemOfferDAO.getAvailableQuantity() >= orderItem.getQuantity(), "Not enough quantity available for this Offer");
 			
-			totalOrderAmount = totalOrderAmount.add(orderItemAmount);
+			totalOrderAmountInCents = totalOrderAmountInCents + orderItemAmountInCents;
 			orderDAOs.add(orderDAO);
 			foodItemOfferDAOs.add(foodItemOfferDAO);
 		}
 		
 		// calculate tax
-		BigDecimal taxAmount = totalOrderAmount.multiply(TAX_PERCENTAGE).setScale(2, RoundingMode.DOWN);
+		int taxAmountInCents = (int)(totalOrderAmountInCents * TAX_PERCENTAGE);
 		
 		// total order amount
-		totalOrderAmount = totalOrderAmount.add(taxAmount);
+		totalOrderAmountInCents = totalOrderAmountInCents + taxAmountInCents;
 		
-		Validator.isTrue(totalOrderAmount.compareTo(orderAmount.getValue()) == 0, String.format("Calculated amount is %s, where as request amount is %s", totalOrderAmount, orderAmount));
+		Validator.isTrue(totalOrderAmountInCents == orderAmount.getValue(), 
+		        String.format("Calculated amount is %s, where as request amount is %s - in cents", totalOrderAmountInCents, orderAmount));
 		
 		for(CustomerOrderItemDAO customerOrderItemDAO: orderDAOs) {
 			PersistenceFactory.getInstance().createCustomerOrderItem(customerOrderItemDAO);
@@ -378,8 +377,8 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		customerOrderDAO.setProviderId(request.getProviderId());
 		customerOrderDAO.setDeliveryMethod(request.getDeliveryMethod());
 		customerOrderDAO.setPaymentMethod(request.getPaymentMethod());
-		customerOrderDAO.setOrderAmount(totalOrderAmount);
-		customerOrderDAO.setTaxAmount(taxAmount);
+		customerOrderDAO.setOrderAmount(totalOrderAmountInCents);
+		customerOrderDAO.setTaxAmount(taxAmountInCents);
 		customerOrderDAO.setOrderCurrency(request.getOrderAmount().getCurrency());
 		customerOrderDAO.setOrderPaymentState(OrderPaymentState.PENDING);
 		customerOrderDAO.setOrderState(OrderState.PENDING);

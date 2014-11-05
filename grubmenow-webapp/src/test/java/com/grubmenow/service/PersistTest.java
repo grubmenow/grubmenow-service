@@ -90,7 +90,7 @@ public class PersistTest {
 			foodItemOfferDAO1.setFoodItemId("245633");
 			foodItemOfferDAO1.setProviderId("ProviderId1");
 			foodItemOfferDAO1.setOfferDescription("Mast Offer");
-			foodItemOfferDAO1.setOfferUnitPrice(new BigDecimal("6.99"));
+			foodItemOfferDAO1.setOfferUnitPrice(699);
 			foodItemOfferDAO1.setOfferCurrency(Currency.USD);
 			foodItemOfferDAO1.setOfferQuantity(new Integer("10"));
 			foodItemOfferDAO1.setAvailableQuantity(new Integer("10"));
@@ -109,7 +109,7 @@ public class PersistTest {
 			foodItemOfferDAO2.setFoodItemId("225636");
 			foodItemOfferDAO2.setProviderId("ProviderId2");
 			foodItemOfferDAO2.setOfferDescription("Mast Offer2");
-			foodItemOfferDAO2.setOfferUnitPrice(new BigDecimal("5.99"));
+			foodItemOfferDAO2.setOfferUnitPrice(599);
 			foodItemOfferDAO2.setOfferCurrency(Currency.USD);
 			foodItemOfferDAO2.setOfferQuantity(new Integer("10"));
 			foodItemOfferDAO2.setAvailableQuantity(new Integer("10"));
@@ -129,7 +129,7 @@ public class PersistTest {
 			foodItemOfferDAO3.setFoodItemId("475630");
 			foodItemOfferDAO3.setProviderId("ProviderId3");
 			foodItemOfferDAO3.setOfferDescription("Mast Offer3");
-			foodItemOfferDAO3.setOfferUnitPrice(new BigDecimal("6.99"));
+			foodItemOfferDAO3.setOfferUnitPrice(699);
 			foodItemOfferDAO3.setOfferCurrency(Currency.USD);
 			foodItemOfferDAO3.setOfferQuantity(new Integer("10"));
 			foodItemOfferDAO3.setAvailableQuantity(new Integer("10"));
@@ -150,7 +150,7 @@ public class PersistTest {
 			foodItemOfferDAO4.setFoodItemId("885637");
 			foodItemOfferDAO4.setProviderId("ProviderId4");
 			foodItemOfferDAO4.setOfferDescription("Mast Offer 4");
-			foodItemOfferDAO4.setOfferUnitPrice(new BigDecimal("2.99"));
+			foodItemOfferDAO4.setOfferUnitPrice(299);
 			foodItemOfferDAO4.setOfferCurrency(Currency.USD);
 			foodItemOfferDAO4.setOfferQuantity(new Integer("10"));
 			foodItemOfferDAO4.setAvailableQuantity(new Integer("10"));

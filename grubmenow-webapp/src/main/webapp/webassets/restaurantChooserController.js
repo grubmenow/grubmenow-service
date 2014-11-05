@@ -22,27 +22,29 @@ angular.module('gmnBrowse').controller('RestuarantCtrl', function ($scope, $http
         return total;
     }
     
-    $scope.getTotalPrice = function(index) {
+    $scope.getTotalPriceInCents = function(index) {
         var primaryQty = isNaN(parseInt($scope.restList.foodItem.foodItemQty)) ? 0 : parseInt($scope.restList.foodItem.foodItemQty);
-        var total = primaryQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value;
-        total = isNaN(total) ? 0 : total;
+        var totalInCents = primaryQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value;
+        totalInCents = isNaN(totalInCents) ? 0 : totalInCents;
         var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
-        if (!restId || !$scope.restMenu[restId]) return total;
+        if (!restId || !$scope.restMenu[restId]) return totalInCents;
         
         for(var i = 0; i < $scope.restMenu[restId].providerFoodItemOffers.length; i++) {
             var product = $scope.restMenu[restId].providerFoodItemOffers[i];
-            total = product.foodItem.foodItemQty ? isNaN(parseInt(product.foodItem.foodItemQty)) ? total : total + (product.foodItemOffer.price.value * parseInt(product.foodItem.foodItemQty)) : total;            
+            totalInCents = product.foodItem.foodItemQty ?
+                isNaN(parseInt(product.foodItem.foodItemQty)) ? totalInCents : totalInCents + (product.foodItemOffer.price.value * parseInt(product.foodItem.foodItemQty)) : totalInCents;
         }
         
-        return total;
+        return totalInCents;
     }
     
     $scope.getFinalOrder = function(index) {
         var order = {};
         order.items = [];
         order.orderItems = [];
-        order.tax = $scope.getTotalPrice(index) * 0.095;
-        order.totalPrice = $scope.getTotalPrice(index) + order.tax;
+        var priceWithoutTaxInCents = $scope.getTotalPriceInCents(index);
+        order.tax = Math.floor( priceWithoutTaxInCents * 0.095);
+        order.totalPrice = priceWithoutTaxInCents + order.tax;
         order.providerId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
         var i = 0;
         if($scope.restList.foodItem.foodItemQty > 0) {

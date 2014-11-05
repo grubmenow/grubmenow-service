@@ -1,7 +1,5 @@
 package com.grubmenow.service.datamodel;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -51,7 +49,7 @@ public class FoodItemOfferDAO {
 
 	@NonNull
 	@Column(name = "OFFER_UNIT_PRICE")
-	private BigDecimal offerUnitPrice;
+	private int offerUnitPrice;
 
 	@NonNull
 	@Enumerated(EnumType.STRING)

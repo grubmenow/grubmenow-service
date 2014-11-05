@@ -4,7 +4,7 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     	var orderObject = {};
     	orderObject.orderAmount = {};
     	orderObject.orderAmount.currency = "USD";
-    	orderObject.orderAmount.value = Math.round($scope.finalOrder.totalPrice*100)/100;
+        orderObject.orderAmount.value = $scope.finalOrder.totalPrice;
     	orderObject.providerId = $scope.finalOrder.providerId;
     	orderObject.websiteAuthenticationToken = $scope.FB.accessToken;
     	orderObject.onlinePaymentToken = token;

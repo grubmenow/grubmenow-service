@@ -1,7 +1,5 @@
 package com.grubmenow.service.api;
 
-import java.math.BigDecimal;
-
 import org.apache.commons.lang3.StringUtils;
 
 import com.grubmenow.service.model.Amount;
@@ -28,11 +26,7 @@ public class Validator {
 	}
 	
 	public static void notPositiveAmount(Amount amount, String message) {
-		if (amount == null || amount.getValue() == null || amount.getCurrency() == null) {
-			throw new ValidationException(message);
-		}
-
-		if (amount.getValue().compareTo(BigDecimal.ZERO) <= 0) {
+		if (amount == null || amount.getValue() <= 0 || amount.getCurrency() == null) {
 			throw new ValidationException(message);
 		}
 	}

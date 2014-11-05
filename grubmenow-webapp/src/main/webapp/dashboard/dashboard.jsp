@@ -35,7 +35,7 @@
 				obj.paymentMethod = 'ONLINE_PAYMENT';
 
 				var amount = new Object();
-				amount.value = '15.31';
+				amount.value = 1531;
 				amount.currency = 'USD';
 				obj.orderAmount = amount;
 				

@@ -8,16 +8,16 @@
         <div ng-repeat="order in finalOrder.items">
             <div class="col-xs-10">{{order.orderQty}} X
                 {{order.orderName}}</div>
-            <div class="col-xs-2 text-right">{{order.orderPrice |
+            <div class="col-xs-2 text-right">${{order.orderPrice/100 |
                 number:2 }}</div>
         </div>
         <p />
         <div class="col-xs-12 text-right">
-            <strong>Tax: ${{finalOrder.tax | number:2 }}</strong>
+            <strong>Tax: ${{finalOrder.tax/100 | number:2 }}</strong>
         </div>
         <p />
         <div class="col-xs-12 text-right">
-            <strong>Total: ${{finalOrder.totalPrice | number:2
+            <strong>Total: ${{finalOrder.totalPrice/100 | number:2
                 }}</strong>
         </div>
         <p />

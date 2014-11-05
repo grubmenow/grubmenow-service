@@ -1,7 +1,5 @@
 package com.grubmenow.service.model;
 
-import java.math.BigDecimal;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +8,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Amount {
-	private BigDecimal value;
+    /**
+     * the value in cents
+     */
+	private int value;
 	
 	private Currency currency;
 }

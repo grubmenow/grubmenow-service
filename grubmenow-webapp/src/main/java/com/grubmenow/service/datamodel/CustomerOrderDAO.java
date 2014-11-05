@@ -1,7 +1,5 @@
 package com.grubmenow.service.datamodel;
 
-import java.math.BigDecimal;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -52,7 +50,7 @@ public class CustomerOrderDAO {
 	
 	@NonNull
 	@Column(name = "ORDER_AMOUNT")
-	private BigDecimal orderAmount;
+	private int orderAmount;
 	
 	@NonNull
 	@Column(name = "ORDER_CURRENCY")
@@ -60,7 +58,7 @@ public class CustomerOrderDAO {
 	
 	@NonNull
 	@Column(name = "TAX_AMOUNT")
-	private BigDecimal taxAmount;
+	private int taxAmount;
 	
 	@NonNull
     @Column(name = "DELIVERY_METHOD")

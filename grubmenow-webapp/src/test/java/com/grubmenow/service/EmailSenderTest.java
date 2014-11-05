@@ -22,7 +22,7 @@ public class EmailSenderTest {
 		
 		Amount orderTotalPrice = new Amount();
 		orderTotalPrice.setCurrency(Currency.USD);
-		orderTotalPrice.setValue(new BigDecimal("9.99"));
+		orderTotalPrice.setValue(999);
 		
 		ProviderDAO provider = new ProviderDAO();
 		provider.setProviderAddressApartmentNumber("APT QQ-202");
