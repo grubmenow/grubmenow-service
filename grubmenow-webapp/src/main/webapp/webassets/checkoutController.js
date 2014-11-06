@@ -16,9 +16,9 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
         	orderObject.paymentMethod = token ? "ONLINE_PAYMENT" : "CASH_ON_DELIVERY"
         	orderObject.orderItems = $scope.finalOrder.orderItems;
         	var orderUrl = "api/placeOrder";
-//        	$http.post(orderUrl, JSON.stringify(orderObject)).success(function(data) {
-//                console.log("Order Placed successfully");
-//            });
+        	$http.post(orderUrl, JSON.stringify(orderObject)).success(function(data) {
+                console.log("Order Placed successfully");
+            });
     	});
     }
     
