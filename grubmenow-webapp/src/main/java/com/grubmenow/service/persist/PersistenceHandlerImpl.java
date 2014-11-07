@@ -27,6 +27,7 @@ import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
+import com.grubmenow.service.datamodel.InvitationRequestDAO;
 import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.SearchSuggestionFeedbackDAO;
@@ -69,6 +70,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	    configuration.addAnnotatedClass(ProviderDAO.class);
 	    configuration.addAnnotatedClass(OrderFeedbackDAO.class);
 	    configuration.addAnnotatedClass(SearchSuggestionFeedbackDAO.class);
+	    configuration.addAnnotatedClass(InvitationRequestDAO.class);
 	    
 	    configuration.setProperties(properties);
 	    ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
@@ -210,6 +212,12 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	{
 	    log.info(String.format("Adding search suggestion: %s", searchSuggestion));
 	    saveObject(searchSuggestion);
+	}
+	
+	@Override
+	public void createInvitationRequest(InvitationRequestDAO dao)
+	{
+        saveObject(dao);
 	}
 
 	

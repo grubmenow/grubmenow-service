@@ -5,6 +5,10 @@ var gmnApp = angular.module('gmnApp', [
 
 gmnApp.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
+	when('/invitation', {
+		templateUrl: 'invitationPage.html',
+		controller: 'InviteCtrl'
+	}).
 	when('/home', {
 		templateUrl: 'searchForm.html',
 		controller: 'SearchFormCtrl'

@@ -1,0 +1,26 @@
+<div class="text-center" ng-controller="InviteCtrl">
+    <div class="clearfix"></div>
+    <div class="formContainer">
+    <div class="visible-xs fillerxs"></div>
+    <div class="col-xs-12 text-center" ng-hide="invitationRequested">
+        <div>
+            <img ng-src="img/howitworksflow.png"/>
+        </div>
+        <div class="formBox">
+	        <form class="form-inline" role="form" novalidate>
+	            <div class="form-group">
+	                <input type="text" class="form-control formElem" id="inputEmailId" placeholder="Email Id" ng-model="invite.emailId" maxlength="20">
+	            </div>
+	            <div class="form-group">
+	                <input type="text" class="form-control formElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="invite.zipCode" maxlength="5">
+	            </div>
+	            <button ng-click="requestInvitation(invite)" class="btn btnGo">Request For Invite</button>
+	        </form>
+        </div>
+    </div>
+    <div ng-show="invitationRequested" class="col-xs-12 text-center" id="invitationRequested">
+        <h4>Thank you for your interest! We will contact you shortly.</h4>
+    </div>
+    </div>
+</div>
+ 
