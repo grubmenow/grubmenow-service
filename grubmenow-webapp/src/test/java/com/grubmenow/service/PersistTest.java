@@ -2,11 +2,13 @@ package com.grubmenow.service;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 
 import org.joda.time.DateTime;
 
 import com.grubmenow.service.api.PlaceOrderService;
 import com.grubmenow.service.api.SubmitOrderFeedbackService;
+import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.OfferMealType;
@@ -26,17 +28,15 @@ public class PersistTest {
 
 //		List<String> zipCodes = PersistenceFactory.getInstance().getNeighbouringZipCodes("98007", 10);
 //		
-//		List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(zipCodes);
+//		List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(zipCodes, new DateTime());
 //		
 //		System.out.println(foodItemDAOs);
-		
-//		testAddFoodItemOffer();
-		
-//		FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferbyId("kyqkfbtdgp");
+//		
+//		FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById("kyqkfbtdgp");
 //		System.out.println(foodItemOfferDAO);
-		
+//		
 //		System.out.println(PersistenceFactory.getInstance().getAllFoodItemOffer());
-		
+//		
 //		populateTestFoodItemOffer();
 		
 //		testPlaceOrder();
