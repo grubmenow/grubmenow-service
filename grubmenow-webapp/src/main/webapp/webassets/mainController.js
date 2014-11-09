@@ -1,6 +1,13 @@
 var gmnControllers = angular.module('gmnControllers', []);
 
 angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, $http) {
+    
+    //Update the Nav state
+    $( "li", "#gmnNav" ).each(function( index ) {
+        $( this ).removeClass('active');
+    });
+    $('#homeNav').addClass('active');
+    
     $scope.location = {radius:5, availableDay:"Today"};
     $scope.searching = 0;
     $scope.showThankYouMessage = 0;

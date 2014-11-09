@@ -5,6 +5,11 @@ angular.module('gmnControllers').controller('InviteCtrl', function ($scope, $htt
     		$scope.invitationRequested = true;
     	});
     }
+    //Update the Nav state
+    $( "li", "#gmnNav" ).each(function( index ) {
+        $( this ).removeClass('active');
+    });
+    $('#invitationNav').addClass('active');
     
     $scope.invite = {};
     $scope.invitationRequested = false;
