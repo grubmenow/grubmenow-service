@@ -33,7 +33,7 @@
     <h3 ng-show="badRadius || badZipcode || badDay" class="spacer">Please enter all the required fields</h3>
 	<h3 ng-show="searching" class="spacer">Finding delicious food within {{master.radius}} miles of {{master.zipcode}} ...</h3>
 	
-    <div class="container spacer">
+    <div class="container spacer" id="searchResults">
         <div class="row">
             <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food" id="searchResults">
                 <div class="thumbnail">
@@ -48,32 +48,34 @@
     	</div>
     </div>
     
-    <div class="container spacer">
-	    <div ng-show="searchedOnce" class="text-left">
-	    	<h4>Search Feedback</h4>
-			Did you find what you were looking for?
-			<div class="btn-toolbar">
-	  			<button ng-click="openFeedbackForm()" class="btn btn-secondary">Yes</button> &nbsp;
-	  			<button ng-click="openSearchSuggestionForm()" class="btn btn-secondary">No</button>
-			</div>
-			<div ng-show="showFeedbackForm" id="generalFeedbackForm">
-			    <b>Leave us some comments about your search; your comments will help make our site better for everyone.</b>
-				<input type="text" class="form-control formElem"  ng-model="feedback.generalFeedback" placeholder="Your feedback goes here" style="width:50%"></input>
-				<div class="btn-toolbar">
-				    <button ng-click="submitFeedbackForm()" class="btn btn-secondary">Submit</button>
-				    <button ng-click="cancelFeedbackForms()" class="btn btn-secondary">Cancel</button>
-				</div>
-			</div>
-			<div ng-show="showFoodItemSuggestionForm" id="searchSuggestionForm">
-			    <b>Leave us some comments about food items you were looking for; your comments will help make our site better for everyone.</b>
-				<input type="text" class="form-control formElem"  ng-model="feedback.newItems" placeholder="comma separated food items you are looking for" style="width:40%"></input>
-				<input type="text" class="form-control formElem"  ng-model="feedback.emailId" placeholder="emailId" style="width:40%"></input>
-				<div class="btn-toolbar">
-				    <button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary">Submit</button>
-				    <button ng-click="cancelFeedbackForms()" class="btn btn-secondary">Cancel</button>
-				</div>
-			</div>
-			<div ng-show="showThankYouMessage" class="text-left" id="thankYouMessage">
+    <div class="container spacer" id="feedbackFormContainer">
+	    <div ng-show="searchedOnce" class="text-center">
+	    	<div class="navLineBtn feedbackQL">
+			     <span>Did you find what you were looking for?</span>
+                 <button ng-click="openFeedbackForm(1)" class="btn btnGo">Yes</button>
+                <button ng-click="openFeedbackForm(0)" class="btn btnGo">No</button>
+            </div>
+			
+			<div ng-show="showFeedbackForm" id="generalFeedbackForm" class="navLineBtn feedbackQL">
+			    <span>Plese leave us some comments about your search <br> Your comments will help make our site better for everyone.</span>
+                <div class="clearfix"></div>
+                <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.generalFeedback" placeholder="Your feedback"></input>
+                <div class="clearfix"></div>
+                <button ng-click="submitFeedbackForm()" class="btn btn-secondary btnGo">Submit</button>
+                <button ng-click="cancelFeedbackForms()" class="btn btn-secondary btnGo">Cancel</button>
+
+            </div>
+            <div ng-show="showFoodItemSuggestionForm" id="searchSuggestionForm" class="navLineBtn feedbackQL">
+                <span>Plese leave us some comments about your search <br> Your comments will help make our site better for everyone.
+                </span>
+                <div class="clearfix"></div>
+                <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.newItems" placeholder="Food items you are looking for"></input> <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.emailId" placeholder="Your Email Id"></input>
+                <div class="clearfix"></div>
+                <button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary btnGo">Submit</button>
+                <button ng-click="cancelFeedbackForms()" class="btn btn-secondary btnGo">Cancel</button>
+
+            </div>
+            <div ng-show="showThankYouMessage" class="navLineBtn feedbackQL" id="thankYouMessage">
 				Thank you for your feedback!
 			</div>
 		</div>

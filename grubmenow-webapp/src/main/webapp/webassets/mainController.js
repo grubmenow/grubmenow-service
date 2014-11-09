@@ -50,19 +50,21 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         		$scope.master.food = data;
             	$scope.searching = 0;
             	$scope.searchedOnce = 1;
+            	$('html, body').animate({
+                    scrollTop: $("#searchResults").offset().top
+                }, 2000);
         	});
         }
     };
     
-    $scope.openFeedbackForm = function() {
-    	$scope.showFeedbackForm = 1;
-    	$scope.showFoodItemSuggestionForm = 0;
+    $scope.openFeedbackForm = function(formInfo) {
+        $scope.showFeedbackForm = formInfo;
+        $scope.showFoodItemSuggestionForm = !formInfo;
+        $('html, body').animate({
+            scrollTop: $("#feedbackFormContainer").offset().top
+        }, 2000);
     };
     
-    $scope.openSearchSuggestionForm = function() {
-    	$scope.showFoodItemSuggestionForm = 1;
-    	$scope.showFeedbackForm = 0;
-    };
     
     $scope.submitFeedbackForm = function()
     {
