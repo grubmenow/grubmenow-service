@@ -75,7 +75,7 @@
 }
 
 .qtyBox {
-     width: 45px;
+     width: 56px;
 }
 
 .foodTitle {
@@ -127,12 +127,12 @@
 }
 
 .navbar {
-     min-height: 42px     
+     min-height: 42px
 }
 
-.navbar-nav > li > a {
+.navbar-nav>li>a {
      color: #FFFFFF !important;
-     text-shadow:none;
+     text-shadow: none;
      padding: 10px 20px !important;
 }
 
@@ -141,21 +141,107 @@
      background-image: none !important;
 }
 
-.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus {
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover,
+     .navbar-default .navbar-nav>.active>a:focus {
      color: #FFFFFF;
      background-color: #65A0D9 !important;
      background-image: none !important;
 }
 
 .navbar-default .navbar-toggle {
-     border-color: #0A549C !important; 
+     border-color: #0A549C !important;
 }
 
-.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus
+     {
      background-color: #65A0D9 !important;
      background-image: none !important;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
      background-color: #FFFFFF !important;
+}
+
+.checkoutText {
+     color: #000000;
+     font-size: 14px;
+     font-weight: bold;
+     line-height: 26px;
+}
+
+.checkoutHeader {
+     color: #FFFFFF;
+     font-size: 14px;
+     font-weight: bold;
+     line-height: 26px;
+     background-color: #0A549C;
+     border: 1px solid #0A549C;
+}
+
+.orderDetailsHeader {
+     height: 30px;
+}
+
+.checkoutItem {
+     border: 1px solid #0A549C;
+     padding-top: 3px;
+     padding-bottom: 3px;
+}
+
+.orderDetails {
+     overflow: hidden;
+     margin: 0px 0px 20px 0px;
+}
+
+.checkoutFormElem {
+     width: 200px;
+     margin: 10px 0px;
+}
+
+.coFormLabels {
+     float: left;
+     line-height: 34px;
+     width: 150px;
+     font-weight: bold;
+}
+
+.coSpacer {
+     margin: 20px 0px;
+}
+
+.checkoutFormCVC {
+     width: 60px;
+     margin-top: 10px;
+}
+
+.checkoutFormYY {
+     width: 60px;
+     margin-top: 10px;
+     float: left;
+}
+
+.checkoutFormMM {
+     width: 42px;
+     float: left;
+     margin-right: 10px;
+     margin-top: 10px;
+}
+
+.coExpiryLabel {
+     margin-top: 10px
+}
+
+.coExpiry {
+     float: left;
+}
+
+.checkoutFormSlash {
+     float: left;
+     margin-top: 18px;
+     font-weight: bold;
+     width: 14px;
+}
+
+.checkoutFormCC {
+     width: 160px;
 }

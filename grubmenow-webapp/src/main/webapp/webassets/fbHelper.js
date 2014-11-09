@@ -1,5 +1,8 @@
 var fbHelper = {
+        initialized: 0,
+        
         initialize: function(callback) {
+            if(fbHelper.initialized) location.reload();
             // Load the SDK asynchronously
             (function(d, s, id) {
                 var js, fjs = d.getElementsByTagName(s)[0];
@@ -17,6 +20,7 @@ var fbHelper = {
                     xfbml      : true,  // parse social plugins on this page
                     version    : 'v2.1' // use version 2.1
                 });
+                fbHelper.initialized = 1;
                 callback(1);
             }
         },

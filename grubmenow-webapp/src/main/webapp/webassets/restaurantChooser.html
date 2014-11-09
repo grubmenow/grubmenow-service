@@ -43,15 +43,8 @@
                         </div>
                         <div class="col-xs-2">
                             <!--  Removing the type="number" and size elements because they are not playing well with the mobile chrome browser -->
-                            <div class="input-group">
-                                <input class="form-control qtyBox uneditable-input" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" maxlength="2" min="0" max="{{rest.foodItemOffer.availableQuantity}}">
-                                <div class="input-group-btn">
-                                    <button type="button" class="btn btn-default">+</button>
-                                    <button type="button" class="btn btn-default">-</button>
-                                </div>
-                            </div>
 
-                            <span ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px">Hurry, {{rest.foodItemOffer.availableQuantity}} items left !</span>
+                            <input type="number" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty" min="0" max="{{rest.foodItemOffer.availableQuantity}}"> <span ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px">Hurry, {{rest.foodItemOffer.availableQuantity}} items left !</span>
                         </div>
 
                         <div class="clearfix"></div>
@@ -75,7 +68,7 @@
                                 <span class="foodTitle">${{restMenuItem.foodItemOffer.price.value / 100 | number:2}}</span>
                             </div>
                             <div class="col-xs-2">
-                                <input type="text" class="form-control qtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.foodItem.foodItemQty" maxlength="2">
+                                <input type="number" type="text" class="form-control qtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.foodItem.foodItemQty" maxlength="2">
                             </div>
                             <div class="clearfix"></div>
                             <p />
