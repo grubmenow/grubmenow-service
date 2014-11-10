@@ -76,6 +76,12 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     	})
     };
     
+    $scope.cancelFeedbackForms = function()
+    {
+        $scope.showFoodItemSuggestionForm = 0;
+        $scope.showFeedbackForm = 0;
+    }
+    
     $scope.submitFoodItemSuggestionForm = function()
     {
     	request = {foodItemSuggestions: $scope.feedback.newItems, zipCode: $scope.location.zipCode, emailId: $scope.feedback.emailId};
