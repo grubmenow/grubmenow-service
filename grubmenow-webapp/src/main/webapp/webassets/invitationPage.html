@@ -1,26 +1,62 @@
-<div class="text-center" ng-controller="InviteCtrl">
+<!DOCTYPE html>
+<html lang="en" ng-app="gmnControllers">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GrubMeNow - Find Good Food Now!</title>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+<link rel="stylesheet" href="app.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+<script src="invitationController.js"></script>
+</head>
+<body>
+    <div class="col-xs-12 text-center">
+        <img src="logo.png" class="logoImage" />
+    </div>
     <div class="clearfix"></div>
-    <div class="formContainer">
-    <div class="visible-xs fillerxs"></div>
-    <div class="col-xs-12 text-center" ng-hide="invitationRequested">
-        <div>
-            <img ng-src="img/howitworksflow.png"/>
+    <div class="text-center" ng-controller="InviteCtrl">
+        <div class="clearfix"></div>
+        <div ng-hide="invitationRequested">
+            <div class="container">
+                <div class="col-xs-2 text-center"></div>
+                <div class="invitationTxt col-xs-8">Discover and enjoy fresh, home-cooked meals prepared by local chefs in your area. 
+                No subscription, no fixed menus. Be a part of our invite-only launch and re-discover the smells and flavor of homemade food.
+                <span class="hdiw" ng-show="!hideHDIW" ng-click="hideHDIW = 1">How Does It Work?</span>
+                <span class="hdiw" ng-show="hideHDIW" ng-click="hideHDIW = 0">Got it!</span>
+                </div>
+            </div>
+            <div class="container text-center hdiwImage" ng-show="hideHDIW">
+                <img src="how-it-works.png">
+            </div>
+            <div class="formContainer">
+                <div class="hidden-xs filler"></div>
+                <div class="visible-xs fillerxs"></div>
+                <div class="col-xs-12 text-center">
+                    <div class="formBox">
+                        <form class="form-inline" role="form" novalidate>
+                            <div class="form-group">
+                                <input type="text" class="form-control formElem" id="inputEmailId" placeholder="Email Id" ng-model="invite.emailId" maxlength="20">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control formElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="invite.zipCode" maxlength="5">
+                            </div>
+                            <button ng-click="requestInvitation(invite)" class="btn btnGo">Request For Invite</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="formBox">
-	        <form class="form-inline" role="form" novalidate>
-	            <div class="form-group">
-	                <input type="text" class="form-control formElem" id="inputEmailId" placeholder="Email Id" ng-model="invite.emailId" maxlength="20">
-	            </div>
-	            <div class="form-group">
-	                <input type="text" class="form-control formElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="invite.zipCode" maxlength="5">
-	            </div>
-	            <button ng-click="requestInvitation(invite)" class="btn btnGo">Request For Invite</button>
-	        </form>
+        <div class="container">
+            <div class="col-xs-2 text-center"></div>
+            <div ng-show="invitationRequested" class="col-xs-12 text-center" id="invitationRequested">
+                <div class="invitationTxt" style="text-align: center">Thank you for your interest! We will contact you shortly.</div>
+            </div>
         </div>
     </div>
-    <div ng-show="invitationRequested" class="col-xs-12 text-center" id="invitationRequested">
-        <h4>Thank you for your interest! We will contact you shortly.</h4>
-    </div>
-    </div>
-</div>
- 
+</body>
+</html>

@@ -1,3 +1,5 @@
+angular.module('gmnControllers', []);
+
 angular.module('gmnControllers').controller('InviteCtrl', function ($scope, $http, $location) {
     
     $scope.requestInvitation = function(invite) {
