@@ -37,7 +37,7 @@
         <div class="row">
             <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food" id="searchResults">
                 <div class="thumbnail">
-                    <a href="index.html#/chefs?id={{foodItem.foodItemId}}&availableDay={{master.availableDay}}"><img src="{{foodItem.foodItemImageUrl}}" alt="{{foodItem.foodItemName}}">
+                    <a href="index.html#/chefs?id={{foodItem.foodItemId}}&availableDay={{master.availableDay}}&radius={{master.radius}}&zipCode={{master.zipCode}}"><img src="{{foodItem.foodItemImageUrl}}" alt="{{foodItem.foodItemName}}">
                     <div class="caption">
                         <h4>{{foodItem.foodItemName}}</h4>
                         <p>{{foodItem.foodItemDescription}}</p>

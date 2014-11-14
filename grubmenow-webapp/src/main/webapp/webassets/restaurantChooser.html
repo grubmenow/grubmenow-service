@@ -2,7 +2,7 @@
     <div class="clearfix"></div>
     <div>
         <div class="col-xs-6 text-left navLineBtn">Your options for '{{foodItem.foodItemName}}' for {{availableDay}}:</div>
-        <div class="col-xs-6 text-right navLineBtn">
+        <div class="col-xs-6 text-right navLineBtn backButton" ng-click="backToSearch()">
             <span class="glyphicon glyphicon-chevron-left"></span> Back to food results
         </div>
     </div>
@@ -34,9 +34,8 @@
                         <div class="clearfix"></div>
 
                         <div class="col-xs-8">
-                            <span class="foodTitle">{{restList.foodItem.foodItemName}}</span>
-                            <p />
-                            <span class="foodDesc text-muted">{{rest.foodItemOffer.offerDescription}}</span>
+                            <div class="foodTitle">{{restList.foodItem.foodItemName}}</div>
+                            <div class="foodDesc text-muted">{{rest.foodItemOffer.offerDescription}}</div>
                         </div>
                         <div class="col-xs-2">
                             <span class="foodTitle">${{rest.foodItemOffer.price.value / 100 | number:2}}</span>
@@ -60,9 +59,8 @@
 
                         <div ng-repeat="restMenuItem in restMenu[rest.provider.providerId].providerFoodItemOffers" ng-show="showRestMenu[rest.provider.providerId]">
                             <div class="col-xs-8">
-                                <span class="foodTitle">{{restMenuItem.foodItem.foodItemName}}</span>
-                                <p />
-                                <span class="foodDesc text-muted">{{restMenuItem.foodItem.foodItemDescription}}</span>
+                                <div class="foodTitle">{{restMenuItem.foodItem.foodItemName}}</div>
+                                <div class="foodDesc text-muted">{{restMenuItem.foodItem.foodItemDescription}}</div>
                             </div>
                             <div class="col-xs-2">
                                 <span class="foodTitle">${{restMenuItem.foodItemOffer.price.value / 100 | number:2}}</span>
