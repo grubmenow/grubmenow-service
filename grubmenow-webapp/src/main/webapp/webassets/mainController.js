@@ -194,6 +194,18 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         window.location.href = url;
     }
 
+    $scope.collapse = function(index) {
+        if(!$scope.collapseState) $scope.collapseState = {};
+        if(!$scope.collapseState.index) {
+            $('#collapse'+index).collapse('hide');
+            $scope.collapseState.index = 1;
+        } else {
+            $('#collapse'+index).collapse('show');
+            $scope.collapseState.index = 0;
+        }
+        
+    }   
+    
     $scope.showMenu = function(restId) {
         if ($scope.restMenu[restId]) {
             $scope.showRestMenu[restId] = 1;

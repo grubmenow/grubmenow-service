@@ -1,16 +1,18 @@
 <div class="rest-sel" ng-controller="RestuarantCtrl">
     <div class="clearfix"></div>
     <div>
-        <div class="col-xs-6 text-left navLineBtn">Your options for '{{foodItem.foodItemName}}' for {{availableDay}}:</div>
-        <div class="col-xs-6 text-right navLineBtn backButton" ng-click="backToSearch()">
-            <span class="glyphicon glyphicon-chevron-left"></span> Back to food results
+        <div class="col-xs-6 text-left  optionsText navLineBtn ">Your options for '{{foodItem.foodItemName}}' for {{availableDay}}:</div>
+        <div class="col-xs-6 text-right" ng-click="backToSearch()">
+            <button type="button" class="btn btn-link showhideBtn optionsText">
+                <span class="glyphicon glyphicon-chevron-left"></span> Back to food results
+            </button>
         </div>
     </div>
     <div class="clearfix"></div>
     <p />
     <div class="panel-group" id="accordion">
         <div class="panel panel-primary" ng-repeat="rest in restList.providerFoodItemOffers">
-            <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$index}}" class="panelLink">
+            <a data-toggle="collapse" data-parent="#accordion" ng-click="collapse($index)" class="panelLink">
                 <div class="panel-heading">
                     <h4 class="panel-title">{{rest.provider.providerName}}</h4>
                 </div>
