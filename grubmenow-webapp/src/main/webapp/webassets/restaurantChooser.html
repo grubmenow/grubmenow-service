@@ -76,7 +76,7 @@
                         <div class="clearfix"></div>
                         <p />
                         <div class="col-xs-12 text-right atcButton">
-                            <span class="totalInfo"><strong>Total: {{getTotalItems($index)}} items @ ${{getTotalPriceInCents($index)/100 | number:2 }} &nbsp;</strong></span> <input type="button" class="btn btn-primary" ng-click="getFinalOrder($index)" id="checkoutButton" value="Checkout" />
+                            <span class="totalInfo"><strong>Total: {{getTotalItems($index)}} items @ ${{getTotalPriceInCents($index)/100 | number:2 }} &nbsp;</strong></span> <input type="button" class="btn btnGo" ng-click="getFinalOrder($index)" id="checkoutButton" value="Checkout" />
                         </div>
                     </div>
                 </div>

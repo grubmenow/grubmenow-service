@@ -175,7 +175,6 @@
 .checkoutText {
      color: #000000;
      font-size: 14px;
-     font-weight: bold;
      line-height: 26px;
 }
 
@@ -271,4 +270,8 @@
 
 .backButton {
      cursor: pointer;
+}
+
+.noBold {
+     font-weight: bold;
 }

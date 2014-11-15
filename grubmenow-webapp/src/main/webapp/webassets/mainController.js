@@ -165,7 +165,11 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         }
 
         var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
-
+        order.restLocation = $scope.restList.providerFoodItemOffers[index].provider.providerAddress;
+        
+        var pickupDate = $scope.availableDay == 'Today' ? new Date() : new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        order.pickupTime = pickupDate.toDateString() + " after 6pm. ";
+        
         if ($scope.restMenu[restId]) {
             for(var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
                 var product = $scope.restMenu[restId].providerFoodItemOffers[j];
