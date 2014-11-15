@@ -176,6 +176,16 @@
      color: #000000;
      font-size: 14px;
      line-height: 26px;
+     font-weight: bold;
+     width: 160px;
+     float: left;
+}
+
+.checkoutTitle {
+     color: #000000;
+     font-size: 14px;
+     line-height: 26px;
+     font-weight: bold;
 }
 
 .checkoutHeader {
@@ -210,7 +220,7 @@
 .coFormLabels {
      float: left;
      line-height: 34px;
-     width: 150px;
+     width: 160px;
      font-weight: bold;
 }
 
@@ -273,5 +283,15 @@
 }
 
 .noBold {
-     font-weight: bold;
+     font-weight: normal;
+     width: 400px;
+}
+
+.coPaymentSel {
+     margin-left: 15px;
+     width: 200px;
+}
+
+.btnCO {
+     
 }

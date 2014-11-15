@@ -90,4 +90,9 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     $scope.initializeFB();
     Stripe.setPublishableKey('pk_test_CJPjqWuObYi705eii41Faeq7');
     $scope.getFinalOrder();
+    $('#inputPayment').change(function(){
+        $('html, body').animate({
+            scrollTop: $("#inputPayment").offset().top
+        }, 2000);
+    });
 });

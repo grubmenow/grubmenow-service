@@ -4,8 +4,8 @@
     <div class="container">
         <div class="col-md-2"></div>
         <div class="col-md-8 col-sm-12">
-            <div class="checkoutText" ng-show="FB.name">Welcome {{FB.name}}</div>
-            <div class="checkoutText">Your order details:</div>
+            <div class="checkoutTitle" ng-show="FB.name">Welcome {{FB.name}}</div>
+            <div class="checkoutTitle">Your order details:</div>
             <div class="orderDetails">
                 <div class="orderDetailsHeader">
                     <div class="col-xs-7 checkoutHeader">Item</div>
@@ -19,15 +19,21 @@
                 </div>
             </div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Taxes: <span class="noBold">${{finalOrder.tax/100 | number:2 }}</span></div>
-            <div class="checkoutText">Order Total: <span class="noBold">${{finalOrder.totalPrice/100 | number:2 }}</span></div>
-            <div class="checkoutText">Pick up date and time: <span class="noBold">{{finalOrder.pickupTime}}</span></div>
-            <div class="checkoutText">Pick up address: <span class="noBold">{{finalOrder.restLocation}}</span></div>
+            <div class="checkoutText">Taxes: </div><div class=" checkoutText noBold">${{finalOrder.tax/100 | number:2 }}</div>
+            <div class="clearfix"></div>
+            <div class="checkoutText">Order Total: </div><div class="checkoutText noBold">${{finalOrder.totalPrice/100 | number:2 }}</div>
+            <div class="clearfix"></div>
+            <div class="checkoutText">Pick up date and time: </div><div class="checkoutText noBold">{{finalOrder.pickupTime}}</div>
+            <div class="clearfix"></div>
+            <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{finalOrder.restLocation}}</div>
+            <div class="clearfix"></div>
             <p />
             <div ng-show="!FB.name && !FB.notRecognized" class="col-xs-12 text-center">Figuring out which button to show</div>
             <div ng-show="FB.name" class="">
                 <form class="form-horizontal" id="payment-form">
                     <div class="payment-errors">{{stripe.error.message}}</div>
+                    
+                    <div class="checkoutTitle">Please enter your contact information below:</div>
                     <div class="coFormElem">
                         <span class="coFormLabels">Name</span> <input type="text" class="form-control checkoutFormElem" id="coName" value={{FB.name}}>
                     </div>
@@ -38,28 +44,40 @@
                         <span class="coFormLabels">Phone (Optional)</span> <input type="text" class="form-control checkoutFormElem" id="coPhone">
                     </div>
                     <div class="coSpacer"></div>
-                    <div class="coFormElem">
-                        <span class="coFormLabels">Card Number</span> <input type="text" class="form-control checkoutFormElem checkoutFormCC" data-stripe="number">
-                    </div>
-                    <div class="coFormElem">
-                        <span class="coFormLabels">CVC</span> <input type="text" class="form-control checkoutFormCVC" size="4" data-stripe="cvc">
-                    </div>
-                    <div class="coFormElem coExpiry">
-                        <span class="coFormLabels coExpiryLabel">Expiration (MM/YYYY)</span> 
-                        <input type="text" class="form-control checkoutFormMM" size="2" data-stripe="exp-month">
-                        <div class="checkoutFormSlash">/</div>
-                        <input type="text" class="form-control checkoutFormYY" size="4" data-stripe="exp-year">
-                        <div class="clearfix"></div>
+                    <div class="checkoutTitle">Please enter your payment information below:</div>
+                    <div class="checkoutText">Payment method:</div>
+                    <div class="checkoutText noBold form-group">
+                        <select class="form-control coPaymentSel" id="inputPayment" ng-model="payment.mode">
+                            <option value=cash>Cash on Pickup</option>
+                            <option value=card>Credit Card</option>
+                        </select>
                     </div>
                     <div class="clearfix"></div>
-                    <input type="button" class="btn btn-primary" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="makePaymentButton" value="Pay Online and place order" />
+                    <div ng-show="payment.mode == 'card'">
+                        <div class="coFormElem">
+                            <span class="coFormLabels">Card Number</span> <input type="text" class="form-control checkoutFormElem checkoutFormCC" data-stripe="number">
+                        </div>
+                        <div class="coFormElem">
+                            <span class="coFormLabels">CVC</span> <input type="text" class="form-control checkoutFormCVC" size="4" data-stripe="cvc">
+                        </div>
+                        <div class="coFormElem coExpiry">
+                            <span class="coFormLabels coExpiryLabel">Expiration (MM/YYYY)</span> <input type="text" class="form-control checkoutFormMM" size="2" data-stripe="exp-month">
+                            <div class="checkoutFormSlash">/</div>
+                            <input type="text" class="form-control checkoutFormYY" size="4" data-stripe="exp-year">
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="text-right">
+                            <input type="button" class="btn btnGo btnCO" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="makePaymentButton" value="Pay Online and place order" />
+                        </div>
+                    </div>
+                    <div ng-show="payment.mode == 'cash'">
+                        <div class="text-right">
+                            <input type="button" class="btn btnGo btnCO" ng-click="placeOrder()" id="placeOrderButton" value="Place Order for COD" />
+                        </div>
+                    </div>
                 </form>
-            </div>
-
-            
-
-                    <input type="button" class="btn btn-primary" ng-click="placeOrder()" id="placeOrderButton" value="Place Order for COD" />
-            <div ng-show="FB.notRecognized" class="col-xs-12 text-center">
+            </div>            <div ng-show="FB.notRecognized" class="col-xs-12 text-center">
                 <h4>Please login via Facebook to place the order.</h4>
                 <p />
                 <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
