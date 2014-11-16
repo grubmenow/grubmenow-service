@@ -292,6 +292,10 @@
      width: 200px;
 }
 
-.btnCO {
-     
+.spinner {
+     background-image: url("loading.gif");
+     background-repeat: no-repeat;
+     background-position: center;
+     height: 102px;
+     margin: 40px 0px;
 }

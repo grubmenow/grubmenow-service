@@ -1,10 +1,10 @@
 <div id="fb-root"></div>
 <div class="rest-sel" ng-controller="CheckoutCtrl">
-
-    <div class="container">
+    <div ng-show="!fbLoaded" class="spinner"></div>
+    <div ng-show="fbLoaded" class="container">
         <div class="col-md-2"></div>
         <div class="col-md-8 col-sm-12">
-            <div class="checkoutTitle" ng-show="FB.name">Welcome {{FB.name}}</div>
+            <div class="checkoutTitle text-center" ng-show="FB.name"><h4>Welcome {{FB.name}}</h4></div>
             <div class="checkoutTitle">Your order details:</div>
             <div class="orderDetails">
                 <div class="orderDetailsHeader">
@@ -28,7 +28,6 @@
             <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{finalOrder.restLocation}}</div>
             <div class="clearfix"></div>
             <p />
-            <div ng-show="!FB.name && !FB.notRecognized" class="col-xs-12 text-center">Figuring out which button to show</div>
             <div ng-show="FB.name" class="">
                 <form class="form-horizontal" id="payment-form">
                     <div class="payment-errors">{{stripe.error.message}}</div>
@@ -68,12 +67,12 @@
                         </div>
                         <div class="clearfix"></div>
                         <div class="text-right">
-                            <input type="button" class="btn btnGo btnCO" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="makePaymentButton" value="Pay Online and place order" />
+                            <input type="button" class="btn btnGo btnCO" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="makePaymentButton" value="Pay ${{finalOrder.totalPrice/100 | number:2 }} and Place Order" />
                         </div>
                     </div>
                     <div ng-show="payment.mode == 'cash'">
                         <div class="text-right">
-                            <input type="button" class="btn btnGo btnCO" ng-click="placeOrder()" id="placeOrderButton" value="Place Order for COD" />
+                            <input type="button" class="btn btnGo btnCO" ng-click="placeOrder()" id="placeOrderButton" value="Place Order for ${{finalOrder.totalPrice/100 | number:2 }} COD" />
                         </div>
                     </div>
                 </form>

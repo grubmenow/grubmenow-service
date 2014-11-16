@@ -46,7 +46,11 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $scope.master = $scope.location;
         $scope.validateForm(); 
         if($scope.location.zipCode && $scope.location.radius != 0 && $scope.location.availableDay != 0) {
+            delete $scope.master['food'];
             $scope.searching = 1;
+            $('html, body').animate({
+                scrollTop: $("#foodFinderMsg").offset().top
+            }, 2000);
             $http.post("api/searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
                 $scope.master.food = data;
                 $scope.searching = 0;
@@ -55,6 +59,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
                     scrollTop: $("#searchResults").offset().top
                 }, 2000);
             });
+            console.log('test');
         }
     };
 
@@ -231,6 +236,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         $scope.restList = data;
         $scope.foodItem = data.foodItem;
         $scope.restList.foodItem.foodItemQty = 1;
+        $scope.chefsLoaded = 1;
     });
 });
 

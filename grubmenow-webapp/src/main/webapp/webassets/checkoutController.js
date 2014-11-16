@@ -28,6 +28,9 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     
     $scope.handleFBResponse = function(token, name) {
         $scope.safeApply(function() {
+            $scope.fbLoaded = 1;
+            $scope.payment = {};
+            $scope.payment.mode = "card";
             if(!token) {
                 $scope.FB.notRecognized = 1;
                 $scope.FB.name = null;

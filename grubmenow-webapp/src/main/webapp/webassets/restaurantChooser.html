@@ -1,6 +1,7 @@
 <div class="rest-sel" ng-controller="RestuarantCtrl">
     <div class="clearfix"></div>
-    <div>
+    <div ng-show="!chefsLoaded" class="spinner"></div>
+    <div ng-show="chefsLoaded">
         <div class="col-xs-6 text-left  optionsText navLineBtn ">Your options for '{{foodItem.foodItemName}}' for {{availableDay}}:</div>
         <div class="col-xs-6 text-right" ng-click="backToSearch()">
             <button type="button" class="btn btn-link showhideBtn optionsText">
@@ -10,7 +11,7 @@
     </div>
     <div class="clearfix"></div>
     <p />
-    <div class="panel-group" id="accordion">
+    <div class="panel-group" id="accordion" ng-show="chefsLoaded">
         <div class="panel panel-primary" ng-repeat="rest in restList.providerFoodItemOffers">
             <a data-toggle="collapse" data-parent="#accordion" ng-click="collapse($index)" class="panelLink">
                 <div class="panel-heading">
