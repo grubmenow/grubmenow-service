@@ -176,7 +176,6 @@
      color: #000000;
      font-size: 14px;
      line-height: 26px;
-     font-weight: bold;
      width: 160px;
      float: left;
 }
@@ -215,13 +214,13 @@
 .checkoutFormElem {
      width: 200px;
      margin: 10px 0px;
+     font-weight: bold;
 }
 
 .coFormLabels {
      float: left;
      line-height: 34px;
      width: 160px;
-     font-weight: bold;
 }
 
 .coSpacer {
@@ -283,7 +282,7 @@
 }
 
 .noBold {
-     font-weight: normal;
+     font-weight: bold;
      width: 400px;
 }
 
