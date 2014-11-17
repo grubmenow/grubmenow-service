@@ -13,7 +13,7 @@
                     <div class="col-xs-3 checkoutHeader">Price</div>
                 </div>
                 <div ng-repeat="order in finalOrder.items">
-                    <div class="col-xs-7 checkoutItem">{{order.orderName}}</div>
+                    <div class="col-xs-7 checkoutItem truncateText">{{order.orderName}}</div>
                     <div class="col-xs-2 text-right checkoutItem">{{order.orderQty}}</div>
                     <div class="col-xs-3 text-right checkoutItem">${{order.orderPrice/100 | number:2 }}</div>
                 </div>
@@ -35,16 +35,19 @@
                     <div class="coFormElem">
                         <span class="coFormLabels">Name</span> <input type="text" class="form-control checkoutFormElem" id="coName" ng-model=customer.customerName>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="coFormElem">
                         <span class="coFormLabels">Email</span> <input type="email" class="form-control checkoutFormElem" id="coEmail" ng-model=customer.customerEmailId>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="coFormElem">
                         <span class="coFormLabels">Phone (Optional)</span> <input type="text" class="form-control checkoutFormElem" id="coPhone" ng-model=customer.customerPhoneNumber>
                     </div>
+                    <div class="clearfix"></div>
                     <div class="coSpacer"></div>
                     <div class="checkoutTitle">Please enter your payment information below:</div>
-                    <div class="checkoutText">Payment method:</div>
-                    <div class="checkoutText noBold form-group">
+                    <div class="coFormLabels">Payment method:</div>
+                    <div class="checkoutText noBold">
                         <select class="form-control coPaymentSel" id="inputPayment" ng-model="payment.mode">
                             <option value=cash>Cash on Pickup</option>
                             <option value=card>Credit Card</option>
@@ -56,14 +59,21 @@
                         <div class="coFormElem">
                             <span class="coFormLabels">Card Number</span> <input type="text" class="form-control checkoutFormElem checkoutFormCC" data-stripe="number">
                         </div>
+                        <div class="clearfix"></div>
                         <div class="coFormElem">
-                            <span class="coFormLabels">CVC</span> <input type="text" class="form-control checkoutFormCVC" size="4" data-stripe="cvc">
+                            <span class="coFormLabels">CVC</span>
+                            <div class="coFormLabelsDiv"> 
+                                <input type="text" class="form-control checkoutFormCVC" size="4" data-stripe="cvc">
+                            </div>
                         </div>
+                        <div class="clearfix"></div>
                         <div class="coFormElem coExpiry">
-                            <span class="coFormLabels coExpiryLabel">Expiration (MM/YYYY)</span> <input type="text" class="form-control checkoutFormMM" size="2" data-stripe="exp-month">
-                            <div class="checkoutFormSlash">/</div>
-                            <input type="text" class="form-control checkoutFormYY" size="4" data-stripe="exp-year">
-                            <div class="clearfix"></div>
+                            <span class="coFormLabels coExpiryLabel">Expiration (MM/YYYY)</span>
+                            <div class="coFormLabelsDiv">
+                                <input type="text" class="form-control checkoutFormMM" size="2" data-stripe="exp-month">
+                                <div class="checkoutFormSlash">/</div>
+                                <input type="text" class="form-control checkoutFormYY" size="4" data-stripe="exp-year">
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                         <div class="text-right">

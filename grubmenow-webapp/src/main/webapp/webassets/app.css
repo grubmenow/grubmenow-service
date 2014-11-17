@@ -75,7 +75,7 @@
 }
 
 .qtyBox {
-     width: 56px;
+     width: 45px;
 }
 
 .foodTitle {
@@ -213,11 +213,17 @@
 
 .checkoutFormElem {
      width: 200px;
-     margin: 10px 0px;
      font-weight: bold;
 }
 
 .coFormLabels {
+     float: left;
+     line-height: 34px;
+     width: 160px;
+     margin: 8px 0px 0px 0px;
+}
+
+.coFormLabelsDiv {
      float: left;
      line-height: 34px;
      width: 160px;
@@ -229,12 +235,10 @@
 
 .checkoutFormCVC {
      width: 60px;
-     margin-top: 10px;
 }
 
 .checkoutFormYY {
      width: 60px;
-     margin-top: 10px;
      float: left;
 }
 
@@ -242,11 +246,11 @@
      width: 42px;
      float: left;
      margin-right: 10px;
-     margin-top: 10px;
 }
 
 .coExpiryLabel {
      margin-top: 10px
+     
 }
 
 .coExpiry {
@@ -255,9 +259,9 @@
 
 .checkoutFormSlash {
      float: left;
-     margin-top: 18px;
      font-weight: bold;
      width: 14px;
+     font-size: 18px;
 }
 
 .checkoutFormCC {
@@ -287,7 +291,6 @@
 }
 
 .coPaymentSel {
-     margin-left: 15px;
      width: 200px;
 }
 
@@ -308,5 +311,15 @@
      color: #F04E00;
      font-size: 18px;
      text-decoration: underline;
+     margin: 20px 0px;
+}
+
+.truncateText {
+     white-space: nowrap;
+     overflow: hidden;
+     text-overflow: ellipsis;
+}
+
+.btnCO {
      margin: 20px 0px;
 }
