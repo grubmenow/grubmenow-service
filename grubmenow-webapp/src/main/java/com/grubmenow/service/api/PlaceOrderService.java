@@ -157,7 +157,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		} catch (Exception e) {
 			log.error("Unable to reserve order", e);
 			processOfferReserveFailure(request, orderId, e.getMessage());
-			return;
+			throw e;
 		}
 		
 		// Charge customer credit card
@@ -168,7 +168,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			log.error("Unable to process payment", e);
 			releaseReservedOrder(request);
 			processCreditCardChargeFailure(request, orderId, e.getMessage());
-			return;
+			throw e;
 		}
 
 		// Update Order Status
@@ -180,7 +180,6 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			throw new IllegalStateException("FoodItemOfferDAOs should not be null at this point");
 		}
 		sendSuccessEmail(customerDAO, customerOrderDAO, order.customerOrderItemDAOs, order.foodItemOfferDAOs.get(0).getOfferDay());
-		
 	}
 	
 	private void processPayment(PlaceOrderRequest request, CustomerDAO customerDAO, String orderId) {
@@ -201,9 +200,8 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			
 			PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
 		} catch (Exception e) {
-			e.printStackTrace();
 			log.error("Unable to authorize payment instrument", e);
-			throw new ValidationException("Unable to authorize payment instrument");
+			throw new ValidationException("Unable to authorize payment instrument", e.getMessage());
 		}
 	}
 	

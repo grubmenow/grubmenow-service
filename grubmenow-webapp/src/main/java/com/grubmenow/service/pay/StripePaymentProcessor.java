@@ -59,7 +59,7 @@ public class StripePaymentProcessor {
 			PaymentTransaction transaction = new PaymentTransaction(charge.getId(), charge.getLivemode());
 			return transaction;
 		} catch (Exception ex) {
-			throw new PaymentProcessorException("Stripe payment failed.", ex);
+			throw new PaymentProcessorException("Stripe payment failed. " + ex.getMessage(), ex);
 		}
 	}
 	
