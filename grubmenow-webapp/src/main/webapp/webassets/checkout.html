@@ -28,9 +28,8 @@
             <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{finalOrder.restLocation}}</div>
             <div class="clearfix"></div>
             <p />
-            <div ng-show="customer.customerLoaded" class="">
+            <div ng-show="customer.customerLoaded && !order.processing && !order.processed"  class="">
                 <form class="form-horizontal" id="payment-form">
-                    <div class="payment-errors">{{stripe.error.message}}</div>
                     
                     <div class="checkoutTitle">Please enter your contact information below:</div>
                     <div class="coFormElem">
@@ -53,6 +52,7 @@
                     </div>
                     <div class="clearfix"></div>
                     <div ng-show="payment.mode == 'card'">
+                        <div class="payment-errors text-warn"><strong>{{stripe.error.message}}</strong></div>
                         <div class="coFormElem">
                             <span class="coFormLabels">Card Number</span> <input type="text" class="form-control checkoutFormElem checkoutFormCC" data-stripe="number">
                         </div>
@@ -77,12 +77,15 @@
                     </div>
                 </form>
             </div>
-            <div ng-show="!customer.customerLoaded && !FB.notRecognized" class="spinner">
+            <div ng-show="(!customer.customerLoaded && !FB.notRecognized) || order.processing" class="spinner">
             </div>
             <div ng-show="FB.notRecognized" class="col-xs-12 text-center">
                 <h4>Please login via Facebook to place the order.</h4>
                 <p />
                 <div class="fb-login-button" data-max-rows="1" data-scope="public_profile,email,user_friends" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
+            </div>
+            <div ng-show="order.processed" class="col-xs-12 text-center checkoutTitle orderConfirmation">
+                Thank you for placing your order. Your Order Id is {{order.orderId}}
             </div>
         </div>
     </div>

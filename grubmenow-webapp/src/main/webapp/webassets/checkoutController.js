@@ -19,8 +19,11 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
             orderObject.customerEmailId = $scope.customer.customerEmailId;
             orderObject.customerPhoneNumber = $scope.customer.customerPhoneNumber;
         	var orderUrl = "api/placeOrder";
+        	$scope.order.processing = 1;
         	$http.post(orderUrl, JSON.stringify(orderObject)).success(function(data) {
-                console.log("Order Placed successfully");
+        	    $scope.order.processing = 0;
+        	    $scope.order.processed = 1;
+        	    $scope.order.orderId = data.customerOrder.orderId;
             });
     	});
     }
@@ -54,39 +57,39 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     
 
     $scope.populateCustomerAccountDetails = function() {
-	var customerAccountDetailsAPIUrl = "api/getCustomerAccountDetails";
-	var customerAccountDetailsReq = {};
-	customerAccountDetailsReq.websiteAuthenticationToken = $scope.FB.accessToken;
-	$http.post(customerAccountDetailsAPIUrl, JSON .stringify(customerAccountDetailsReq))
-		.success(
-			function(data) {
-				$scope.safeApply(function() {
-					var fullName = data.firstName;
-					if (data.lastName != null) {
-						fullName = fullName
-								+ " "
-								+ data.lastName;
-					}
-					$scope.customer.customerName = fullName;
-					$scope.customer.customerEmailId = data.emailId;
-					$scope.customer.customerPhoneNumber = data.phoneNumber;
-					$scope.customer.customerLoaded = 1;
-				});
-			})
-		.error(
-			function(data) {
-				$scope.safeApply(function() {
-					// error from service,
-					// means the customer
-					// does not exist.
-					// Default with
-					// what fb returned
-					$scope.customer.customerName = $scope.FB.name;
-					$scope.customer.customerEmailId = $scope.FB.email;
-					$scope.customer.customerPhoneNumber = null;
-					$scope.customer.customerLoaded = 1;
-				});
-			});
+        var customerAccountDetailsAPIUrl = "api/getCustomerAccountDetails";
+        var customerAccountDetailsReq = {};
+        customerAccountDetailsReq.websiteAuthenticationToken = $scope.FB.accessToken;
+        $http.post(customerAccountDetailsAPIUrl, JSON .stringify(customerAccountDetailsReq))
+        .success(
+                function(data) {
+                    $scope.safeApply(function() {
+                        var fullName = data.firstName;
+                        if (data.lastName != null) {
+                            fullName = fullName
+                            + " "
+                            + data.lastName;
+                        }
+                        $scope.customer.customerName = fullName;
+                        $scope.customer.customerEmailId = data.emailId;
+                        $scope.customer.customerPhoneNumber = data.phoneNumber;
+                        $scope.customer.customerLoaded = 1;
+                    });
+                })
+                .error(
+                        function(data) {
+                            $scope.safeApply(function() {
+                                // error from service,
+                                // means the customer
+                                // does not exist.
+                                // Default with
+                                // what fb returned
+                                $scope.customer.customerName = $scope.FB.name;
+                                $scope.customer.customerEmailId = $scope.FB.email;
+                                $scope.customer.customerPhoneNumber = null;
+                                $scope.customer.customerLoaded = 1;
+                            });
+                        });
     }
 
     $scope.safeApply = function(fn) {
@@ -116,12 +119,14 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     $scope.makePayment = function() {
     	var $form = $('#payment-form');
     	$scope.stripe.disableSubmit = 1;
+    	$scope.order.processing = 1;
     	Stripe.card.createToken($form, $scope.stripeResponseHandler);
     }
     
     $scope.stripeResponseHandler = function(status, response) {
     	$scope.safeApply(function() {
     		$scope.stripe.disableSubmit = 0;
+    		$scope.order.processing = 0;
     		var $form = $('#payment-form');
 
     		if (response.error) {
@@ -138,6 +143,7 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     $scope.FB = {};
     $scope.customer = {customerLoaded: 0, customerName: null, customerEmailId: null, customerPhoneNumber: null};
     $scope.stripe = {};
+    $scope.order = {};
     $scope.initializeFB();
     Stripe.setPublishableKey('pk_test_CJPjqWuObYi705eii41Faeq7');
     $scope.getFinalOrder();
