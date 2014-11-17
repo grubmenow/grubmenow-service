@@ -1,7 +1,7 @@
 angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $http, $location) {
     
-    $scope.placeOrder = function(token) {
-        fbHelper.getFBTokenAndName(function(token, name){
+    $scope.placeOrder = function(paymentToken) {
+        fbHelper.getFBTokenNameAndEmail(function(token, name, email){
     		if(!token) {
     			return;
     		}
@@ -11,10 +11,13 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
             orderObject.orderAmount.value = $scope.finalOrder.totalPrice;
         	orderObject.providerId = $scope.finalOrder.providerId;
         	orderObject.websiteAuthenticationToken = $scope.FB.accessToken;
-        	orderObject.onlinePaymentToken = token;
+        	orderObject.onlinePaymentToken = paymentToken;
         	orderObject.deliveryMethod = "CUSTOMER_PICKUP";
-        	orderObject.paymentMethod = token ? "ONLINE_PAYMENT" : "CASH_ON_DELIVERY"
+        	orderObject.paymentMethod = paymentToken ? "ONLINE_PAYMENT" : "CASH_ON_DELIVERY"
         	orderObject.orderItems = $scope.finalOrder.orderItems;
+            orderObject.customerName = $scope.customer.customerName;
+            orderObject.customerEmailId = $scope.customer.customerEmailId;
+            orderObject.customerPhoneNumber = $scope.customer.customerPhoneNumber;
         	var orderUrl = "api/placeOrder";
         	$http.post(orderUrl, JSON.stringify(orderObject)).success(function(data) {
                 console.log("Order Placed successfully");
@@ -26,22 +29,66 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     	$scope.finalOrder = JSON.parse(localStorage.getItem('gmn.finalOrder'));
 	}
     
-    $scope.handleFBResponse = function(token, name) {
+    $scope.handleFBResponse = function(token, name, email) {
         $scope.safeApply(function() {
             $scope.fbLoaded = 1;
             $scope.payment = {};
             $scope.payment.mode = "card";
             if(!token) {
                 $scope.FB.notRecognized = 1;
+                $scope.customer.customerLoaded = 0;
                 $scope.FB.name = null;
+                $scope.FB.email = null;
+                $scope.customer.customerName = null;
+                $scope.customer.customerEmailId = null;
+                $scope.customer.customerPhoneNumber = null;
             } else {
                 $scope.FB.accessToken = token;
                 $scope.FB.notRecognized = 0;
                 $scope.FB.name = name;
+                $scope.FB.email = email;
+                $scope.populateCustomerAccountDetails();
             }
         });
     }
     
+
+    $scope.populateCustomerAccountDetails = function() {
+	var customerAccountDetailsAPIUrl = "api/getCustomerAccountDetails";
+	var customerAccountDetailsReq = {};
+	customerAccountDetailsReq.websiteAuthenticationToken = $scope.FB.accessToken;
+	$http.post(customerAccountDetailsAPIUrl, JSON .stringify(customerAccountDetailsReq))
+		.success(
+			function(data) {
+				$scope.safeApply(function() {
+					var fullName = data.firstName;
+					if (data.lastName != null) {
+						fullName = fullName
+								+ " "
+								+ data.lastName;
+					}
+					$scope.customer.customerName = fullName;
+					$scope.customer.customerEmailId = data.emailId;
+					$scope.customer.customerPhoneNumber = data.phoneNumber;
+					$scope.customer.customerLoaded = 1;
+				});
+			})
+		.error(
+			function(data) {
+				$scope.safeApply(function() {
+					// error from service,
+					// means the customer
+					// does not exist.
+					// Default with
+					// what fb returned
+					$scope.customer.customerName = $scope.FB.name;
+					$scope.customer.customerEmailId = $scope.FB.email;
+					$scope.customer.customerPhoneNumber = null;
+					$scope.customer.customerLoaded = 1;
+				});
+			});
+    }
+
     $scope.safeApply = function(fn) {
     	var phase = this.$root.$$phase;
     	if(phase == '$apply' || phase == '$digest') {
@@ -55,12 +102,12 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     	
     $scope.initializeFB = function() {
         fbHelper.initialize(function(initialized){
-            fbHelper.getFBTokenAndName(function(token, name){
-                $scope.handleFBResponse(token, name);
+            fbHelper.getFBTokenNameAndEmail(function(token, name, email){
+                $scope.handleFBResponse(token, name, email);
             });
             
-            fbHelper.addAuthChangeSubscription(function(token, name){
-                $scope.handleFBResponse(token, name);
+            fbHelper.addAuthChangeSubscription(function(token, name, email){
+                $scope.handleFBResponse(token, name, email);
             }); 
         });
     }
@@ -89,6 +136,7 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     }
     
     $scope.FB = {};
+    $scope.customer = {customerLoaded: 0, customerName: null, customerEmailId: null, customerPhoneNumber: null};
     $scope.stripe = {};
     $scope.initializeFB();
     Stripe.setPublishableKey('pk_test_CJPjqWuObYi705eii41Faeq7');

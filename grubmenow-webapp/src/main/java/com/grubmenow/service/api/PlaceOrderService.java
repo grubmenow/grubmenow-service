@@ -1,10 +1,12 @@
 package com.grubmenow.service.api;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
@@ -30,7 +32,6 @@ import com.grubmenow.service.datamodel.OrderState;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
 import com.grubmenow.service.model.Amount;
-import com.grubmenow.service.model.Currency;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
@@ -56,7 +57,6 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		validateInput(request);
 
 		// generate ids and other constant for this order
-		// TODO: kapila(Oct 11 2014): Make the order id a number for easier pronunciation over phone
 		String orderId = IDGenerator.generateOrderId();
 		CustomerDAO customerDAO = saveAndFetchCustomerId(request);
 		
@@ -78,37 +78,78 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	}
 	
 	private CustomerDAO saveAndFetchCustomerId(PlaceOrderRequest request) {
-		FacebookCustomerInfo customerInfo = null;
+		FacebookCustomerInfo fbCustomerInfo = null;
 		try {
-			customerInfo = ServiceHandler.getInstance().getFacebookAuthentication().validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
+			fbCustomerInfo = ServiceHandler.getInstance().getFacebookAuthentication().validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
 		} catch (Exception e) {
 			throw new ValidationException("Invalid fb authentication token");
 		}
 			
-		try{
-			// create a customer DAO
-			CustomerDAO customerDAO = new CustomerDAO();
-			customerDAO.setCustomerId(customerInfo.getFacebookUserId());
-			customerDAO.setCustomerFirstName(customerInfo.getFirstName());
-			customerDAO.setCustomerLastName(customerInfo.getLastName());
-			customerDAO.setCustomerEmailId(customerInfo.getEmailId());
-			customerDAO.setCustomerState(CustomerState.ACTIVE);
-
-			PersistenceFactory.getInstance().createCustomer(customerDAO);
-			
-			return customerDAO;
-		} catch (Exception e) {
-			log.info("Customer could not be created. Valid for a revisting customer. fb user id: " + customerInfo.getFacebookUserId());
-			// it is possible that customer is already in our database
-			CustomerDAO customerDAO = PersistenceFactory.getInstance().getCustomerById(customerInfo.getFacebookUserId());
-			// TODO: kapila (11th oct 2014): this will throw an ISE? 
-			Validator.notNull(customerDAO, "Error loading customer profile");
-			Validator.isTrue(customerDAO.getCustomerState() == CustomerState.ACTIVE, "Invalid Customer State");
-			
-			return customerDAO;
+		// create a customer DAO
+		CustomerDAO customerDAO = new CustomerDAO();
+		customerDAO.setCustomerId(fbCustomerInfo.getFacebookUserId());
+		String[] splitCustomerName = StringUtils.split(request.getCustomerName(), " ");
+		String firstName = splitCustomerName[0];
+		String lastName = null;
+		if (splitCustomerName.length > 1)
+		{
+		    lastName = splitCustomerName[1];
 		}
+
+		customerDAO.setCustomerFirstName(firstName);
+		customerDAO.setCustomerLastName(lastName);
+		customerDAO.setCustomerEmailId(request.getCustomerEmailId());
+		customerDAO.setCustomerPhoneNumber(request.getCustomerPhoneNumber());
+		customerDAO.setCustomerState(CustomerState.ACTIVE);
+
+		CustomerDAO prevCustomerDAO = null;
+		try
+		{
+		    prevCustomerDAO = PersistenceFactory.getInstance().getCustomerById(fbCustomerInfo.getFacebookUserId());
+		}
+		catch (Exception e)
+		{
+		    log.info("Customer does not exist, valid for a new customer placing order first time. fb user id: " + fbCustomerInfo.getFacebookUserId() 
+		        + ". " + e.getMessage());
+		}
+
+		try
+		{
+		    if (prevCustomerDAO == null)
+		    {
+		        PersistenceFactory.getInstance().createCustomer(customerDAO);
+		    }
+		    else
+		    {
+		        Validator.isTrue(prevCustomerDAO.getCustomerState() == CustomerState.ACTIVE, "Invalid Customer State");
+		        CustomerDAO newCustomerDAO = mergePrevAndNewCustomerDAO(prevCustomerDAO, customerDAO);
+		        PersistenceFactory.getInstance().updateCustomer(newCustomerDAO);
+		    }
+		}
+		catch (Exception e) {
+            throw new ValidationException("Customer could not be created or updated", e.getMessage());
+        }
+
+		return customerDAO;
 	}
 	 
+	private CustomerDAO mergePrevAndNewCustomerDAO(CustomerDAO prevCustomerDAO, CustomerDAO newCustomerDAO)
+    {
+        if (prevCustomerDAO == null)
+        {
+            return newCustomerDAO;
+        }
+
+        // Use the prev phone number if the prev was present but the new one is not present. 
+        // this is done so that we don't override a previous phone number and have a way to reach to the customer
+        // if needed
+        if (prevCustomerDAO.getCustomerPhoneNumber() != null && newCustomerDAO.getCustomerPhoneNumber() == null)
+        {
+            newCustomerDAO.setCustomerPhoneNumber(prevCustomerDAO.getCustomerPhoneNumber());
+        }
+        return newCustomerDAO;
+    }
+
 	private void processOrder(PlaceOrderRequest request, CustomerDAO customerDAO, Order order) throws EmailSendException {
 		String orderId = order.customerOrderDAO.getOrderId();
 		try {
@@ -406,6 +447,8 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		Validator.notNull(request.getOrderAmount(), "Invalid Order Amount");
 		Validator.notNull(request.getOrderAmount().getValue(), "Invalid Order Amount.Value");
 		Validator.notNull(request.getOrderAmount().getCurrency(), "Invalid Order Amount.Currency");
+		Validator.notBlank(request.getCustomerName(), "Customer name cannot be empty");
+		Validator.notBlank(request.getCustomerEmailId(), "Customer email id cannot be empty");
 		
 		if(request.getPaymentMethod() == PaymentMethod.ONLINE_PAYMENT) {
 			Validator.notNull(request.getOnlinePaymentToken(), "Invalid Website Authentication Token");	

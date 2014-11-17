@@ -21,4 +21,7 @@ public class PlaceOrderRequest {
 	
 	private DeliveryMethod deliveryMethod;
 	
+	private String customerName;
+	private String customerEmailId;
+	private String customerPhoneNumber;
 }

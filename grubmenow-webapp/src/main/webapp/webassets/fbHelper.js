@@ -15,7 +15,7 @@ var fbHelper = {
             window.fbAsyncInit = function() {
                 FB.init({
 //                   appId      : '85199433896',
-                    appId      : '591805167609392', 
+                    appId      : '591805167609392',
                     cookie     : true,  // enable cookies to allow the server to access the session
                     xfbml      : true,  // parse social plugins on this page
                     version    : 'v2.1' // use version 2.1
@@ -28,23 +28,23 @@ var fbHelper = {
         handleFBAuthResponse: function(response, callback) {
             var token = response.status == "connected" ? response.authResponse.accessToken : 0;
             if(!token) {
-                callback(0, null);
+                callback(0, null, null);
             } else {
-                fbHelper.getFBName(function(status){
-                    callback(token, status);
+                fbHelper.getFBNameAndEmail(function(name, email){
+                    callback(token, name, email);
                 });
             }
         },
         
-        getFBName: function(callback) {
+        getFBNameAndEmail: function(callback) {
             FB.api('/me', function(response) {
                 if (response.name) {
-                    callback(response.name)                      
+                    callback(response.name, response.email)
                 }
             });
         },
         
-        getFBTokenAndName: function(callback) {
+        getFBTokenNameAndEmail: function(callback) {
             FB.getLoginStatus(function(response) {
                 fbHelper.handleFBAuthResponse(response, callback);
             });

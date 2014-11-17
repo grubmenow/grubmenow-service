@@ -28,19 +28,19 @@
             <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{finalOrder.restLocation}}</div>
             <div class="clearfix"></div>
             <p />
-            <div ng-show="FB.name" class="">
+            <div ng-show="customer.customerLoaded" class="">
                 <form class="form-horizontal" id="payment-form">
                     <div class="payment-errors">{{stripe.error.message}}</div>
                     
                     <div class="checkoutTitle">Please enter your contact information below:</div>
                     <div class="coFormElem">
-                        <span class="coFormLabels">Name</span> <input type="text" class="form-control checkoutFormElem" id="coName" value={{FB.name}}>
+                        <span class="coFormLabels">Name</span> <input type="text" class="form-control checkoutFormElem" id="coName" ng-model=customer.customerName>
                     </div>
                     <div class="coFormElem">
-                        <span class="coFormLabels">Email</span> <input type="email" class="form-control checkoutFormElem" id="coEmail">
+                        <span class="coFormLabels">Email</span> <input type="email" class="form-control checkoutFormElem" id="coEmail" ng-model=customer.customerEmailId>
                     </div>
                     <div class="coFormElem">
-                        <span class="coFormLabels">Phone (Optional)</span> <input type="text" class="form-control checkoutFormElem" id="coPhone">
+                        <span class="coFormLabels">Phone (Optional)</span> <input type="text" class="form-control checkoutFormElem" id="coPhone" ng-model=customer.customerPhoneNumber>
                     </div>
                     <div class="coSpacer"></div>
                     <div class="checkoutTitle">Please enter your payment information below:</div>
@@ -76,10 +76,13 @@
                         </div>
                     </div>
                 </form>
-            </div>            <div ng-show="FB.notRecognized" class="col-xs-12 text-center">
+            </div>
+            <div ng-show="!customer.customerLoaded && !FB.notRecognized" class="spinner">
+            </div>
+            <div ng-show="FB.notRecognized" class="col-xs-12 text-center">
                 <h4>Please login via Facebook to place the order.</h4>
                 <p />
-                <div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
+                <div class="fb-login-button" data-max-rows="1" data-scope="public_profile,email,user_friends" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
             </div>
         </div>
     </div>

@@ -32,13 +32,15 @@ public class CustomerDAO {
     @Column(name = "CUSTOMER_FIRST_NAME")
 	private String customerFirstName;
 
-	@NonNull
     @Column(name = "CUSTOMER_LAST_NAME")
 	private String customerLastName;
 	
 	@NonNull
     @Column(name = "CUSTOMER_EMAIL_ID")
 	private String customerEmailId;
+
+    @Column(name = "CUSTOMER_PHONE_NUMBER")
+    private String customerPhoneNumber;
 
     @NonNull
     @Column(name = "CUSTOMER_STATE")

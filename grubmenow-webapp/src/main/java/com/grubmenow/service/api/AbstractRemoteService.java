@@ -23,6 +23,10 @@ public abstract class AbstractRemoteService  {
 	     HashMap<String, Object> result = new HashMap<>();
 	     result.put("error", true);
 	     result.put("error_message", ex.getMessage());
+	     if (ex.getInternalErrorMessage() != null)
+	     {
+	         result.put("internal_error_message", ex.getInternalErrorMessage());
+	     }
 	     return result;
 	  }
 	
