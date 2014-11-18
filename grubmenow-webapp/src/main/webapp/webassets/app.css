@@ -46,7 +46,7 @@
 }
 
 .fillerxs {
-     height: 70px;
+     height: 90px;
 }
 
 .thumbnail {
@@ -322,4 +322,8 @@
 
 .btnCO {
      margin: 20px 0px;
+}
+
+.hdiwImage {
+     margin: 0px auto;
 }

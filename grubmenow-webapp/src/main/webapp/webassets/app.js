@@ -21,6 +21,10 @@ gmnApp.config(['$routeProvider', function($routeProvider) {
 		templateUrl: 'checkout.html',
 		controller: 'CheckoutCtrl'
 	}).
+	when('/howitworks', {
+        templateUrl: 'howitworks.html',
+        controller: 'HIWCtrl'
+    }).
 	otherwise({
 		redirectTo: '/home'
 	});

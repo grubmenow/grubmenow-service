@@ -153,3 +153,11 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
         }, 2000);
     });
 });
+
+angular.module('gmnControllers').controller('HIWCtrl', function ($scope, $http) {
+    //Update the Nav state
+    $( "li", "#gmnNav" ).each(function( index ) {
+        $( this ).removeClass('active');
+    });
+    $('#hiwNav').addClass('active');   
+});
