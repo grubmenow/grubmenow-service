@@ -320,8 +320,12 @@
      text-overflow: ellipsis;
 }
 
-.btnCO {
+.btnCO, .btnCO:hover, .btnCO:focus {
+     background-color: #FF8246;
+     color: white;
+     border: 1px solid #FF8246;
      margin: 20px 0px;
+     outline: none;
 }
 
 .hdiwImage {
