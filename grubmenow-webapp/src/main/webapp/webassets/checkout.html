@@ -77,12 +77,12 @@
                         </div>
                         <div class="clearfix"></div>
                         <div class="text-right">
-                            <input type="button" class="btn btnGo btnCO" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="makePaymentButton" value="Pay ${{finalOrder.totalPrice/100 | number:2 }} and Place Order" />
+                            <input type="button" class="btn btnCO" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="makePaymentButton" value="Pay ${{finalOrder.totalPrice/100 | number:2 }} and Place Order" />
                         </div>
                     </div>
                     <div ng-show="payment.mode == 'cash'">
                         <div class="text-right">
-                            <input type="button" class="btn btnGo btnCO" ng-click="placeOrder()" id="placeOrderButton" value="Place Order for ${{finalOrder.totalPrice/100 | number:2 }} COD" />
+                            <input type="button" class="btn btnCO" ng-click="placeOrder()" id="placeOrderButton" value="Place Order and Pay ${{finalOrder.totalPrice/100 | number:2 }} on Pickup" />
                         </div>
                     </div>
                 </form>
