@@ -7,10 +7,16 @@
 <title>GrubMeNow Order</title>
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
 <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
+<link href="css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="app.css" />
+
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
 <script src="orderDetailsController.js"></script>
+<script src="js/star-rating.min.js" type="text/javascript"></script>
+
 <style type="text/css">
     .bs-example {
     	margin: 20px;
@@ -52,14 +58,6 @@
 		width: 100%;
     }
     
-    body {
-		background-color: #FFFFFF;
-		color: black;
-		font-family: "Lucida Grande", "Lucida Sans", "Lucida Sans Unicode",
-			"Luxi Sans", Tahoma, sans-serif;
-		margin: 0;
-		padding: 0;
-	}   
 </style>
 </head>
 <body>
@@ -107,13 +105,13 @@
 				<table style="width: 100%">
 					<tr>
 						<td>
-			              	<span style="float: left; font-size: 12px; padding-bottom: 5px; font-weight: bold;"> Item </span>
+			              	<span style="float: left; font-size: 12px; padding-bottom: 5px; font-weight: bold; text-decoration: underline;"> Item </span>
 			            </td>
 						<td>
-		              		<span style="float: left; font-size: 12px; padding-bottom: 5px; font-weight: bold;"> Quantity </span>
+		              		<span style="float: left; font-size: 12px; padding-bottom: 5px; font-weight: bold; text-decoration: underline;"> Quantity </span>
 			            </td>
 						<td>
-			              	<span style="float: right; font-size: 12px; padding-bottom: 5px; font-weight: bold;"> Amount </span>
+			              	<span style="float: right; font-size: 12px; padding-bottom: 5px; font-weight: bold; text-decoration: underline;"> Amount </span>
 			            </td>
 			        </tr>
 				
@@ -159,6 +157,8 @@
 			 <div class="starRate">
 			 	<form>
 			 	 <br/>
+			 	 
+			 	 
 			 	 <span class="feedbackMessage" style="display: none;"></span>
 			 	 
 				 <div class="radio">

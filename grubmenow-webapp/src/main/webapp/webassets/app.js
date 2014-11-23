@@ -25,6 +25,10 @@ gmnApp.config(['$routeProvider', function($routeProvider) {
         templateUrl: 'howitworks.html',
         controller: 'HIWCtrl'
     }).
+	when('/faq', {
+        templateUrl: 'faq.html',
+        controller: 'FAQCtrl'
+    }).
 	otherwise({
 		redirectTo: '/home'
 	});

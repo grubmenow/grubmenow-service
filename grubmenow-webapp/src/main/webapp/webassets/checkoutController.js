@@ -161,3 +161,12 @@ angular.module('gmnControllers').controller('HIWCtrl', function ($scope, $http) 
     });
     $('#hiwNav').addClass('active');   
 });
+
+angular.module('gmnControllers').controller('FAQCtrl', function ($scope, $http) {
+    //Update the Nav state
+    $( "li", "#gmnNav" ).each(function( index ) {
+        $( this ).removeClass('active');
+    });
+    $('#faqNav').addClass('active');   
+});
+

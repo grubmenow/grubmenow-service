@@ -238,5 +238,20 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         $scope.restList.foodItem.foodItemQty = 1;
         $scope.chefsLoaded = 1;
     });
+    
+}).directive('providerRepeatDirective', function() {
+	  return function(scope, element, attrs) {
+		  scope.$watch('rest', function(){
+			  $('span.stars').stars();
+			  $('.qtyBox').TouchSpin({
+	                min: 0,
+	                max: 10,
+	                step: 1,
+	                verticalbuttons: true,
+	                verticalupclass: 'glyphicon glyphicon-plus',
+	                verticaldownclass: 'glyphicon glyphicon-minus'
+	            });
+		  });
+   };
 });
 
