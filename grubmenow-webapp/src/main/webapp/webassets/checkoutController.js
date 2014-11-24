@@ -160,6 +160,7 @@ angular.module('gmnControllers').controller('HIWCtrl', function ($scope, $http) 
         $( this ).removeClass('active');
     });
     $('#hiwNav').addClass('active');   
+    $('#navbarCollapse').removeClass('in');
 });
 
 angular.module('gmnControllers').controller('FAQCtrl', function ($scope, $http) {
@@ -168,5 +169,6 @@ angular.module('gmnControllers').controller('FAQCtrl', function ($scope, $http) 
         $( this ).removeClass('active');
     });
     $('#faqNav').addClass('active');   
+    $('#navbarCollapse').removeClass('in');
 });
 

@@ -103,6 +103,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $( this ).removeClass('active');
     });
     $('#homeNav').addClass('active');
+    $('#navbarCollapse').removeClass('in');
 
     $scope.location = {};
     $scope.location = gmnGetQSP($scope.location);
