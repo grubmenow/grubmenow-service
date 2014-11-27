@@ -1,79 +1,19 @@
-<!DOCTYPE html>
-<html lang="en" ng-app="orderDetails">
-<head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">  
-<title>GrubMeNow Order</title>
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" />
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" />
-<link href="css/star-rating.min.css" media="all" rel="stylesheet" type="text/css" />
-<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="app.css" />
-
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
-<script src="orderDetailsController.js"></script>
-<script src="js/star-rating.min.js" type="text/javascript"></script>
-
-<style type="text/css">
-    .bs-example {
-    	margin: 20px;
-    }
-    
-    .logoImage {
-		margin-bottom: 20px;
-    }
-    .zipForm {
-		margin: 20px;
-    }
-    
-    body {
-		 
-    }
-    
-    @-ms-viewport {
-		width: device-width;
-    }
-    
-    .formElem {
-		display: inline-block !important;
-		width: 200px;
-    }
-        
-    .cbTitle {
-		padding-top: 2px;
-    }
-    
-    .upperHeader {
-    	background:#aaa;
-    	display: inline-block !important;
-		width: 100%;
-    }
-    
-    .lowerBox {
-    	background:#eee;
-    	display: inline-block !important;
-		width: 100%;
-    }
-    
-</style>
-</head>
-<body>
+<div id="fb-root"></div>
 <div class="food-finder text-center" ng-controller="orderDetailsController">
-    
-    <img src="logo.png" class="logoImage"/>
-	<br>
 
-    <span class="loadMessage alert alert-info" style="display: none;"></span>
-    
-    <div class="container"  ng-show="showOrder">
-        <div ng-show="orderPlacedSuccessful">
-            <h4>Thank you for your order!</h4>
-        </div>
-        
-        <div class="panel panel-default">
+    <div ng-show="!FB.libraryLoaded" class="spinner">
+    </div>
+    <div ng-show="FB.libraryLoaded && FB.notRecognized">
+        <!--  show login button -->
+        <h4>Please login via Facebook to view the order.</h4>
+        <p />
+        <div class="fb-login-button" data-max-rows="1" data-scope="public_profile,email,user_friends" data-size="large"
+                data-show-faces="false" data-auto-logout-link="false"></div>
+    </div>
+
+    <div ng-show="FB.libraryLoaded && !FB.notRecognized" class="container">
+        <div ng-show="!orderLoaded" class="spinner"></div>
+        <div ng-show="orderLoaded" class="panel panel-default">
 			<div class="panel-heading">
 				<div class="row">
 				
@@ -82,7 +22,7 @@
 				  </span>
 					
 				  <span class="span2" style="float: left; padding-right: 15px; font-size: 12px;">
-				  	<b>Order Amount</b> <br/> {{getCustomerOrderResponse.customerOrder.orderAmount.currency}} {{customerOrder.orderAmount.value}}
+                      <b>Order Amount</b> <br/> ${{getCustomerOrderResponse.customerOrder.orderAmount.value/100 | number:2}}
 				  </span>
 				  
 				  <span class="span2" style="float: left; padding-right: 15px; font-size: 12px;">
@@ -90,7 +30,7 @@
 				  </span>
 				  
 				  <span class="span2" style="float: left; padding-right: 15px; font-size: 12px;">
-				  	<b>Order Delivery</b> <br/> {{getCustomerOrderResponse.customerOrder.deliveryMethod}}
+                    <b>Order Delivery</b> <br/> {{getCustomerOrderResponse.customerOrder.deliveryMethod.replace("_", " ")}}
 				  </span>
 				  
 				  <span class="span4" style="float: right; padding-right: 15px; font-size: 12px;">
@@ -99,8 +39,6 @@
 				  
 				</div>
 			</div>
-
-	
 			<div class="panel-body">
 				<table style="width: 100%">
 					<tr>
@@ -123,7 +61,7 @@
 			              	<span style="float: left"> {{orderItem.quantity}} </span>
 			            </td>
 						<td>
-			              	<span style="float: right"> {{orderItem.orderItemAmount.currency}} {{orderItem.orderItemAmount.value}} </span>
+                            <span style="float: right"> ${{orderItem.orderItemAmount.value/100 | number:2}} </span>
 			            </td>
 			        </tr>
 			        <tr>
@@ -134,7 +72,7 @@
 			              <span style="float: right; font-style: italic;"> Tax @ 9.5% </span>
 			            </td>
 						<td>
-			              <span style="float: right"> {{getCustomerOrderResponse.customerOrder.taxAmount.currency}} {{getCustomerOrderResponse.customerOrder.taxAmount.value}} </span>
+			              <span style="float: right"> ${{getCustomerOrderResponse.customerOrder.taxAmount.value/100 | number:2}} </span>
 			            </td>
 			        </tr>
 			        <tr>
@@ -145,7 +83,7 @@
 			              	 <span style="float: right;"> <b>Total</b> </span>
 			            </td>
 						<td>
-			              	<span style="float: right"> {{getCustomerOrderResponse.customerOrder.orderAmount.currency}} {{getCustomerOrderResponse.customerOrder.orderAmount.value}}</span>
+                             <span style="float: right"> ${{getCustomerOrderResponse.customerOrder.orderAmount.value/100 | number:2}}</span>
 			            </td>
 			        </tr>
 				</table>
@@ -196,6 +134,3 @@
 	</div>
 
 </div>
-
-</body>
-</html>     

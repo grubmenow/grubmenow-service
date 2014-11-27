@@ -29,6 +29,10 @@ gmnApp.config(['$routeProvider', function($routeProvider) {
         templateUrl: 'faq.html',
         controller: 'FAQCtrl'
     }).
+    when('/orderDetails', {
+        templateUrl: 'orderDetails.html',
+        controller: 'orderDetailsController'
+    }).
 	otherwise({
 		redirectTo: '/home'
 	});
