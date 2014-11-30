@@ -10,6 +10,7 @@ import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
+import com.grubmenow.service.datamodel.GeneralFeedbackDAO;
 import com.grubmenow.service.datamodel.InvitationRequestDAO;
 import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
@@ -185,8 +186,11 @@ public interface PersistenceHandler {
     void createSearchSuggestionFeedback(SearchSuggestionFeedbackDAO searchSuggestion);
 
     /**
+     * Create general feedback object in database 
+     */
+    public void createGeneralFeedback(GeneralFeedbackDAO generalFeedbackDAO);
+    /**
      * Invitation request object creation
      */
     void createInvitationRequest(InvitationRequestDAO dao);
-
 }

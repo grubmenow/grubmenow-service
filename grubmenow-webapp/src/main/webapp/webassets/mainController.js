@@ -74,14 +74,18 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
 
     $scope.submitFeedbackForm = function()
     {
-        request = {feedbackMessage: $scope.feedback.generalFeedback};
-        $http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data) {
-            $scope.showFoodItemSuggestionForm = 0;
-            $scope.showFeedbackForm = 0;
-            $scope.showThankYouMessage = 1;
-        })
+    	request = {
+    		feedbackType: "SEARCH_GENERAL_FEEDBACK",
+    		feedbackMessage: $scope.feedback.generalFeedback,
+    		zipCode: $scope.location.zipCode, 
+    		emailId: $scope.feedback.emailId};
+    	$http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data) {
+    		$scope.showFoodItemSuggestionForm = 0;
+        	$scope.showFeedbackForm = 0;
+    		$scope.showThankYouMessage = 1;
+    	})
     };
-
+    
     $scope.cancelFeedbackForms = function()
     {
         $scope.showFoodItemSuggestionForm = 0;
@@ -103,6 +107,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $( this ).removeClass('active');
     });
     $('#homeNav').addClass('active');
+    $('#navbarCollapse').removeClass('in');
 
     $scope.location = {};
     $scope.location = gmnGetQSP($scope.location);

@@ -33,7 +33,6 @@ public class OrderFeedbackDAO {
     @Column(name = "RATING")
 	private int rating;
 	
-	@NonNull
     @Column(name = "FEEDBACK")
 	private String feedback;
 }

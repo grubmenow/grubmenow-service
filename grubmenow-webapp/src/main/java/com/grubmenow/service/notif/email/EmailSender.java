@@ -160,6 +160,8 @@ public class EmailSender
 	public static class Formatter
 	{
 		private static DateTimeFormatter dateFormatter = new DateTimeFormatterBuilder()
+		 .appendDayOfWeekText()
+		 .appendLiteral(", ")
 	     .appendMonthOfYearText()
 	     .appendLiteral(' ')
 	     .appendDayOfMonth(2)

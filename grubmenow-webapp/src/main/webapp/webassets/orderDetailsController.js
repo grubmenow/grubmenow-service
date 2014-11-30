@@ -1,6 +1,4 @@
-var gmnBrowse = angular.module('orderDetails', []);
-
-gmnBrowse.controller('orderDetailsController', function ($scope, $http, $location) {
+angular.module('gmnControllers').controller('orderDetailsController', function ($scope, $http, $location) {
 	
     $scope.getQSP = function() {
         var url = $location.absUrl();
@@ -12,36 +10,26 @@ gmnBrowse.controller('orderDetailsController', function ($scope, $http, $locatio
         }
     }
 
-    $scope.loadOrder = function() {
-        $scope.showOrder = 0;
-        
+    $scope.loadOrder = function(websiteAuthenticateToken) {
         $('.loadMessage').addClass('alert alert-info').show().html("Please wait, While we load your order");
         
         var requestObj = new Object();
-        if ($scope.websiteAuthenticationToken != null)
-        {
-        	requestObj.websiteAuthenticationToken = $scope.websiteAuthenticationToken;
-        }
-        else
-        {
-        	requestObj.websiteAuthenticationToken = '10152843609422975';
-        }
+        requestObj.websiteAuthenticationToken = websiteAuthenticateToken;
         requestObj.orderId = $scope['orderId'];
         $scope.getCustomerOrderRequest = requestObj;
 
-        
         $http.post("api/getCustomerOrder", JSON.stringify($scope.getCustomerOrderRequest)).success(function(data) {
         	$('.loadMessage').hide();
             $scope.getCustomerOrderResponse = data;
-            $scope.showOrder = 1;
+            $scope.orderLoaded = 1;
         });
     };
     
-    $scope.loadOrderFeedback = function() {
+    $scope.loadOrderFeedback = function(websiteAuthenticationToken) {
         $scope.showReview = 0;
         
         var requestObj = new Object();
-        requestObj.websiteAuthenticationToken = '10152843609422975';
+        requestObj.websiteAuthenticationToken = websiteAuthenticationToken;
         requestObj.orderId = $scope['orderId'];
         $scope.getCustomerOrderFeedbackRequest = requestObj;
 
@@ -58,7 +46,7 @@ gmnBrowse.controller('orderDetailsController', function ($scope, $http, $locatio
     
     $scope.submitFeedback = function(review) {
         var requestObj = new Object();
-        requestObj.websiteAuthenticationToken = '10152843609422975';
+        requestObj.websiteAuthenticationToken = $scope.FB.accessToken;
         requestObj.orderId = $scope['orderId'];
         requestObj.rating = review.rating;
         requestObj.feedback = review.feedback;
@@ -72,8 +60,51 @@ gmnBrowse.controller('orderDetailsController', function ($scope, $http, $locatio
         	$('.feedbackMessage').removeClass('alert-info').addClass('alert-success').html("Thanks, Feedback Submitted").fadeOut(2000);
         });
     };
-    
+
+    $scope.handleFBResponse = function(token, name, email) {
+        $scope.safeApply(function() {
+            $scope.FB.libraryLoaded = 1;
+            if(!token) {
+                $scope.FB.notRecognized = 1;
+                $scope.FB.name = null;
+                $scope.FB.email = null;
+            } else {
+                $scope.FB.accessToken = token;
+                $scope.FB.notRecognized = 0;
+                $scope.FB.name = name;
+                $scope.FB.email = email;
+                $scope.loadOrder(token);
+                $scope.loadOrderFeedback(token);
+            }
+        });
+    }
+
+    $scope.safeApply = function(fn) {
+		var phase = this.$root.$$phase;
+		if (phase == '$apply' || phase == '$digest') {
+			if (fn && (typeof (fn) === 'function')) {
+				fn();
+			}
+		} else {
+			this.$apply(fn);
+		}
+	};
+
+    $scope.initializeFB = function() {
+        fbHelper.initialize(function(initialized){
+            fbHelper.getFBTokenNameAndEmail(function(token, name, email){
+                $scope.handleFBResponse(token, name, email);
+            });
+            fbHelper.addAuthChangeSubscription(function(token, name, email){
+                $scope.handleFBResponse(token, name, email);
+            });
+        });
+    }
+
+    $scope.showReview = 0;
+    $scope.allowReview = 0;
+    $scope.orderLoaded = 0;
+    $scope.FB = {libraryLoaded: 0, notRecognized: 1};
     $scope.getQSP();
-    $scope.loadOrderFeedback();
-    $scope.loadOrder();
+    $scope.initializeFB();
 });
