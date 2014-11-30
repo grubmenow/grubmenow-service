@@ -29,6 +29,10 @@ gmnApp.config(['$routeProvider', function($routeProvider) {
         templateUrl: 'faq.html',
         controller: 'FAQCtrl'
     }).
+    when('/contactus', {
+        templateUrl: 'contactUs.html',
+        controller: 'contactUsController'
+    }).
     when('/orderDetails', {
         templateUrl: 'orderDetails.html',
         controller: 'orderDetailsController'

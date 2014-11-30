@@ -76,20 +76,17 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
                         $scope.customer.customerLoaded = 1;
                     });
                 })
-                .error(
-                        function(data) {
-                            $scope.safeApply(function() {
-                                // error from service,
-                                // means the customer
-                                // does not exist.
-                                // Default with
-                                // what fb returned
-                                $scope.customer.customerName = $scope.FB.name;
-                                $scope.customer.customerEmailId = $scope.FB.email;
-                                $scope.customer.customerPhoneNumber = null;
-                                $scope.customer.customerLoaded = 1;
-                            });
-                        });
+        .error(
+                function(data) {
+                    $scope.safeApply(function() {
+                        // error from service, means the customer does not exist.
+                        // Default with what fb returned
+                        $scope.customer.customerName = $scope.FB.name;
+                        $scope.customer.customerEmailId = $scope.FB.email;
+                        $scope.customer.customerPhoneNumber = null;
+                        $scope.customer.customerLoaded = 1;
+                    });
+                });
     }
 
     $scope.safeApply = function(fn) {

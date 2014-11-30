@@ -1,0 +1,28 @@
+<div id="fb-root"></div>
+<div class="food-finder text-center" ng-controller="contactUsController">
+    <div class="col-xs-12 text-center">
+        <div ng-show="showFeedbackForm" class="navLineBtn feedbackQL">
+            <span>Please contact us regarding any problems or feedback</span>
+        </div>
+        <div ng-show="showFeedbackForm" class="formBox">
+        <form class="form" role="form" novalidate>
+            <div class="form-group">
+                <input type="text" class="form-control formElem" id="inputEmailId" placeholder="Enter your Email" ng-model="feedback.emailId" maxlength="20"></input>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control formElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="feedback.zipCode" maxlength="5"></input>
+            </div>
+            <div class="form-group">
+                <textarea class="form-control formElem feedbackInput" ng-model="feedback.generalFeedback" placeholder="Your Message"></textarea>
+            </div>
+            <button ng-click="submitContact()" class="btn btnGo">Submit</button>
+        </form>
+        </div>
+        
+        <div ng-show="remoteCallInProgress" class="spinner"></div>
+        
+        <div ng-show="showThankYouMessage" class="navLineBtn feedbackQL" id="thankYouMessage">
+            Thank you for contacting us. We will reach out to you as soon as possible.
+        </div>
+    </div>
+</div>

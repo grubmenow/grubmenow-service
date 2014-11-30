@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.grubmenow.service.datamodel.SearchSuggestionFeedbackDAO;
 import com.grubmenow.service.model.SubmitFoodItemSuggestionsRequest;
 import com.grubmenow.service.model.SubmitFoodItemSuggestionsResponse;
-import com.grubmenow.service.model.SubmitGeneralFeedbackRequest;
-import com.grubmenow.service.model.SubmitGeneralFeedbackResponse;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
