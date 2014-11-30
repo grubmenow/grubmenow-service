@@ -24,6 +24,10 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
         	    $scope.order.processing = 0;
         	    $scope.order.processed = 1;
         	    $scope.order.orderId = data.customerOrder.orderId;
+            }).error(function(data, status, headers, config) {
+            	console.log('Error placing Order');
+            	$scope.order.error = data.error_message;
+        	    $scope.order.processing = 0;
             });
     	});
     }

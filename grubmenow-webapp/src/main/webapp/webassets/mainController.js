@@ -109,7 +109,18 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     if($scope.location.zipCode) {
         $scope.update();
     } else {
-        $scope.location = {radius:5, availableDay:"Today"};
+    	
+    	var nowDate = new Date();
+    	
+    	// if we are above the cut off time, don't show the option for today
+    	if(nowDate.getHours() >= 16) {
+    	    $scope.isBeforeCutOffTime = 0;
+    		$scope.location = {radius:5, availableDay:"Tomorrow"};
+    	} else {
+    		$scope.isBeforeCutOffTime = 1;
+    		$scope.location = {radius:5, availableDay:"Today"};	
+    	}
+        
         $scope.searching = 0;
     }
     $scope.showThankYouMessage = 0;
@@ -243,14 +254,6 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
 	  return function(scope, element, attrs) {
 		  scope.$watch('rest', function(){
 			  $('span.stars').stars();
-			  $('.qtyBox').TouchSpin({
-	                min: 0,
-	                max: 10,
-	                step: 1,
-	                verticalbuttons: true,
-	                verticalupclass: 'glyphicon glyphicon-plus',
-	                verticaldownclass: 'glyphicon glyphicon-minus'
-	            });
 		  });
    };
 });

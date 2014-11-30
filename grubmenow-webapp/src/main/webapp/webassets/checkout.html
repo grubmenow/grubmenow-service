@@ -28,7 +28,7 @@
             <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{finalOrder.restLocation}}</div>
             <div class="clearfix"></div>
             <p />
-            <div ng-show="customer.customerLoaded && !order.processing && !order.processed"  class="">
+            <div ng-show="customer.customerLoaded && !order.processing && !order.processed && !order.error"  class="">
                 <form class="form-horizontal" id="payment-form">
                     
                     <div class="checkoutTitle">Please enter your contact information below:</div>
@@ -97,5 +97,10 @@
             <div ng-show="order.processed" class="col-xs-12 text-center checkoutTitle orderConfirmation">
                 Thank you for placing your order. Your Order Id is {{order.orderId}}
             </div>
+            
+            <div ng-show="order.error" class="col-xs-12 text-center alert alert-danger">
+                Sorry, we faced error placing your order. {{order.error}}. 
+            </div>
+            
         </div>
     </div>

@@ -26,12 +26,14 @@ import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemOfferDAO;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.ObjectPopulator;
+import com.grubmenow.service.datamodel.OfferMealType;
 import com.grubmenow.service.datamodel.OfferState;
 import com.grubmenow.service.datamodel.OrderPaymentState;
 import com.grubmenow.service.datamodel.OrderState;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
 import com.grubmenow.service.model.Amount;
+import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
@@ -49,6 +51,8 @@ import com.grubmenow.service.persist.PersistenceFactory;
 public class PlaceOrderService  extends AbstractRemoteService {
 
 	private static float TAX_PERCENTAGE = 0.095f;
+	
+	private static int ORDER_CUT_OFF_HOUR = 16;
 	
 	@RequestMapping(value = "/api/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
@@ -371,10 +375,10 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			String orderItemId = IDGenerator.generateOrderId();
 			
 			FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById(orderItem.getFoodItemOfferId());
-			Validator.isTrue(foodItemOfferDAO.getOfferState() == OfferState.ACTIVE, "Offer state is not Active");
+			
+			validateFoodOffer(foodItemOfferDAO);
 			
 			CustomerOrderItemDAO orderDAO = new CustomerOrderItemDAO();
-			orderDAO.setCustomerId(customerId);
 			orderDAO.setOrderCreationDate(orderDateTime);
 			orderDAO.setOrderId(orderId);
 			orderDAO.setOrderItemId(orderItemId);
@@ -434,6 +438,16 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	
 	private void validateProvider(ProviderDAO providerDAO) {
 		Validator.isTrue(providerDAO.getProviderState() == ProviderState.ACTIVE, "Provider state is not Active");
+	}
+	
+	private void validateFoodOffer (FoodItemOfferDAO foodItemOfferDAO) {
+		// check if offer is a valid offer
+		Validator.isTrue(foodItemOfferDAO.getOfferState() == OfferState.ACTIVE, "Offer state is not Active");
+
+		// if meal type is dinner and it is for today
+		if(foodItemOfferDAO.getOfferMealType() == OfferMealType.DINNER && foodItemOfferDAO.getOfferDay().getDayOfYear() == DateTime.now().getDayOfYear() && foodItemOfferDAO.getOfferDay().getDayOfYear() == DateTime.now().getDayOfYear()) {
+			Validator.validateNowBeforeCutOff(ORDER_CUT_OFF_HOUR, "Order cannot be placed as it is after cut-off time.");
+		}
 	}
 
 	private void validateInput(PlaceOrderRequest request) {

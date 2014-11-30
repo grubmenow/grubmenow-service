@@ -20,7 +20,7 @@
 		    <div class="form-group">
 	   			<select class="form-control formElem" ng-class="{redBorder:badDay==1}" id="inputDay" ng-model="location.availableDay">
 		        	<option value=0>When do you want it?</option>
-		        	<option value=Today>Today</option>
+		        	<option ng-show="isBeforeCutOffTime" value=Today>Today</option>
 		        	<option value=Tomorrow>Tomorrow</option>
 		    	</select>
 		    </div>
