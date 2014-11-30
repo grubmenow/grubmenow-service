@@ -31,7 +31,6 @@ public class SubmitOrderFeedbackService extends AbstractRemoteService {
 	public SubmitOrderFeedbackResponse executeService(@RequestBody SubmitOrderFeedbackRequest request) {
 		validateInput(request);
 		CustomerOrderDAO customerOrderDAO = validateCustomersOrder(request);
-
 		
 		OrderFeedbackDAO orderFeedbackDAO = new OrderFeedbackDAO();
 		orderFeedbackDAO.setOrderId(request.getOrderId());
@@ -83,7 +82,6 @@ public class SubmitOrderFeedbackService extends AbstractRemoteService {
 	
 	private void validateInput(SubmitOrderFeedbackRequest request) {
 		Validator.notBlank(request.getOrderId(), "Invalid Order id");
-		Validator.notBlank(request.getFeedback(), "Feedback message not present");
 		Validator.isTrue(request.getRating() > 0 && request.getRating() <=5 , "Rating should be in a range of 1 to 5");
 		Validator.notBlank(request.getWebsiteAuthenticationToken(), "Auth token not present");
 	}
