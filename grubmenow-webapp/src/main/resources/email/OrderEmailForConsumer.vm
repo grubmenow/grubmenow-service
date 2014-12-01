@@ -39,7 +39,10 @@ Your order summary:
 </tr>
 #end
 </table>
+<br/>
+<br/>
  Click <a href="http://grubmenow.com/#/orderDetails?orderId=${request.customerOrder.orderId}">here</a> to see details.
+<br/>
 <br/>
 Please pick up your order between <b>${request.orderPickupStartTime} and ${request.orderPickupEndTime} on $Formatter.formatDate(${request.orderFulfillmentDate})</b> from this location:
 <br/>
