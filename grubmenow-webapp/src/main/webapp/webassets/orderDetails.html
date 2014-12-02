@@ -89,44 +89,34 @@
 				</table>
 			</div>
 			
-	</div>		
-			
+	</div>
+	<br/>		
+	   <div class="feedbackQL bold leftAlign">
+            <span>Please provide feedback for the chef. The food was: </span>
+       </div>
 		<div ng-show="showReview || allowReview">
-			 <div class="starRate">
+			 <div class="starRate leftAlign">
 			 	<form>
-			 	 <br/>
-			 	 
-			 	 
 			 	 <span class="feedbackMessage" style="display: none;"></span>
-			 	 
 				 <div class="radio">
-				    <label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="5" ng-model="review.rating"> Awesome </label>
+				    <label><input class="radio" type="radio" name="rating" value="5" ng-model="review.rating">Delicious</label>
 				 </div>
-				 
 				 <div class="radio">
-			 	 	<label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="4" ng-model="review.rating"> Good </label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="4" ng-model="review.rating">Good</label>
 			 	 </div>
-			 	 
 			 	 <div class="radio">
-			 	 	<label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="3" ng-model="review.rating"> Ok </label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="3" ng-model="review.rating">OK</label>
 			 	 </div>
-			 	 
 			 	 <div class="radio">
-			 	 	<label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="2" ng-model="review.rating"> Could have been better </label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="2" ng-model="review.rating">Could have been better</label>
 			 	 </div>
-			 	 
 			 	 <div class="radio">
-				 	<label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="1" ng-model="review.rating"> Not Satisfactory </label>
+				 	<label><input class="radio" type="radio" name="rating" value="1" ng-model="review.rating">Not Satisfactory</label>
 				 </div>
-				 
 				 <div class="radio">
-				 	<textarea class="form-control" name="feedback" style="width: 100%; font-size: 12px"  ng-model="review.feedback" placeholder="Please provide feedback for your order"></textarea>
+				 	<textarea class="form-control" name="feedback" style="width: 100%; font-size: 12px"  ng-model="review.feedback" placeholder="Please provide feedback for the chef"></textarea>
 				 </div>
-				
 	  		    <span style="float: right"><button ng-click="submitFeedback(review)" class="btn btn-primary">Submit Feedback</button></span>
-	  		    
-	  		    <br/>
-	  		    <br/><br/>
 			 	</form>
 			</div>
 		</div>
