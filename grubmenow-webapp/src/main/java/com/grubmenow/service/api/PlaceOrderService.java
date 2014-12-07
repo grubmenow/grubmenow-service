@@ -294,8 +294,6 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		customerOrderDAO.setOrderState(OrderState.FAILED);
 		PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
 	}
-
-	
 	
 	private CustomerOrderDAO processOrderSuccess(PlaceOrderRequest request, String orderId, String message) {
 		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
@@ -337,7 +335,6 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			orderItemDetails.add(emailOrderItemDetail);
 		}
 				
-		
 		// send email
 		OrderSuccessEmailRequest emailRequest = OrderSuccessEmailRequest
 					.builder()
@@ -371,6 +368,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		
 		int totalOrderAmountInCents = 0;
 		List<FoodItemOfferDAO> foodItemOfferDAOs = new ArrayList<>();
+		DateTime orderFulfilmentDate = null;
 		for (OrderItem orderItem : request.getOrderItems()) {
 			String orderItemId = IDGenerator.generateOrderId();
 			
@@ -378,6 +376,10 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			
 			validateFoodOffer(foodItemOfferDAO);
 			
+			if (orderFulfilmentDate == null)
+			{
+			    orderFulfilmentDate = foodItemOfferDAO.getOfferDay();
+			}
 			CustomerOrderItemDAO orderDAO = new CustomerOrderItemDAO();
 			orderDAO.setOrderCreationDate(orderDateTime);
 			orderDAO.setOrderId(orderId);
@@ -416,6 +418,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		CustomerOrderDAO customerOrderDAO = new CustomerOrderDAO();
 		customerOrderDAO.setCustomerId(customerId);
 		customerOrderDAO.setOrderCreationDate(DateTime.now());
+		customerOrderDAO.setOrderFulfilmentDate(orderFulfilmentDate);
 		customerOrderDAO.setOrderId(orderId);
 		customerOrderDAO.setProviderId(request.getProviderId());
 		customerOrderDAO.setDeliveryMethod(request.getDeliveryMethod());

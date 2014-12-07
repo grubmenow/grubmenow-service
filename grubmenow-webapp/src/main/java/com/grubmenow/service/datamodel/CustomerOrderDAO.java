@@ -91,5 +91,9 @@ public class CustomerOrderDAO {
     @Column(name = "ORDER_CREATION_DATE")
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	private DateTime orderCreationDate;
-
+	
+	@NonNull
+    @Column(name = "ORDER_FULFILMENT_DATE")
+    @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+    private DateTime orderFulfilmentDate;
 }
