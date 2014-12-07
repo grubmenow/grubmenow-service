@@ -211,7 +211,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
 
         $scope.finalOrder = order;
         localStorage.setItem('gmn.finalOrder', JSON.stringify(order));
-        window.location.href = "index.html#/checkout";
+        window.location.href = "#/checkout";
     }
 
     $scope.backToSearch = function() {
