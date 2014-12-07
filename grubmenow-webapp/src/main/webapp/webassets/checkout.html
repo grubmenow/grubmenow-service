@@ -3,7 +3,7 @@
     <div ng-show="!fbLoaded" class="spinner"></div>
     <div ng-show="fbLoaded" class="container">
         <div class="col-md-2"></div>
-        <div class="col-md-8 col-sm-12">
+        <div class="col-md-8 col-sm-8 ">
             <div class="checkoutTitle text-center" ng-show="FB.name"><h4>Welcome {{FB.name}}</h4></div>
             <div class="checkoutTitle">Your order details:</div>
             <div class="orderDetails">
@@ -23,9 +23,16 @@
             <div class="clearfix"></div>
             <div class="checkoutText">Order Total: </div><div class="checkoutText noBold">${{finalOrder.totalPrice/100 | number:2 }}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Pick up date and time: </div><div class="checkoutText noBold">{{finalOrder.pickupTime}}</div>
+            <div class="checkoutText ">Pick up date and time: </div><div class="checkoutText bold">{{finalOrder.pickupTime}}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{finalOrder.restLocation}}</div>
+            <div class="checkoutText">Pick up address: </div>
+                <div class="checkoutText bold" ng-show="!FB.notRecognized">{{finalOrder.restLocation}}</div>
+                <div class="checkoutText bold" ng-show="FB.notRecognized">Will be displayed after you Log In</div>
+            <div class="clearfix"></div>
+            <div ng-show="!FB.notRecognized && finalOrder.chefPhone != null">
+                <div class="checkoutText">Chef Phone: </div>
+                <div class="checkoutText bold" >{{finalOrder.chefPhone}}</div>
+            </div>
             <div class="clearfix"></div>
             <p />
             <div ng-show="customer.customerLoaded && !order.processing && !order.processed && !order.error"  class="">

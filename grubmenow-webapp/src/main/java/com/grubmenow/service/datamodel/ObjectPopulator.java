@@ -3,6 +3,7 @@ package com.grubmenow.service.datamodel;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -36,11 +37,7 @@ public class ObjectPopulator {
 		provider.setProviderId(providerDAO.getProviderId());
 		provider.setProviderName(providerDAO.getProviderName());
 		
-		String address = String.format("%s, %s, %s",
-				providerDAO.getProviderAddressStreetNumber(),
-				providerDAO.getProviderAddressStreet(),
-				providerDAO.getProviderAddressCity());
-		// TODO: city, state, zipcode
+		String address = buildAddressSingleLine(providerDAO);
 		provider.setProviderAddress(address);
 		
 		provider.setProviderImageURL(providerDAO.getProviderImageURL());
@@ -57,10 +54,51 @@ public class ObjectPopulator {
 		provider.setOnlinePaymentAccepted(providerDAO.getIsOnlinePaymentAccepted());
 		provider.setCashOnDeliverPaymentAccepted(providerDAO.getIsCashOnDeliverPaymentAccepted());
 		provider.setCardOnDeliverPaymentAccepted(providerDAO.getIsCardOnDeliverPaymentAccepted());
-		// TODO: phone number
+		provider.setProviderPhoneNumber(providerDAO.getProviderPhoneNumber());
 		
 		return provider;
 	}
+	
+	public static String buildAddressSingleLine(ProviderDAO provider)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (StringUtils.isNotBlank(provider.getProviderAddressApartmentNumber()))
+        {
+            stringBuilder.append(provider.getProviderAddressApartmentNumber())
+                .append(" ");
+        }
+        if (StringUtils.isNotBlank(provider.getProviderAddressStreetNumber()))
+        {
+            stringBuilder.append(provider.getProviderAddressStreetNumber())
+            .append(" ");
+        }
+        if (StringUtils.isNotBlank(provider.getProviderAddressStreet()))
+        {
+            stringBuilder.append(provider.getProviderAddressStreet())
+            .append(" ");
+        }
+        // remove the last space from the string so far
+        stringBuilder = new StringBuilder(stringBuilder.substring(0, stringBuilder.length() - 1));
+        // Add the comman to separate city
+        stringBuilder.append(", ");
+        if (StringUtils.isNotBlank(provider.getProviderAddressCity()))
+        {
+            stringBuilder.append(provider.getProviderAddressCity())
+                .append(", ");
+        }
+        if (StringUtils.isNotBlank(provider.getProviderAddressState()))
+        {
+            stringBuilder.append(provider.getProviderAddressState())
+            .append(" ");
+        }
+        if (StringUtils.isNotBlank(provider.getProviderAddressZipCode()))
+        {
+            stringBuilder.append(provider.getProviderAddressZipCode())
+            .append(" ");
+        }
+        return stringBuilder.substring(0, stringBuilder.length()-1);
+    }
+    
 	
 	public static FoodItemOffer toFoodItemOffer(FoodItemOfferDAO foodItemOfferDAO) {
 		FoodItemOffer foodItemOffer = new FoodItemOffer();
