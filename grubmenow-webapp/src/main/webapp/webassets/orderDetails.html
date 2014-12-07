@@ -14,9 +14,7 @@
     <div ng-show="FB.libraryLoaded && !FB.notRecognized" class="container">
         <div ng-show="!orderLoaded" class="spinner"></div>
         <div ng-show="orderLoaded" class="panel-default">
-        
-        
-        
+
         <div class="col-md-8 col-sm-12">
             <div class="checkoutTitle">Order details</div>
             <div class="checkoutText">Order Id: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.orderId}}</div>
@@ -45,6 +43,9 @@
             <div class="clearfix"></div>
             <div class="checkoutText">Order Total: </div><div class="checkoutText noBold">${{getCustomerOrderResponse.customerOrder.orderAmount.value/100 | number:2}}</div>
             <div class="clearfix"></div>
+            <div class="checkoutText">Payment method: </div><div class="checkoutText bold">{{formatEnum(getCustomerOrderResponse.customerOrder.paymentMethod)}}</div>
+            <div class="clearfix"></div>
+            
             <p />
          </div>
 	<br/>

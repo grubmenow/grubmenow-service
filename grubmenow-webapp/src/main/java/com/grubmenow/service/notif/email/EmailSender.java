@@ -31,6 +31,7 @@ import com.amazonaws.services.simpleemail.model.Message;
 import com.amazonaws.services.simpleemail.model.SendEmailRequest;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.model.Amount;
+import com.grubmenow.service.model.PaymentMethod;
 
 @CommonsLog
 public class EmailSender 
@@ -224,6 +225,19 @@ public class EmailSender
 			}
 			return stringBuilder.substring(0, stringBuilder.length()-1);
 		}
-		
+
+		/**
+		 * Formats the enum's constants. E.g. it has _, replace those with space.
+		 * @param enumString the enum value whose value needs to be formatted
+		 */
+		public static String formatEnum(PaymentMethod paymentMethod)
+		{
+		    if (paymentMethod == null)
+		    {
+		        return "";
+		    }
+
+		    return paymentMethod.toString().replaceAll("_", " ");
+		}
 	}
 }

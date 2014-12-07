@@ -1,7 +1,5 @@
 package com.grubmenow.service.model;
 
-import java.util.Date;
-
 import lombok.Data;
 
 import com.grubmenow.service.datamodel.OrderState;
@@ -17,6 +15,7 @@ public class CustomerOrder {
 	private String orderFulfilmentDate;
 	
 	private Amount orderAmount;
+	private PaymentMethod paymentMethod;
 	
 	private Amount taxAmount;
 	

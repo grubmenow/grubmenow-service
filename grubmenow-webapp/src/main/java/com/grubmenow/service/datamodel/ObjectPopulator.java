@@ -18,7 +18,7 @@ import com.grubmenow.service.model.Provider;
 
 public class ObjectPopulator {
 	
-	private static DateTimeFormatter printableDateTimeFormatter = DateTimeFormat.forPattern("E, dd MMM, yy");
+	private static DateTimeFormatter printableDateTimeFormatter = DateTimeFormat.forPattern("E, MMM dd YYYY");
 	
 	public static FoodItem toFoodItem(FoodItemDAO foodItemDAO) {
 		
@@ -99,6 +99,7 @@ public class ObjectPopulator {
 		customerOrder.setDeliveryMethod(customerOrderDAO.getDeliveryMethod());
 		customerOrder.setOrderAmount(new Amount(customerOrderDAO.getOrderAmount(), customerOrderDAO.getOrderCurrency()));
 		customerOrder.setTaxAmount(new Amount(customerOrderDAO.getTaxAmount(), customerOrderDAO.getOrderCurrency()));
+		customerOrder.setPaymentMethod(customerOrderDAO.getPaymentMethod());
 		customerOrder.setOrderCreationDate(customerOrderDAO.getOrderCreationDate().toString(printableDateTimeFormatter));
 		if (customerOrderDAO.getOrderFulfilmentDate() != null)
 		{
