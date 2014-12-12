@@ -19,14 +19,19 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
             orderObject.customerEmailId = $scope.customer.customerEmailId;
             orderObject.customerPhoneNumber = $scope.customer.customerPhoneNumber;
         	var orderUrl = "api/placeOrder";
+        	
+        	
+        	// restate the state variables
         	$scope.order.processing = 1;
+        	$scope.order.error = 0;
+        	
         	$http.post(orderUrl, JSON.stringify(orderObject)).success(function(data) {
         	    $scope.order.processing = 0;
         	    $scope.order.processed = 1;
         	    $scope.order.orderId = data.customerOrder.orderId;
             }).error(function(data, status, headers, config) {
-            	console.log('Error placing Order');
-            	$scope.order.error = data.error_message;
+            	$scope.order.error_message = "Sorry, we faced error placing your order. " + data.error_message +  ". Please try again.";
+            	$scope.order.error = 1;
         	    $scope.order.processing = 0;
             });
     	});

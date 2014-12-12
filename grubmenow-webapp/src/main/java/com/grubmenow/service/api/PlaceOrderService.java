@@ -33,16 +33,15 @@ import com.grubmenow.service.datamodel.OrderState;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
 import com.grubmenow.service.model.Amount;
-import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
 import com.grubmenow.service.model.PlaceOrderRequest;
 import com.grubmenow.service.model.PlaceOrderResponse;
 import com.grubmenow.service.model.exception.ValidationException;
-import com.grubmenow.service.notif.email.OrderSuccessEmailRequest;
 import com.grubmenow.service.notif.email.EmailSendException;
 import com.grubmenow.service.notif.email.EmailableOrderItemDetail;
+import com.grubmenow.service.notif.email.OrderSuccessEmailRequest;
 import com.grubmenow.service.pay.PaymentTransaction;
 import com.grubmenow.service.persist.PersistenceFactory;
 
