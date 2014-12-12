@@ -190,7 +190,7 @@ body{
      color: #000000;
      font-size: 14px;
      line-height: 26px;
-     width: 160px;
+     width: 320px;
      float: left;
 }
 
@@ -288,6 +288,14 @@ body{
      color: #F04E00;
      text-align: justify;
      margin: 20px 0px;
+}
+
+.bold {
+    font-weight: bold;	
+}
+
+.leftAlign {
+	text-align: left;
 }
 
 .hdiw {

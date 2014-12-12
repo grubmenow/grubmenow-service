@@ -12,10 +12,13 @@ public class CustomerOrder {
 	private OrderState orderState;
 
 	private String orderCreationDate;
+	private String orderFulfilmentDate;
 	
 	private Amount orderAmount;
+	private PaymentMethod paymentMethod;
 	
 	private Amount taxAmount;
 	
 	private DeliveryMethod deliveryMethod;
+	private String deliveryAddress;
 }

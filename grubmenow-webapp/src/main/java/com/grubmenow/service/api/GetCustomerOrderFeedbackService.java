@@ -1,5 +1,7 @@
 package com.grubmenow.service.api;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +19,7 @@ import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
+@CommonsLog
 public class GetCustomerOrderFeedbackService extends AbstractRemoteService {
 
 	@RequestMapping(value = "/api/getCustomerOrderFeedback", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
@@ -34,11 +37,19 @@ public class GetCustomerOrderFeedbackService extends AbstractRemoteService {
 		
 		try{
 			OrderFeedbackDAO orderFeedbackDAO = PersistenceFactory.getInstance().getOrderFeedbackById(request.getOrderId());
-			response.setFeedback(orderFeedbackDAO.getFeedback());
-			response.setRating(orderFeedbackDAO.getRating());
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.setFeedback("");
+			if (orderFeedbackDAO != null)
+			{
+			    response.setFeedback(orderFeedbackDAO.getFeedback());
+			    response.setRating(orderFeedbackDAO.getRating());
+			}
+			else
+			{
+			    response.setFeedback("");
+	            response.setRating(-1);
+			}
+		} catch (Exception ex) {
+		    log.error("Error while loading prev feedback, returning no feedback", ex);
+		    response.setFeedback("");
 			response.setRating(-1);
 		}
 

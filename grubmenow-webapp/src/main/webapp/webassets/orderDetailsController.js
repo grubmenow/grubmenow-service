@@ -78,6 +78,11 @@ angular.module('gmnControllers').controller('orderDetailsController', function (
             }
         });
     }
+    
+    $scope.formatEnum = function(enumString)
+    {
+    	return enumString.replace(/_/g, " ");
+    }
 
     $scope.safeApply = function(fn) {
 		var phase = this.$root.$$phase;

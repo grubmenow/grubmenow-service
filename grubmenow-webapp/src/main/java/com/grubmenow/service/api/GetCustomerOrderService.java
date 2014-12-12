@@ -16,6 +16,7 @@ import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.ObjectPopulator;
+import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.GetCustomerOrderRequest;
 import com.grubmenow.service.model.GetCustomerOrderResponse;
@@ -40,6 +41,9 @@ public class GetCustomerOrderService extends AbstractRemoteService {
 
 		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(request.getOrderId());
 		response.setCustomerOrder(ObjectPopulator.toCustomerOrder(customerOrderDAO));
+		
+		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(customerOrderDAO.getProviderId());
+		response.setProvider(ObjectPopulator.toProvider(providerDAO));
 		
 		List<CustomerOrderItemDAO> customerOrderItemDAOs = PersistenceFactory.getInstance().getCustomerOrderItemByOrderId(request.getOrderId());
 		

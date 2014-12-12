@@ -82,7 +82,7 @@ angular.module('gmnBrowse').controller('RestuarantCtrl', function ($scope, $http
         
         $scope.finalOrder = order;
         localStorage.setItem('gmn.finalOrder', JSON.stringify(order));
-        window.location.href = "checkout.html";
+        window.location.href = "#checkout";
     }
     
     $scope.showMenu = function(restId) {

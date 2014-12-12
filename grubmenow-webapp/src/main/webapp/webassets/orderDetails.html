@@ -1,5 +1,5 @@
 <div id="fb-root"></div>
-<div class="food-finder text-center" ng-controller="orderDetailsController">
+<div class="rest-sel" ng-controller="orderDetailsController">
 
     <div ng-show="!FB.libraryLoaded" class="spinner">
     </div>
@@ -13,124 +13,75 @@
 
     <div ng-show="FB.libraryLoaded && !FB.notRecognized" class="container">
         <div ng-show="!orderLoaded" class="spinner"></div>
-        <div ng-show="orderLoaded" class="panel panel-default">
-			<div class="panel-heading">
-				<div class="row">
-				
-				  <span class="span2" style="float: left; padding-right: 15px; padding-left: 15px; font-size: 12px;">
-				  	<b>Order Date</b> <br/> {{getCustomerOrderResponse.customerOrder.orderCreationDate}}
-				  </span>
-					
-				  <span class="span2" style="float: left; padding-right: 15px; font-size: 12px;">
-                      <b>Order Amount</b> <br/> ${{getCustomerOrderResponse.customerOrder.orderAmount.value/100 | number:2}}
-				  </span>
-				  
-				  <span class="span2" style="float: left; padding-right: 15px; font-size: 12px;">
-				  	<b>Order Status</b> <br/> {{getCustomerOrderResponse.customerOrder.orderState}} 
-				  </span>
-				  
-				  <span class="span2" style="float: left; padding-right: 15px; font-size: 12px;">
-                    <b>Order Delivery</b> <br/> {{getCustomerOrderResponse.customerOrder.deliveryMethod.replace("_", " ")}}
-				  </span>
-				  
-				  <span class="span4" style="float: right; padding-right: 15px; font-size: 12px;">
-				  	<b>Order Id</b> <br/> {{getCustomerOrderResponse.customerOrder.orderId}}
-				  </span>
-				  
-				</div>
-			</div>
-			<div class="panel-body">
-				<table style="width: 100%">
-					<tr>
-						<td>
-			              	<span style="float: left; font-size: 12px; padding-bottom: 5px; font-weight: bold; text-decoration: underline;"> Item </span>
-			            </td>
-						<td>
-		              		<span style="float: left; font-size: 12px; padding-bottom: 5px; font-weight: bold; text-decoration: underline;"> Quantity </span>
-			            </td>
-						<td>
-			              	<span style="float: right; font-size: 12px; padding-bottom: 5px; font-weight: bold; text-decoration: underline;"> Amount </span>
-			            </td>
-			        </tr>
-				
-					<tr ng-repeat="orderItem in getCustomerOrderResponse.customerOrderItems">
-						<td>
-			              	<span style="float: left"> {{orderItem.foodItem.foodItemName}} </span>
-			            </td>
-						<td>
-			              	<span style="float: left"> {{orderItem.quantity}} </span>
-			            </td>
-						<td>
-                            <span style="float: right"> ${{orderItem.orderItemAmount.value/100 | number:2}} </span>
-			            </td>
-			        </tr>
-			        <tr>
-						<td>
-			              	
-			            </td>
-						<td>
-			              <span style="float: right; font-style: italic;"> Tax @ 9.5% </span>
-			            </td>
-						<td>
-			              <span style="float: right"> ${{getCustomerOrderResponse.customerOrder.taxAmount.value/100 | number:2}} </span>
-			            </td>
-			        </tr>
-			        <tr>
-						<td>
-			              	
-			            </td>
-						<td>
-			              	 <span style="float: right;"> <b>Total</b> </span>
-			            </td>
-						<td>
-                             <span style="float: right"> ${{getCustomerOrderResponse.customerOrder.orderAmount.value/100 | number:2}}</span>
-			            </td>
-			        </tr>
-				</table>
-			</div>
-			
-	</div>		
-			
+        <div ng-show="orderLoaded" class="panel-default">
+
+        <div class="col-md-8 col-sm-12">
+            <div class="checkoutTitle">Order details</div>
+            <div class="checkoutText">Order Id: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.orderId}}</div>
+            <div class="checkoutText">Order date: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.orderCreationDate}}</div>
+            <div class="clearfix"></div>
+            <div class="checkoutText">Order status: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.orderState}}</div>
+            <div class="checkoutText">Order delivery: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.deliveryMethod.replace("_", " ")}}</div>
+            <div class="clearfix"></div>
+            <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{getCustomerOrderResponse.provider.providerAddress}}</div>
+            <div class="clearfix"></div>
+            <div class="checkoutText">Pick up date and time: </div><div class="checkoutText noBold">{{getCustomerOrderResponse.customerOrder.orderFulfilmentDate}}</div>
+            <div class="clearfix"></div>
+            <div class="orderDetails">
+                <div class="orderDetailsHeader">
+                    <div class="col-xs-7 checkoutHeader">Item</div>
+                    <div class="col-xs-2 checkoutHeader">Qty</div>
+                    <div class="col-xs-3 checkoutHeader">Price</div>
+                </div>
+                <div ng-repeat="orderItem in getCustomerOrderResponse.customerOrderItems">
+                    <div class="col-xs-7 checkoutItem truncateText">{{orderItem.foodItem.foodItemName}}</div>
+                    <div class="col-xs-2 checkoutItem">{{orderItem.quantity}}</div>
+                    <div class="col-xs-3 checkoutItem">${{orderItem.orderItemAmount.value/100 | number:2}}</div>
+                </div>
+            </div>
+            <div class="checkoutText">Taxes: </div><div class=" checkoutText noBold">${{getCustomerOrderResponse.customerOrder.taxAmount.value/100 | number:2}}</div>
+            <div class="clearfix"></div>
+            <div class="checkoutText">Order Total: </div><div class="checkoutText noBold">${{getCustomerOrderResponse.customerOrder.orderAmount.value/100 | number:2}}</div>
+            <div class="clearfix"></div>
+            <div class="checkoutText">Payment method: </div><div class="checkoutText bold">{{formatEnum(getCustomerOrderResponse.customerOrder.paymentMethod)}}</div>
+            <div class="clearfix"></div>
+            
+            <p />
+         </div>
+	<br/>
+	<p/>	
+	<div class="col-md-8 col-sm-12">
+	   <div class="feedbackQL bold leftAlign">
+            <span>Please provide feedback for the chef. The food was: </span>
+       </div>
 		<div ng-show="showReview || allowReview">
-			 <div class="starRate">
+			 <div class="starRate leftAlign">
 			 	<form>
-			 	 <br/>
-			 	 
-			 	 
 			 	 <span class="feedbackMessage" style="display: none;"></span>
-			 	 
 				 <div class="radio">
-				    <label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="5" ng-model="review.rating"> Awesome </label>
+				    <label><input class="radio" type="radio" name="rating" value="5" ng-model="review.rating">Delicious</label>
 				 </div>
-				 
 				 <div class="radio">
-			 	 	<label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="4" ng-model="review.rating"> Good </label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="4" ng-model="review.rating">Good</label>
 			 	 </div>
-			 	 
 			 	 <div class="radio">
-			 	 	<label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="3" ng-model="review.rating"> Ok </label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="3" ng-model="review.rating">OK</label>
 			 	 </div>
-			 	 
 			 	 <div class="radio">
-			 	 	<label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="2" ng-model="review.rating"> Could have been better </label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="2" ng-model="review.rating">Could have been better</label>
 			 	 </div>
-			 	 
 			 	 <div class="radio">
-				 	<label style="float: left"><input class="radio" style="float: left" type="radio" name="rating" value="1" ng-model="review.rating"> Not Satisfactory </label>
+				 	<label><input class="radio" type="radio" name="rating" value="1" ng-model="review.rating">Not Satisfactory</label>
 				 </div>
-				 
 				 <div class="radio">
-				 	<textarea class="form-control" name="feedback" style="width: 100%; font-size: 12px"  ng-model="review.feedback" placeholder="Please provide feedback for your order"></textarea>
+				 	<textarea class="form-control" name="feedback" style="width: 100%; font-size: 12px"  ng-model="review.feedback" placeholder="Please provide feedback for the chef"></textarea>
 				 </div>
-				
 	  		    <span style="float: right"><button ng-click="submitFeedback(review)" class="btn btn-primary">Submit Feedback</button></span>
-	  		    
-	  		    <br/>
-	  		    <br/><br/>
 			 	</form>
 			</div>
 		</div>
 		
+	</div>
 	</div>
 
 </div>

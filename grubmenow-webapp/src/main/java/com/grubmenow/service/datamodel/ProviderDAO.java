@@ -59,6 +59,9 @@ public class ProviderDAO {
     @Column(name = "PROVIDER_ADDRESS_STATE")
 	private String providerAddressState;
 	
+	@Column(name = "PROVIDER_PHONE_NUMBER")
+	private String providerPhoneNumber;
+	
 	@NonNull
     @Column(name = "PROVIDER_ADDRESS_CITY")
 	private String providerAddressCity;
