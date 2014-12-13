@@ -74,17 +74,25 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 			providerFoodItemOffers.add(providerFoodItemOffer);
 		}
 		
-		// sort the providers based on distance
+		// sort the providers based on distance and the rating
 		Collections.sort(providerFoodItemOffers, new Comparator<ProviderFoodItemOffer>() {
 
 			@Override
 			public int compare(ProviderFoodItemOffer o1, ProviderFoodItemOffer o2) {
-				Double double1 = Double.parseDouble(o1.getDistanceInMiles());
-				Double double2 = Double.parseDouble(o2.getDistanceInMiles());
+				double double1 = Double.parseDouble(o1.getDistanceInMiles());
+				double double2 = Double.parseDouble(o2.getDistanceInMiles());
 				
-				if(double1 == double2) {
-					return 0;
-				} else if(double1 > double2) {
+				if (double1 == double2) { // if the distance are equal, then
+											// sort is based on rating
+					if (o1.getProvider().getRating().compareTo(o2.getProvider().getRating()) > 0) {
+						return 1;
+					} else if (o1.getProvider().getRating().compareTo(o2.getProvider().getRating()) < 0) {
+						return -1;
+					} else {
+						return 0;
+					}
+					
+				} else if (double1 > double2) {
 					return 1;
 				} else {
 					return -1;
