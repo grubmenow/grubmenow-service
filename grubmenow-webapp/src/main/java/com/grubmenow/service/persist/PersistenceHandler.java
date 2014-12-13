@@ -15,6 +15,7 @@ import com.grubmenow.service.datamodel.InvitationRequestDAO;
 import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.SearchSuggestionFeedbackDAO;
+import com.grubmenow.service.datamodel.ZipCodeDAO;
 
 
 /**
@@ -33,6 +34,11 @@ public interface PersistenceHandler {
 	 * Get All Food Items
 	 */
 	public List<String> getNeighbouringZipCodes(String zipCode, int numberOfMilesAround);
+
+	/**
+	 * Get Distance between zip codes
+	 */
+	public String getDistanceInMilesBetweenZipCodes(String zipCode1, String zipCode2);
 
 	
 	/**
@@ -180,6 +186,12 @@ public interface PersistenceHandler {
 	 */
 	public void updateOrderFeedback(OrderFeedbackDAO orderFeedbackDAO);
 
+	
+	/**
+	 * Zip Code
+	 */
+	public ZipCodeDAO getZipCode(String zipCode);
+	
 	/**
 	 * Create Search suggestion feedback object in database
 	 */

@@ -1,6 +1,8 @@
 package com.grubmenow.service.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -34,7 +36,7 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		
 		response.setFoodItem(populateFoodItem(request.getFoodItemId()));
 		
-		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getFoodItemId(), request.getAvailableDay()));
+		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getZipCode(), request.getFoodItemId(), request.getAvailableDay()));
 		return response;
 	}
 
@@ -49,7 +51,7 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		return ObjectPopulator.toFoodItem(foodItemDAO);
 	}
 
-	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String foodItemId, AvailableDay availableDay) {
+	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String zipCode, String foodItemId, AvailableDay availableDay) {
 
 		DateTime forDate = DateTime.now();
 		if (availableDay == AvailableDay.Tomorrow) {
@@ -67,9 +69,29 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 			ProviderFoodItemOffer providerFoodItemOffer = new ProviderFoodItemOffer();
 			providerFoodItemOffer.setProvider(ObjectPopulator.toProvider(providerDAO));
 			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO));
+			providerFoodItemOffer.setDistanceInMiles(PersistenceFactory.getInstance().getDistanceInMilesBetweenZipCodes(zipCode, providerDAO.getProviderAddressZipCode())); 
 
 			providerFoodItemOffers.add(providerFoodItemOffer);
 		}
+		
+		// sort the providers based on distance
+		Collections.sort(providerFoodItemOffers, new Comparator<ProviderFoodItemOffer>() {
+
+			@Override
+			public int compare(ProviderFoodItemOffer o1, ProviderFoodItemOffer o2) {
+				Double double1 = Double.parseDouble(o1.getDistanceInMiles());
+				Double double2 = Double.parseDouble(o2.getDistanceInMiles());
+				
+				if(double1 == double2) {
+					return 0;
+				} else if(double1 > double2) {
+					return 1;
+				} else {
+					return -1;
+				}
+			}
+		});
+		
 
 		return providerFoodItemOffers;
 	}

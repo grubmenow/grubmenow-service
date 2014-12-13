@@ -2,7 +2,7 @@
     <div class="clearfix"></div>
     <div ng-show="!chefsLoaded" class="spinner"></div>
     <div ng-show="chefsLoaded">
-        <div class="col-xs-6 text-left  optionsText navLineBtn">Your options for '{{foodItem.foodItemName}}' for {{availableDay}}:</div>
+        <div class="col-xs-6 text-left  optionsText navLineBtn">Showing {{restList.providerFoodItemOffers.length}} chef(s) providing '{{foodItem.foodItemName}}' for {{availableDay}}</div>
         <div class="col-xs-6 text-right" ng-click="backToSearch()">
             <button type="button" class="btn btn-link showhideBtn optionsText">
                 <span class="glyphicon glyphicon-chevron-left"></span> Back to food results
@@ -22,7 +22,23 @@
                         </span>
                     	<span >
                     	   <span class="stars">{{rest.provider.rating}}</span>
+                    	</span>
+                    	
+                    	<span class="optionsText" style="float: right;">
+	                    	<span style="font-size: 10px" >
+	                    	   around
+	                    	</span>   
+	                    	<span>
+	                    	   {{rest.distanceInMiles}} miles
+	                    	</span>
+	                    	 <span style="font-size: 10px" >
+	                    	   near
+	                    	</span>   
+	                    	<span>
+	                    	   {{rest.provider.zipCode}}
+	                    	</span>
                     	</span>   
+                    	   
                     </span>
                 </div>
             </a>

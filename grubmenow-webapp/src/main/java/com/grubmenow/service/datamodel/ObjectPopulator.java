@@ -50,6 +50,7 @@ public class ObjectPopulator {
 			provider.setRating(rating);
 		}
 		
+		provider.setZipCode(providerDAO.getProviderAddressZipCode());
 		provider.setProviderImageURL(providerDAO.getProviderImageURL());
 		provider.setOnlinePaymentAccepted(providerDAO.getIsOnlinePaymentAccepted());
 		provider.setCashOnDeliverPaymentAccepted(providerDAO.getIsCashOnDeliverPaymentAccepted());

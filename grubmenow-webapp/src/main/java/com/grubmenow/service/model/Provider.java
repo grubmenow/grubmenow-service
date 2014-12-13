@@ -17,6 +17,8 @@ public class Provider {
 	
 	private String providerImageURL;
 	
+	private String zipCode;
+	
 	private BigDecimal rating;
 	
 	private boolean isOnlinePaymentAccepted;

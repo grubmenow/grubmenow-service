@@ -248,7 +248,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
     $scope.restMenu = {};
     $scope.showRestMenu = {};
     $scope = gmnGetQSP($scope);
-    var requestData = {"foodItemId": $scope.id, "availableDay": $scope.availableDay};
+    var requestData = {"foodItemId": $scope.id, "availableDay": $scope.availableDay, "radius": $scope.radius, "zipCode": $scope.zipCode};
     var restListUrl = "api/getDetailPageResults";
     $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
         $scope.restList = data;

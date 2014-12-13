@@ -8,4 +8,5 @@ public class ProviderFoodItemOffer
 	private Provider provider;
 	private FoodItem foodItem;
 	private FoodItemOffer foodItemOffer;
+	private String distanceInMiles;
 }

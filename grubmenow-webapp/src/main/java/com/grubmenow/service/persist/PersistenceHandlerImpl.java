@@ -1,5 +1,6 @@
 package com.grubmenow.service.persist;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ import com.grubmenow.service.datamodel.InvitationRequestDAO;
 import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.SearchSuggestionFeedbackDAO;
+import com.grubmenow.service.datamodel.ZipCodeDAO;
 import com.grubmenow.service.persist.sql.SQLReader;
 
 /**
@@ -73,6 +75,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	    configuration.addAnnotatedClass(SearchSuggestionFeedbackDAO.class);
 	    configuration.addAnnotatedClass(GeneralFeedbackDAO.class);
 	    configuration.addAnnotatedClass(InvitationRequestDAO.class);
+	    configuration.addAnnotatedClass(ZipCodeDAO.class);
 	    
 	    configuration.setProperties(properties);
 	    ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
@@ -101,6 +104,17 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 				tokens);
 		
 		return executeCustomSQL(sql);
+	}
+	
+	@Override
+	public String getDistanceInMilesBetweenZipCodes(String zipCode1, String zipCode2) {
+		Map<String, String> tokens = ImmutableMap.of("zip_code1", zipCode1,
+				"zip_code2", zipCode2);
+		
+		String sql = SQLReader.loadSQL("/find_distance_between_zip_codes.sql", tokens);
+		
+		Double distance = (Double) executeCustomSQL(sql).get(0);
+		return new DecimalFormat("#0.0").format(distance);
 	}
 	
 	@Override
@@ -377,6 +391,13 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 		log.info(String.format("Creating order feedback: %s " , orderFeedbackDAO));
 		
 		updateObject(orderFeedbackDAO);
+	}
+	
+	@Override
+	public ZipCodeDAO getZipCode(String zipCode) {
+		log.info(String.format("Retrieving ZipCode: %s " , zipCode));
+
+		return getObject(ZipCodeDAO.class, zipCode);
 	}
 	
 	private <T> List<T> executeCustomSQL(Class<T> clazz, String sql) {
