@@ -118,7 +118,8 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     	var nowDate = new Date();
     	
     	// if we are above the cut off time, don't show the option for today
-    	if(nowDate.getHours() >= 16) {
+    	var cutoffTime = 16; // cut of time to order by today. Server and client side are stored separately. 
+    	if(nowDate.getHours() >= cutoffTime) {
     	    $scope.isBeforeCutOffTime = 0;
     		$scope.location = {radius:5, availableDay:"Tomorrow"};
     	} else {
