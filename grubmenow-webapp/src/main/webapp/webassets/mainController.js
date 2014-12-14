@@ -191,7 +191,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         
         var pickupDate = $scope.availableDay == 'Today' ? new Date() : new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
         order.pickupTime = $scope.availableDay + " " + $scope.restList.providerFoodItemOffers[index].foodItemOffer.offerDay	
-        					+ ", 7pm to 9pm ";
+        					+ ", 6pm to 9pm ";
         order.chefPhone = $scope.restList.providerFoodItemOffers[index].provider.providerPhoneNumber;
         
         if ($scope.restMenu[restId]) {
