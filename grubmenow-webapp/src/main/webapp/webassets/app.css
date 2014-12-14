@@ -374,3 +374,9 @@ a:active {
 .hdiwImage {
      margin: 0px auto;
 }
+
+div.footer {
+font-size: 11px;
+text-align: center;
+padding-bottom: 20px;
+}
