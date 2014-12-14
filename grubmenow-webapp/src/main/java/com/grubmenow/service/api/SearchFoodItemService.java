@@ -17,7 +17,6 @@ import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.SearchFoodItemRequest;
 import com.grubmenow.service.persist.PersistenceFactory;
-import com.grubmenow.service.persist.PersistenceHandlerImpl;
 
 @RestController
 @CommonsLog
@@ -38,10 +37,13 @@ public class SearchFoodItemService extends AbstractRemoteService {
 		    return foodItems;
 		}
 		// get all the distinct food items in the related zip code
-		List<FoodItemDAO> foodItemsAround = getAllFoodItemsInZipCodes(neighboringZipCodes, request.getAvailableDay());
+		List<FoodItemDAO> foodItemsAround = getAllFoodItemsInZipCodes(neighboringZipCodes, request.getAvailableDay(), 
+		        request.getTimezoneOffsetMins());
 
-		if (foodItemsAround != null) {
-			for (FoodItemDAO dao : foodItemsAround) {
+		if (foodItemsAround != null)
+		{
+			for (FoodItemDAO dao : foodItemsAround) 
+			{
 				FoodItem foodItem = new FoodItem();
 				foodItem.setFoodItemId(dao.getFoodItemId());
 				foodItem.setFoodItemName(dao.getFoodItemName());
@@ -60,12 +62,14 @@ public class SearchFoodItemService extends AbstractRemoteService {
 		Validator.notNull(searchQuery.getAvailableDay(), "AvailableDay should be present");
 	}
 
-	private List<FoodItemDAO> getAllFoodItemsInZipCodes(List<String> neighboringZipCodes, AvailableDay availableDay) {
+	private List<FoodItemDAO> getAllFoodItemsInZipCodes(List<String> neighboringZipCodes, AvailableDay availableDay, int requestTimezoneOffsetMins) {
 
 		DateTime forDate = DateTime.now();
 		if (availableDay == AvailableDay.Tomorrow) {
 			forDate = forDate.plusDays(1);
 		}
+		forDate = forDate.minusMinutes(requestTimezoneOffsetMins);
+		log.debug("Finding food item for date: " + forDate);
 
 		return PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(neighboringZipCodes, forDate);
 	}

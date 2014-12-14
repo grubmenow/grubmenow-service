@@ -68,7 +68,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 		// initialize order by adding order and order item id in it's initial state into database
 		// Also verifies if the order amount in request is as per back-end logic
-		Order order = initializeOrder(request, orderId, customerDAO.getCustomerId(), orderDateTime);
+		Order order = initializeOrder(request, orderId, customerDAO.getCustomerId(), orderDateTime, request.getTimezoneOffsetMins());
 
 		// process order
 		try {
@@ -311,29 +311,29 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		List<EmailableOrderItemDetail> orderItemDetails = new ArrayList<>();
 		for(CustomerOrderItemDAO customerOrderItemDAO: customerOrderItemDAOs) {
 			EmailableOrderItemDetail emailOrderItemDetail = new EmailableOrderItemDetail();
-			
+
 			// fill food item name
 			String foodItemId = customerOrderItemDAO.getFoodItemId();
 			FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemId);
 			emailOrderItemDetail.setFoodItemName(foodItemDAO.getFoodItemName());
-			
+
 			// fill food item description
 			String foodItemOfferId = customerOrderItemDAO.getFoodItemOfferId();
 			FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById(foodItemOfferId);
 			emailOrderItemDetail.setFoodItemDescription(foodItemOfferDAO.getOfferDescription());
-			
+
 			// fill quantity
 			emailOrderItemDetail.setFoodItemQuantity(customerOrderItemDAO.getQuantity());
-			
+
 			// fill food item amount
 			Amount foodItemAmount = new Amount();
 			foodItemAmount.setCurrency(customerOrderItemDAO.getOrderCurrency());
 			foodItemAmount.setValue(customerOrderItemDAO.getOrderItemAmount());
 			emailOrderItemDetail.setFoodItemTotalPrice(foodItemAmount);
-			
+
 			orderItemDetails.add(emailOrderItemDetail);
 		}
-				
+
 		// send email
 		OrderSuccessEmailRequest emailRequest = OrderSuccessEmailRequest
 					.builder()
@@ -341,11 +341,11 @@ public class PlaceOrderService  extends AbstractRemoteService {
 					.provider(providerDAO)
 					.customerOrder(customerOrderDAO)
 					.orderItems(orderItemDetails)
+					.orderPickupStartTime("6 PM")
 					.orderPickupEndTime("9 PM")
-					.orderPickupStartTime("7 PM")
 					.orderFulfillmentDate(orderFulfillmentDate)
 					.build();
-					
+
 		// send email to consumer
 		try
 		{
@@ -358,7 +358,11 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		}
 	}
 
-	private Order initializeOrder(PlaceOrderRequest request, String orderId, String customerId, DateTime orderDateTime) {
+	private Order initializeOrder(PlaceOrderRequest request,
+	        String orderId,
+	        String customerId,
+	        DateTime orderDateTime, 
+	        int requestTimezoneOffsetMins) {
 		// TODO: kapila(11th Oct 2014) All these calls are not happening in db transaction. is that alright?
 		
 		List<CustomerOrderItemDAO> orderDAOs = new ArrayList<>(); 
@@ -428,6 +432,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		customerOrderDAO.setOrderPaymentState(OrderPaymentState.PENDING);
 		customerOrderDAO.setOrderState(OrderState.PENDING);
 		customerOrderDAO.setOrderStateMessage("Creating Order");
+		customerOrderDAO.setOrderTimezoneOffsetMins(requestTimezoneOffsetMins);
 		
 		PersistenceFactory.getInstance().createCustomerOrder(customerOrderDAO);
 		

@@ -18,6 +18,8 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
             orderObject.customerName = $scope.customer.customerName;
             orderObject.customerEmailId = $scope.customer.customerEmailId;
             orderObject.customerPhoneNumber = $scope.customer.customerPhoneNumber;
+            var d = new Date();
+            orderObject.timezoneOffsetMins = d.getTimezoneOffset();
         	var orderUrl = "api/placeOrder";
         	
         	

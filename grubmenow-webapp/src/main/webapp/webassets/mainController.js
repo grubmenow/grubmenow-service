@@ -50,14 +50,21 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
             $scope.searching = 1;
             $('html, body').animate({
                 scrollTop: $("#foodFinderMsg").offset().top
-            }, 2000);
-            $http.post("api/searchFoodItems", JSON.stringify($scope.master)).success(function(data) {
+            }, $scope.animationTime);
+
+            var request = {};
+            request.zipCode = $scope.master.zipCode;
+            request.radius = $scope.master.radius;
+            request.availableDay = $scope.master.availableDay;
+            var d = new Date()
+            request.timezoneOffsetMins = d.getTimezoneOffset();
+            $http.post("api/searchFoodItems", JSON.stringify(request)).success(function(data) {
                 $scope.master.food = data;
                 $scope.searching = 0;
                 $scope.searchedOnce = 1;
                 $('html, body').animate({
                     scrollTop: $("#searchResults").offset().top
-                }, 2000);
+                }, $scope.animationTime);
             });
             console.log('test');
         }
@@ -68,7 +75,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $scope.showFoodItemSuggestionForm = !formInfo;
         $('html, body').animate({
             scrollTop: $("#feedbackFormContainer").offset().top
-        }, 2000);
+        }, $scope.animationTime);
     };
 
 
@@ -133,6 +140,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     $scope.feedback = {generalFeedback: '', newItems: '', emailId: ""};
     $scope.showFeedbackForm = 0;
     $scope.showFoodItemSuggestionForm = 0;
+    $scope.animationTime = 1000;
 });
 
 angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, $http, $location) {
@@ -218,7 +226,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
     }
 
     $scope.backToSearch = function() {
-        var url = "index.html#/home?radius="+$scope.radius+"&availableDay="+$scope.availableDay+"&zipCode="+$scope.zipCode;
+        var url = "#/home?radius="+$scope.radius+"&availableDay="+$scope.availableDay+"&zipCode="+$scope.zipCode;
         window.location.href = url;
     }
 
@@ -239,6 +247,8 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
             $scope.showRestMenu[restId] = 1;
         }
         var requestData = {"providerId": restId, "availableDay": $scope.availableDay};
+        var date = new Date();
+        requestData.timezoneOffsetMins = d.getTimezoneOffset();
         var restListUrl = "api/getProviderMenu";
         $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
             $scope.restMenu[restId] = data;
@@ -250,6 +260,8 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
     $scope.showRestMenu = {};
     $scope = gmnGetQSP($scope);
     var requestData = {"foodItemId": $scope.id, "availableDay": $scope.availableDay, "radius": $scope.radius, "zipCode": $scope.zipCode};
+    var d = new Date();
+    requestData.timezoneOffsetMins = d.getTimezoneOffset();
     var restListUrl = "api/getDetailPageResults";
     $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
         $scope.restList = data;
