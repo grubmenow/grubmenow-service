@@ -374,3 +374,10 @@ a:active {
 .hdiwImage {
      margin: 0px auto;
 }
+
+#footer {
+font-size: 11px;
+text-align: center;
+position : fixed;
+bottom : 0;
+}
