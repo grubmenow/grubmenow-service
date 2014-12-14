@@ -9,7 +9,7 @@
             <div class="orderDetails">
                 <div class="orderDetailsHeader">
                     <div class="col-xs-7 checkoutHeader">Item</div>
-                    <div class="col-xs-2 checkoutHeader">Qty</div>
+                    <div class="col-xs-2 checkoutHeader">Quantity</div>
                     <div class="col-xs-3 checkoutHeader">Price</div>
                 </div>
                 <div ng-repeat="order in finalOrder.items">
@@ -56,14 +56,20 @@
                     <div class="coFormLabels">Payment method:</div>
                     <div class="checkoutText noBold">
                         <select class="form-control coPaymentSel" id="inputPayment" ng-model="payment.mode">
-                            <option value=cash>Cash on Pickup</option>
-                            <option value=card>Credit Card</option>
+                            <option ng-selected="finalOrder.provider.cashOnDeliverPaymentAccepted == true" ng-disabled="finalOrder.provider.cashOnDeliverPaymentAccepted == false" value=cash>Cash on Pickup</option>
+                            <option ng-selected="finalOrder.provider.onlinePaymentAccepted == true" ng-disabled="finalOrder.provider.onlinePaymentAccepted == false" value=card>Credit Card</option>
                         </select>
                     </div>
                     <div class="clearfix"></div>
             		
                     <div ng-show="payment.mode == 'card'">
                         <div class="payment-errors text-warn"><strong>{{stripe.error.message}}</strong></div>
+                        
+                        <br/>
+                        <div class="coFormElem">
+                        	<span class="coFormLabels"></span> <img class="checkoutFormCC" src="credit_card_logo.png"/>
+                        </div>
+                        
                         <div class="coFormElem">
                             <span class="coFormLabels">Card Number</span> <input type="text" class="form-control checkoutFormElem checkoutFormCC" data-stripe="number">
                         </div>

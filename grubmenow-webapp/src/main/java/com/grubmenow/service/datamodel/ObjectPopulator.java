@@ -64,12 +64,8 @@ public class ObjectPopulator {
 	
 	public static String buildAddressSingleLine(ProviderDAO provider)
     {
+		
         StringBuilder stringBuilder = new StringBuilder();
-        if (StringUtils.isNotBlank(provider.getProviderAddressApartmentNumber()))
-        {
-            stringBuilder.append(provider.getProviderAddressApartmentNumber())
-                .append(" ");
-        }
         if (StringUtils.isNotBlank(provider.getProviderAddressStreetNumber()))
         {
             stringBuilder.append(provider.getProviderAddressStreetNumber())
@@ -77,9 +73,15 @@ public class ObjectPopulator {
         }
         if (StringUtils.isNotBlank(provider.getProviderAddressStreet()))
         {
-            stringBuilder.append(provider.getProviderAddressStreet())
-            .append(" ");
+            stringBuilder.append(provider.getProviderAddressStreet());
         }
+        if (StringUtils.isNotBlank(provider.getProviderAddressApartmentNumber()))
+        {
+        	stringBuilder.append(", ");
+            stringBuilder.append(provider.getProviderAddressApartmentNumber())
+                .append(" ");
+        }
+        
         // remove the last space from the string so far
         stringBuilder = new StringBuilder(stringBuilder.substring(0, stringBuilder.length() - 1));
         // Add the comman to separate city
@@ -111,7 +113,7 @@ public class ObjectPopulator {
 		foodItemOffer.setOfferDescription(foodItemOfferDAO.getOfferDescription());
 		foodItemOffer.setAvailableQuantity(foodItemOfferDAO.getAvailableQuantity());
 		foodItemOffer.setPrice(new Amount(foodItemOfferDAO.getOfferUnitPrice(), foodItemOfferDAO.getOfferCurrency()));
-		foodItemOffer.setOfferDay(foodItemOfferDAO.getOfferDay().toString(printableDateTimeFormatter));
+		foodItemOffer.setOfferDay(readableDay(foodItemOfferDAO.getOfferDay()));
 		
 		DateTime today = DateTime.now();
 		DateTime tomorrow = today.plusDays(1);
@@ -130,6 +132,10 @@ public class ObjectPopulator {
 		foodItemOffer.setMealType(MealType.valueOf(foodItemOfferDAO.getOfferMealType().name()));
 		
 		return foodItemOffer;
+	}
+	
+	public static String readableDay (DateTime dateTime) {
+		return dateTime.toString(printableDateTimeFormatter);
 	}
 	
 	public static CustomerOrder toCustomerOrder(CustomerOrderDAO customerOrderDAO) {

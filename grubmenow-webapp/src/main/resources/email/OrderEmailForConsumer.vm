@@ -20,7 +20,7 @@ table tr:nth-child(odd) {
 </head>
 Hello <b>${request.consumer.customerFirstName}</b>, 
 <br/>
-Thank you for your grubmenow order. Your order id is <b>${request.customerOrder.orderId}</b>.
+Thank you for your grubmenow order. Your order id is <a href="http://grubmenow.com/#/orderDetails?orderId=${request.customerOrder.orderId}"><b>${request.customerOrder.orderId}</b></a>.
 <p/>
 Your order summary: 
 <table>

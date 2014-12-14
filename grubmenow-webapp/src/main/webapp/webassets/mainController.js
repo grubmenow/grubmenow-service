@@ -171,6 +171,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         order.orderItems = [];
         order.tax = Math.floor($scope.getTotalPriceInCents(index) * 0.095);
         order.totalPrice = $scope.getTotalPriceInCents(index) + order.tax;
+        order.provider = $scope.restList.providerFoodItemOffers[index].provider;
         order.providerId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
         var i = 0;
         if($scope.restList.foodItem.foodItemQty > 0) {

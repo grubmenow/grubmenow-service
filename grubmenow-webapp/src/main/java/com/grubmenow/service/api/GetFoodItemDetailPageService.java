@@ -35,8 +35,8 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		GetFoodItemDetailPageResponse response = new GetFoodItemDetailPageResponse();
 		
 		response.setFoodItem(populateFoodItem(request.getFoodItemId()));
-		
 		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getZipCode(), request.getFoodItemId(), request.getAvailableDay()));
+		response.setFormattedOfferDay(ObjectPopulator.readableDay(getDateTimeForOfferDay(request.getAvailableDay())));
 		return response;
 	}
 
@@ -53,12 +53,7 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 
 	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String zipCode, String foodItemId, AvailableDay availableDay) {
 
-		DateTime forDate = DateTime.now();
-		if (availableDay == AvailableDay.Tomorrow) {
-			forDate = forDate.plusDays(1);
-		}
-
-		List<FoodItemOfferDAO> foodItemOfferDAOs = PersistenceFactory.getInstance().getCurrentProviderOffering(foodItemId, forDate);
+		List<FoodItemOfferDAO> foodItemOfferDAOs = PersistenceFactory.getInstance().getCurrentProviderOffering(foodItemId, getDateTimeForOfferDay(availableDay));
 
 		List<ProviderFoodItemOffer> providerFoodItemOffers = new ArrayList<>();
 
@@ -102,6 +97,15 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		
 
 		return providerFoodItemOffers;
+	}
+	
+	private DateTime getDateTimeForOfferDay(AvailableDay availableDay) {
+		DateTime forDate = DateTime.now();
+		if (availableDay == AvailableDay.Tomorrow) {
+			forDate = forDate.plusDays(1);
+		}
+
+		return forDate;
 	}
 
 }

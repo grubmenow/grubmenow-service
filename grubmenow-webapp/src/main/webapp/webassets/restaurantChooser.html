@@ -2,7 +2,7 @@
     <div class="clearfix"></div>
     <div ng-show="!chefsLoaded" class="spinner"></div>
     <div ng-show="chefsLoaded">
-        <div class="col-xs-6 text-left  optionsText navLineBtn">Showing {{restList.providerFoodItemOffers.length}} chef(s) providing '{{foodItem.foodItemName}}' for {{availableDay}}</div>
+        <div class="col-xs-6 text-left  optionsText navLineBtn">Showing {{restList.providerFoodItemOffers.length}} chef(s) providing '{{foodItem.foodItemName}}' for {{availableDay}} - {{restList.formattedOfferDay}}</div>
         <div class="col-xs-6 text-right" ng-click="backToSearch()">
             <button type="button" class="btn btn-link showhideBtn optionsText">
                 <span class="glyphicon glyphicon-chevron-left"></span> Back to food results
@@ -20,6 +20,7 @@
                         <span style="font-size: 16px">
                           {{rest.provider.providerName}}
                         </span>
+                        <br/>
                     	<span >
                     	   <span class="stars">{{rest.provider.rating}}</span>
                     	</span>
@@ -55,7 +56,7 @@
                             <span class="tableTitle">Price</span>
                         </div>
                         <div class="col-xs-2">
-                            <span class="tableTitle">Qty</span>
+                            <span class="tableTitle">Quantity</span>
                         </div>
 
                         <div class="clearfix"></div>
@@ -79,6 +80,7 @@
 
                         <div class="clearfix"></div>
                         <p />
+                        
                         <div class="col-xs-12 text-left">
                             <button type="button" id="showMore{{$index}}" ng-show="!showRestMenu[rest.provider.providerId]" class="btn btn-link showhideBtn optionsText" ng-click="showMenu(rest.provider.providerId)">
                                 More from this chef <span class="glyphicon glyphicon-chevron-down"></span>
@@ -88,6 +90,10 @@
                             </button>
                         </div>
 
+                        <div class="col-xs-8" ng-show="showRestMenu[rest.provider.providerId] && restMenu[rest.provider.providerId].providerFoodItemOffers.length != 0">
+                       	 	<span style="font-size: 12px; font-style: italic;">Sorry, no other offering from <b>'{{rest.provider.providerName}}'</b> at this time.</span> 
+                        </div>
+                        
                         <div ng-repeat="restMenuItem in restMenu[rest.provider.providerId].providerFoodItemOffers" ng-show="showRestMenu[rest.provider.providerId] && (restMenuItem.foodItemOffer.foodItemOfferId != '{{rest.foodItemOffer.foodItemOfferId}}')">
                             <div class="col-xs-8">
                                 <div class="foodTitle">{{restMenuItem.foodItem.foodItemName}}</div>

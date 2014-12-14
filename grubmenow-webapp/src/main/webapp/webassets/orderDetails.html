@@ -30,7 +30,7 @@
             <div class="orderDetails">
                 <div class="orderDetailsHeader">
                     <div class="col-xs-7 checkoutHeader">Item</div>
-                    <div class="col-xs-2 checkoutHeader">Qty</div>
+                    <div class="col-xs-2 checkoutHeader">Quantity</div>
                     <div class="col-xs-3 checkoutHeader">Price</div>
                 </div>
                 <div ng-repeat="orderItem in getCustomerOrderResponse.customerOrderItems">
@@ -51,32 +51,38 @@
 	<br/>
 	<p/>	
 	<div class="col-md-8 col-sm-12">
-	   <div class="feedbackQL bold leftAlign">
-            <span>Please provide feedback for the chef. The food was: </span>
+       <div ng-show="showReview">
+       		You rated this order as '<span style="color: #F04E00; font-size: 16px; font-weight: bold;">{{review.rating_description}}</span>'.
        </div>
-		<div ng-show="showReview || allowReview">
-			 <div class="starRate leftAlign">
+       
+	   <div ng-show="allowReview">
+			 <div class="feedbackQL bold leftAlign">
+            	<span>Please provide feedback for the chef. The food was: </span>
+       		 </div>
+		
+			 <div class="leftAlign">
 			 	<form>
-			 	 <span class="feedbackMessage" style="display: none;"></span>
 				 <div class="radio">
-				    <label><input class="radio" type="radio" name="rating" value="5" ng-model="review.rating">Delicious</label>
+				    <label><input class="radio" type="radio" name="rating" value="5" ng-model="review.rating" ng-value="5">{{rating_descriptions[5]}}</label>
 				 </div>
 				 <div class="radio">
-			 	 	<label><input class="radio" type="radio" name="rating" value="4" ng-model="review.rating">Good</label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="4" ng-model="review.rating" ng-value="4">{{rating_descriptions[4]}}</label>
 			 	 </div>
 			 	 <div class="radio">
-			 	 	<label><input class="radio" type="radio" name="rating" value="3" ng-model="review.rating">OK</label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="3" ng-model="review.rating" ng-value="3">{{rating_descriptions[3]}}</label>
 			 	 </div>
 			 	 <div class="radio">
-			 	 	<label><input class="radio" type="radio" name="rating" value="2" ng-model="review.rating">Could have been better</label>
+			 	 	<label><input class="radio" type="radio" name="rating" value="2" ng-model="review.rating" ng-value="2">{{rating_descriptions[2]}}</label>
 			 	 </div>
 			 	 <div class="radio">
-				 	<label><input class="radio" type="radio" name="rating" value="1" ng-model="review.rating">Not Satisfactory</label>
+				 	<label><input class="radio" type="radio" name="rating" value="1" ng-model="review.rating" ng-value="1">{{rating_descriptions[1]}}</label>
 				 </div>
 				 <div class="radio">
 				 	<textarea class="form-control" name="feedback" style="width: 100%; font-size: 12px"  ng-model="review.feedback" placeholder="Please provide feedback for the chef"></textarea>
 				 </div>
-	  		    <span style="float: right"><button ng-click="submitFeedback(review)" class="btn btn-primary">Submit Feedback</button></span>
+				 <br/>
+				 <span style="float: left" class="feedbackMessage" style="display: none;"></span>
+	  		     <span style="float: right"><button ng-click="submitFeedback(review)" class="btn btn-primary" ng-disabled="review.rating == -1">Submit Feedback</button></span>
 			 	</form>
 			</div>
 		</div>

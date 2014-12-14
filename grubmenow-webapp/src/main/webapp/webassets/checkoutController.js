@@ -45,7 +45,14 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
         $scope.safeApply(function() {
             $scope.fbLoaded = 1;
             $scope.payment = {};
-            $scope.payment.mode = "card";
+            
+            // check for default payment method
+            if($scope.finalOrder.provider.onlinePaymentAccepted) {
+            	$scope.payment.mode = "card";
+            } else if($scope.finalOrder.provider.cashOnDeliverPaymentAccepted) {
+            	$scope.payment.mode = "cash";
+            }
+            
             if(!token) {
                 $scope.FB.notRecognized = 1;
                 $scope.customer.customerLoaded = 0;
@@ -175,6 +182,16 @@ angular.module('gmnControllers').controller('FAQCtrl', function ($scope, $http) 
         $( this ).removeClass('active');
     });
     $('#faqNav').addClass('active');   
+    $('#navbarCollapse').removeClass('in');
+});
+
+
+angular.module('gmnControllers').controller('ContactUsController', function ($scope, $http) {
+    //Update the Nav state
+    $( "li", "#gmnNav" ).each(function( index ) {
+        $( this ).removeClass('active');
+    });
+    $('#cuNav').addClass('active');   
     $('#navbarCollapse').removeClass('in');
 });
 

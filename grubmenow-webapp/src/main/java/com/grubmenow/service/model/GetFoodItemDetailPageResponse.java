@@ -11,4 +11,6 @@ public class GetFoodItemDetailPageResponse {
 	
 	private List<ProviderFoodItemOffer> providerFoodItemOffers;
 	
+	private String formattedOfferDay;
+	
 }

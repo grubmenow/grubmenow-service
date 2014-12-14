@@ -17,7 +17,7 @@ public class IDGenerator {
 	}
 
 	public static String generateOrderId() {
-		return RandomStringUtils.randomNumeric(10);
+		return RandomStringUtils.randomNumeric(12);
 	}
 
 }

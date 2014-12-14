@@ -26,9 +26,10 @@ angular.module('gmnControllers').controller('orderDetailsController', function (
     };
     
     $scope.loadOrderFeedback = function(websiteAuthenticationToken) {
-        $scope.showReview = 0;
-        
-        var requestObj = new Object();
+    	
+    	$scope.rating_descriptions = ['N/A', 'Not Satisfactory', 'Could have been better', 'OK', 'Good', 'Delicious'];
+
+    	var requestObj = new Object();
         requestObj.websiteAuthenticationToken = websiteAuthenticationToken;
         requestObj.orderId = $scope['orderId'];
         $scope.getCustomerOrderFeedbackRequest = requestObj;
@@ -39,7 +40,13 @@ angular.module('gmnControllers').controller('orderDetailsController', function (
             $scope.review.feedback = data.feedback;
             $scope.review.rating = data.rating;
             
-            $scope.showReview = 1;
+            // show review only if user has not yet provided the review for this item
+            if(data.rating == -1) {
+            	$scope.allowReview = 1;
+            } else {
+            	$scope.review.rating_description = $scope.rating_descriptions[data.rating];
+            	$scope.showReview = 1;
+            }
         });
     };
 
@@ -58,6 +65,9 @@ angular.module('gmnControllers').controller('orderDetailsController', function (
         
         $http.post("api/submitOrderFeedback", JSON.stringify(requestObj)).success(function(data) {
         	$('.feedbackMessage').removeClass('alert-info').addClass('alert-success').html("Thanks, Feedback Submitted").fadeOut(2000);
+        	$scope.review.rating_description = $scope.rating_descriptions[review.rating];
+        	$scope.allowReview = 0;
+        	$scope.showReview = 1;
         });
     };
 

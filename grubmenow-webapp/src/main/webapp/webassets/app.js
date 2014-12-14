@@ -31,7 +31,7 @@ gmnApp.config(['$routeProvider', function($routeProvider) {
     }).
     when('/contactus', {
         templateUrl: 'contactUs.html',
-        controller: 'contactUsController'
+        controller: 'ContactUsController'
     }).
     when('/orderDetails', {
         templateUrl: 'orderDetails.html',
