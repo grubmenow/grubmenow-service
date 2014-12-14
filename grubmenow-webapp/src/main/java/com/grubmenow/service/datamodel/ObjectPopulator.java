@@ -48,6 +48,8 @@ public class ObjectPopulator {
 		if(numberOfRatings.compareTo(BigDecimal.ZERO) != 0) {
 			BigDecimal rating = totalRatingPoints.divide(numberOfRatings, 2, RoundingMode.HALF_UP).setScale(2, RoundingMode.CEILING);
 			provider.setRating(rating);
+		} else {
+			provider.setRating(BigDecimal.ZERO);
 		}
 		
 		provider.setZipCode(providerDAO.getProviderAddressZipCode());
