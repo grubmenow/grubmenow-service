@@ -96,4 +96,7 @@ public class CustomerOrderDAO {
     @Column(name = "ORDER_FULFILMENT_DATE")
     @Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
     private DateTime orderFulfilmentDate;
+
+    @Column(name = "ORDER_TIMEZONE_OFFSET_MINS")
+    private int orderTimezoneOffsetMins;
 }

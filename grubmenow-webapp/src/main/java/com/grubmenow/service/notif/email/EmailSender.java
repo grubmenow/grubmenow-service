@@ -187,11 +187,6 @@ public class EmailSender
 		public static String formatAddressFirstLine(ProviderDAO provider)
 		{
 			StringBuilder stringBuilder = new StringBuilder();
-			if (StringUtils.isNotBlank(provider.getProviderAddressApartmentNumber()))
-			{
-				stringBuilder.append(provider.getProviderAddressApartmentNumber())
-					.append(" ");
-			}
 			if (StringUtils.isNotBlank(provider.getProviderAddressStreetNumber()))
 			{
 				stringBuilder.append(provider.getProviderAddressStreetNumber())
@@ -202,6 +197,11 @@ public class EmailSender
 				stringBuilder.append(provider.getProviderAddressStreet())
 				.append(" ");
 			}
+			if (StringUtils.isNotBlank(provider.getProviderAddressApartmentNumber()))
+            {
+                stringBuilder.append(provider.getProviderAddressApartmentNumber())
+                    .append(" ");
+            }
 			return stringBuilder.substring(0, stringBuilder.length()-1);
 		}
 		

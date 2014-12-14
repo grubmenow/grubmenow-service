@@ -38,6 +38,7 @@ public class GetProviderMenuService extends AbstractRemoteService {
 		if (request.getAvailableDay() == AvailableDay.Tomorrow) {
 			forDate = forDate.plusDays(1);
 		}
+		forDate = forDate.minusMinutes(request.getTimezoneOffsetMins());
 		
 		List<FoodItemOfferDAO> allOffersFromProvider = PersistenceFactory.getInstance().getAllOffersByProvider(request.getProviderId(), forDate);
 
@@ -56,7 +57,7 @@ public class GetProviderMenuService extends AbstractRemoteService {
 			FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemOfferDAO.getFoodItemId());
 
 			ProviderFoodItemOffer providerFoodItemOffer = new ProviderFoodItemOffer();
-			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO));
+			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO, request.getAvailableDay()));
 			providerFoodItemOffer.setFoodItem(ObjectPopulator.toFoodItem(foodItemDAO));
 			
 			providerFoodItemOffers.add(providerFoodItemOffer);

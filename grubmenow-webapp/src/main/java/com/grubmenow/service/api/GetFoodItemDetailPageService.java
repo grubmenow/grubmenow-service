@@ -35,7 +35,11 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		GetFoodItemDetailPageResponse response = new GetFoodItemDetailPageResponse();
 		
 		response.setFoodItem(populateFoodItem(request.getFoodItemId()));
-		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getZipCode(), request.getFoodItemId(), request.getAvailableDay()));
+		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getZipCode(), 
+		        request.getFoodItemId(),
+		        request.getAvailableDay(), 
+		        request.getTimezoneOffsetMins()));
+		
 		response.setFormattedOfferDay(ObjectPopulator.readableDay(getDateTimeForOfferDay(request.getAvailableDay())));
 		return response;
 	}
@@ -51,7 +55,16 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		return ObjectPopulator.toFoodItem(foodItemDAO);
 	}
 
-	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String zipCode, String foodItemId, AvailableDay availableDay) {
+	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String zipCode,
+	        String foodItemId,
+	        AvailableDay availableDay, 
+	        int requestTimezoneOffsetMins) 
+	{
+		DateTime forDate = DateTime.now();
+		if (availableDay == AvailableDay.Tomorrow) {
+			forDate = forDate.plusDays(1);
+		}
+		forDate = forDate.minusMinutes(requestTimezoneOffsetMins);
 
 		List<FoodItemOfferDAO> foodItemOfferDAOs = PersistenceFactory.getInstance().getCurrentProviderOffering(foodItemId, getDateTimeForOfferDay(availableDay));
 
@@ -63,7 +76,7 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 			
 			ProviderFoodItemOffer providerFoodItemOffer = new ProviderFoodItemOffer();
 			providerFoodItemOffer.setProvider(ObjectPopulator.toProvider(providerDAO));
-			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO));
+			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO, availableDay));
 			providerFoodItemOffer.setDistanceInMiles(PersistenceFactory.getInstance().getDistanceInMilesBetweenZipCodes(zipCode, providerDAO.getProviderAddressZipCode())); 
 
 			providerFoodItemOffers.add(providerFoodItemOffer);
