@@ -118,6 +118,7 @@ public class ObjectPopulator {
 		
 		foodItemOffer.setAvailableDay(availableDay);
 		foodItemOffer.setMealType(MealType.valueOf(foodItemOfferDAO.getOfferMealType().name()));
+		foodItemOffer.setOfferTags(StringUtils.split(StringUtils.trimToEmpty(foodItemOfferDAO.getOfferDescriptionTags()), ','));
 		
 		return foodItemOffer;
 	}

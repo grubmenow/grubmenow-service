@@ -112,6 +112,21 @@ a:active {
      font-size: 12px;
 }
 
+.foodItemOfferTags {
+     font-size: 11px;
+     line-height: 16px;
+     border:1px solid #123960;
+     color: #EEE;
+     background-color: #4D82B6;
+     border-radius: 3px;
+     padding-left: 2px;
+     padding-right: 2px;
+     padding-top: 1px;
+     padding-bottom: 1px;
+     margin-left: 4px;
+}
+
+
 .panel-heading {
      background-color: #0A549C !important;
      color: #FFFFFF;

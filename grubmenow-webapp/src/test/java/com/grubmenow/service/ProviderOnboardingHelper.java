@@ -79,27 +79,29 @@ public class ProviderOnboardingHelper {
 		String offerDescription = "Rice flour fried on tava with onions and spieces, served with achaar. (3 pieces)";
 		int offerUnitPrice = 899;
 		int offerQuantity = 5;
+		String offerTags = "Spicy, Gravy";
 		DateTime dateTime = DateTime.now();
 		dateTime = dateTime.withMonthOfYear(12).withDayOfMonth(17);
 		
-		FoodItemOfferDAO foodItemOfferDAO1 = new FoodItemOfferDAO();
-		foodItemOfferDAO1.setFoodItemOfferId(IDGenerator.generateFoodItemOfferId());
+		FoodItemOfferDAO foodItemOfferDAO = new FoodItemOfferDAO();
+		foodItemOfferDAO.setFoodItemOfferId(IDGenerator.generateFoodItemOfferId());
 		
-		foodItemOfferDAO1.setFoodItemId(foodItemId);
-		foodItemOfferDAO1.setProviderId(providerId); // id from database
-		foodItemOfferDAO1.setOfferDescription(offerDescription);
-		foodItemOfferDAO1.setOfferUnitPrice(offerUnitPrice);
-		foodItemOfferDAO1.setOfferCurrency(Currency.USD);
-		foodItemOfferDAO1.setOfferQuantity(offerQuantity);
-		foodItemOfferDAO1.setAvailableQuantity(offerQuantity);
-		foodItemOfferDAO1.setOfferDay(dateTime);
-		foodItemOfferDAO1.setOfferMealType(OfferMealType.DINNER);
-		foodItemOfferDAO1.setIsFoodDeliveryOptionAvailable(false);
-		foodItemOfferDAO1.setIsFoodPickUpOptionAvailable(true);
-		foodItemOfferDAO1.setOfferState(OfferState.ACTIVE);
+		foodItemOfferDAO.setFoodItemId(foodItemId);
+		foodItemOfferDAO.setProviderId(providerId); // id from database
+		foodItemOfferDAO.setOfferDescription(offerDescription);
+		foodItemOfferDAO.setOfferUnitPrice(offerUnitPrice);
+		foodItemOfferDAO.setOfferCurrency(Currency.USD);
+		foodItemOfferDAO.setOfferQuantity(offerQuantity);
+		foodItemOfferDAO.setAvailableQuantity(offerQuantity);
+		foodItemOfferDAO.setOfferDay(dateTime);
+		foodItemOfferDAO.setOfferMealType(OfferMealType.DINNER);
+		foodItemOfferDAO.setIsFoodDeliveryOptionAvailable(false);
+		foodItemOfferDAO.setIsFoodPickUpOptionAvailable(true);
+		foodItemOfferDAO.setOfferState(OfferState.ACTIVE);
+		foodItemOfferDAO.setOfferDescriptionTags(offerTags);
 
 		PersistenceFactory.getInstance().createFoodItemOffer(
-				foodItemOfferDAO1);
+				foodItemOfferDAO);
 	}
 	
 }

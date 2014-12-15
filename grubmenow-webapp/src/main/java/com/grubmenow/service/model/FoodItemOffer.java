@@ -13,4 +13,5 @@ public class FoodItemOffer {
 	private String offerDay;
 	private AvailableDay availableDay;
 	private MealType mealType;
+	private String[] offerTags;
 }
