@@ -402,6 +402,8 @@ a:active {
 }
 
 #footer {
+padding-left: 5px;
+padding-right: 5px;
 color: #FFF;
 width: 100%;
 text-align: center;
