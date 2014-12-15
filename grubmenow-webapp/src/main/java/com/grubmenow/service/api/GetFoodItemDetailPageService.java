@@ -28,45 +28,44 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 
 	@RequestMapping(value = "/api/getDetailPageResults", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public GetFoodItemDetailPageResponse executeService(@RequestBody GetFoodItemDetailPageRequest request) {
-
+	public GetFoodItemDetailPageResponse executeService(@RequestBody GetFoodItemDetailPageRequest request)
+	{
 		validateInput(request);
 		// food item
 		GetFoodItemDetailPageResponse response = new GetFoodItemDetailPageResponse();
 		
+		DateTime offerDay = getDateTimeForOfferDay(request.getAvailableDay(), request.getTimezoneOffsetMins());
 		response.setFoodItem(populateFoodItem(request.getFoodItemId()));
-		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(request.getZipCode(), 
+		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(
+		        offerDay,
+		        request.getZipCode(), 
 		        request.getFoodItemId(),
 		        request.getAvailableDay(), 
 		        request.getTimezoneOffsetMins()));
-		
-		response.setFormattedOfferDay(ObjectPopulator.readableDay(getDateTimeForOfferDay(request.getAvailableDay())));
+		response.setFormattedOfferDay(ObjectPopulator.readableDay(offerDay));
 		return response;
 	}
 
-	private void validateInput(GetFoodItemDetailPageRequest request) {
+	private void validateInput(GetFoodItemDetailPageRequest request)
+	{
 		Validator.notNull(request.getAvailableDay(), "AvailableDay should be present");
 		Validator.notBlank(request.getFoodItemId(), "Food item id should be present");
 	}
 
-	private FoodItem populateFoodItem(String foodItemId) {
+	private FoodItem populateFoodItem(String foodItemId)
+	{
 		FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemId);
-
 		return ObjectPopulator.toFoodItem(foodItemDAO);
 	}
 
-	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(String zipCode,
+	private List<ProviderFoodItemOffer> populateProviderFoodItemOffers(
+	        DateTime offerDay,
+	        String zipCode,
 	        String foodItemId,
 	        AvailableDay availableDay, 
 	        int requestTimezoneOffsetMins) 
 	{
-		DateTime forDate = DateTime.now();
-		if (availableDay == AvailableDay.Tomorrow) {
-			forDate = forDate.plusDays(1);
-		}
-		forDate = forDate.minusMinutes(requestTimezoneOffsetMins);
-
-		List<FoodItemOfferDAO> foodItemOfferDAOs = PersistenceFactory.getInstance().getCurrentProviderOffering(foodItemId, getDateTimeForOfferDay(availableDay));
+		List<FoodItemOfferDAO> foodItemOfferDAOs = PersistenceFactory.getInstance().getCurrentProviderOffering(foodItemId, offerDay);
 
 		List<ProviderFoodItemOffer> providerFoodItemOffers = new ArrayList<>();
 
@@ -107,18 +106,16 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 				}
 			}
 		});
-		
-
 		return providerFoodItemOffers;
 	}
 	
-	private DateTime getDateTimeForOfferDay(AvailableDay availableDay) {
+	private DateTime getDateTimeForOfferDay(AvailableDay availableDay, int requestTimezoneOffsetMins) 
+	{
 		DateTime forDate = DateTime.now();
-		if (availableDay == AvailableDay.Tomorrow) {
-			forDate = forDate.plusDays(1);
-		}
-
-		return forDate;
+        if (availableDay == AvailableDay.Tomorrow) {
+            forDate = forDate.plusDays(1);
+        }
+        forDate = forDate.minusMinutes(requestTimezoneOffsetMins);
+        return forDate;
 	}
-
 }
