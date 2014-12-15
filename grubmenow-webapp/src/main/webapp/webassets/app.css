@@ -1,5 +1,6 @@
 body{
 	font-family: 'Open Sans', sans-serif;
+	margin-bottom: 20px;
 }
 
 a:link {
@@ -89,14 +90,15 @@ a:active {
      float: right;
 }
 
-.tableTitle {
-     font-weight: bold;
+.tableHeader {
      text-decoration: underline;
+     border-bottom: 1px solid #ddd;
+     margin-bottom: 10px;
 }
 
 .qtyBox {
      width: 50px;
-     margin-right: 15px;
+     margin-right: 5px;
      padding: 2px; 
 }
 
@@ -106,7 +108,7 @@ a:active {
 }
 
 .foodPrice{
-     font-size: 16px;
+     font-size: 14px;
      color: #444;
 }
 
@@ -132,6 +134,10 @@ a:active {
      margin-left: 4px;
 }
 
+.foodItemOfferLayout {
+	padding-left: 0px; 
+	padding-right: 5px;
+}
 
 .panel-heading {
      background-color: #0A549C !important;
@@ -396,6 +402,10 @@ a:active {
 }
 
 #footer {
+color: #FFF;
+width: 100%;
+text-align: center;
+background-color: #4D82B6;	
 font-size: 11px;
 text-align: center;
 position : fixed;
