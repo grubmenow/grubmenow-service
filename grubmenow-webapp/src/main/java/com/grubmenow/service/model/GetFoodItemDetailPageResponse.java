@@ -6,11 +6,7 @@ import lombok.Data;
 
 @Data
 public class GetFoodItemDetailPageResponse {
-
 	private FoodItem foodItem;
-	
 	private List<ProviderFoodItemOffer> providerFoodItemOffers;
-	
 	private String formattedOfferDay;
-	
 }
