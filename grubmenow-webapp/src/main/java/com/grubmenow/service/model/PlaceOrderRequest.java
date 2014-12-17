@@ -25,4 +25,5 @@ public class PlaceOrderRequest {
 	private String customerEmailId;
 	private String customerPhoneNumber;
 	private int timezoneOffsetMins;
+	private AvailableDay orderAvailabilityDay;
 }

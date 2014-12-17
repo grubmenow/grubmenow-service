@@ -175,6 +175,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
 
     $scope.getFinalOrder = function(index) {
         var order = {};
+        order.availableDay = $scope.availableDay;
         order.items = [];
         order.orderItems = [];
         order.tax = Math.floor($scope.getTotalPriceInCents(index) * 0.095);

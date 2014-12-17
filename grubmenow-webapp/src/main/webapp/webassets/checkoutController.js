@@ -6,6 +6,7 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     			return;
     		}
     		var orderObject = {};
+            orderObject.orderAvailabilityDay = $scope.finalOrder.availableDay;
         	orderObject.orderAmount = {};
         	orderObject.orderAmount.currency = "USD";
             orderObject.orderAmount.value = $scope.finalOrder.totalPrice;
