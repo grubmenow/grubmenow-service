@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,7 @@ import com.grubmenow.service.model.ProviderFoodItemOffer;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
+@CommonsLog
 public class GetFoodItemDetailPageService extends AbstractRemoteService {
 
 	@RequestMapping(value = "/api/getDetailPageResults", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
@@ -33,16 +36,27 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 		validateInput(request);
 		// food item
 		GetFoodItemDetailPageResponse response = new GetFoodItemDetailPageResponse();
-		
 		DateTime offerDay = getDateTimeForOfferDay(request.getAvailableDay(), request.getTimezoneOffsetMins());
-		response.setFoodItem(populateFoodItem(request.getFoodItemId()));
+        response.setFormattedOfferDay(ObjectPopulator.readableDay(offerDay));
+        response.setFoodItem(populateFoodItem(request.getFoodItemId()));
+
+        // check if the request is after the order cut off time of that day, if
+        // so: return empty results
+        DateTime orderCutoffTimeWrtClient = TimezoneUtils.calculateOrderCutOffTimeWrtClient(request.getAvailableDay(), request.getTimezoneOffsetMins());
+        DateTime currentTimeWrtClient = TimezoneUtils.getCurrentTimeWrtClient(request.getTimezoneOffsetMins());
+        if (currentTimeWrtClient.isAfter(orderCutoffTimeWrtClient))
+        {
+            log.info("Current Time on client [" + currentTimeWrtClient + "] exceeds the order cut off time [ " + orderCutoffTimeWrtClient
+                    + " ], returning empty results");
+            response.setProviderFoodItemOffers(new ArrayList<ProviderFoodItemOffer>());
+            return response;
+        }
 		response.setProviderFoodItemOffers(populateProviderFoodItemOffers(
 		        offerDay,
 		        request.getZipCode(), 
 		        request.getFoodItemId(),
 		        request.getAvailableDay(), 
 		        request.getTimezoneOffsetMins()));
-		response.setFormattedOfferDay(ObjectPopulator.readableDay(offerDay));
 		return response;
 	}
 

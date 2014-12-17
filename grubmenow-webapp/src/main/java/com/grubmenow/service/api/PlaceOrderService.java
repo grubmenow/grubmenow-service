@@ -52,8 +52,6 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 	private static float TAX_PERCENTAGE = 0.095f;
 	
-	private static int DINNER_ORDER_CUT_OFF_HOUR = 16;
-	
 	@RequestMapping(value = "/api/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public PlaceOrderResponse executeService(@RequestBody PlaceOrderRequest request) throws ValidationException {
@@ -456,7 +454,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		if(foodItemOfferDAO.getOfferMealType() == OfferMealType.DINNER)
 		{
 		    DateTime foodItemOfferCutOffTimeWrtClient = calculateFoodItemOfferCutoffTimeWrtClient(foodItemOfferDAO.getOfferDay());
-		    DateTime clientCurrentTime = getCurrentTimeWrtClient(requestTimezoneOffsetMins);
+		    DateTime clientCurrentTime = TimezoneUtils.getCurrentTimeWrtClient(requestTimezoneOffsetMins);
 		    if (clientCurrentTime.isAfter(foodItemOfferCutOffTimeWrtClient))
 		    {
 		        throw new ValidationException("Order cannot be placed as it is after cut-off time.");
@@ -469,7 +467,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	    // offerDay saved in DB is in client's timezone's day itself. We should 
 	    // save the exact time in DB in UTC to be consistent
 	    DateTime orderCutoffTimeWrtClient = offerDay.withTimeAtStartOfDay();
-	    orderCutoffTimeWrtClient = orderCutoffTimeWrtClient.plusHours(DINNER_ORDER_CUT_OFF_HOUR);
+	    orderCutoffTimeWrtClient = orderCutoffTimeWrtClient.plusHours(TimezoneUtils.DINNER_ORDER_CUT_OFF_HOUR);
 	    return orderCutoffTimeWrtClient;
     }
 
@@ -494,35 +492,15 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 		// make sure that the order request time is before the cutoff time for that day
 		Validator.notNull(request.getOrderAvailabilityDay(), "Order Availability day cannot be null");
-		DateTime orderCutoffTimeWrtClient = calculateOrderCutOffTimeWrtClient(request.getOrderAvailabilityDay(), 
+		DateTime orderCutoffTimeWrtClient = TimezoneUtils.calculateOrderCutOffTimeWrtClient(request.getOrderAvailabilityDay(), 
 		        request.getTimezoneOffsetMins());
-		DateTime currentTimeWrtClient = getCurrentTimeWrtClient(request.getTimezoneOffsetMins());
+		DateTime currentTimeWrtClient = TimezoneUtils.getCurrentTimeWrtClient(request.getTimezoneOffsetMins());
 		if (currentTimeWrtClient.isAfter(orderCutoffTimeWrtClient))
 		{
 		    throw new ValidationException("Order cannot be placed as it is after cut-off time.");
 		}
 	}
 
-    private DateTime calculateOrderCutOffTimeWrtClient(AvailableDay availableDay, int requestTimezoneOffsetMins)
-    {
-        DateTime orderCutoffTimeWrtClient = DateTime.now();
-		if (availableDay == AvailableDay.Tomorrow)
-		{
-		    orderCutoffTimeWrtClient = orderCutoffTimeWrtClient.plusDays(1);
-		}
-		orderCutoffTimeWrtClient = orderCutoffTimeWrtClient.minusMinutes(requestTimezoneOffsetMins)
-		                      .withTimeAtStartOfDay();
-		orderCutoffTimeWrtClient = orderCutoffTimeWrtClient.plusHours(DINNER_ORDER_CUT_OFF_HOUR);
-		return orderCutoffTimeWrtClient;
-    }
-
-    private DateTime getCurrentTimeWrtClient(int requestTimezoneOffsetMins) 
-    {
-        DateTime forDate = DateTime.now();
-        forDate = forDate.minusMinutes(requestTimezoneOffsetMins);
-        return forDate;
-    }
-	
 	/**
 	 * An object that carries the order and related state and objects from one method to another. 
 	 * This is also used to avoid multiple redundant calls to db. 
