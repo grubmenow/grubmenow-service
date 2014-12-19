@@ -161,6 +161,12 @@ a:active {
      color: #FFFFFF !important;
 }
 
+.faq {
+     background-color: #DDDDDD !important;
+     color: #000000;
+     cursor: pointer;
+}
+
 .atcButton {
      border-top: 1px solid #E1EEF5;
      padding: 10px 0px 0px;
@@ -178,7 +184,7 @@ a:active {
 
 .distanceInfoText {
      color: #CCC;
-	 display: block;
+     float: right;
      font-size: 13px;
 }
 
