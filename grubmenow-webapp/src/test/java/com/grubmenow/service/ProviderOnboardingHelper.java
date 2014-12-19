@@ -18,8 +18,8 @@ import com.grubmenow.service.persist.PersistenceFactory;
 public class ProviderOnboardingHelper {
 
 	public static void main(String[] args) {
-		setUpItem();
-		onboardProvider();
+//		setUpItem();
+//		onboardProvider();
 		setUpOffer();
 	}
 	
@@ -74,14 +74,14 @@ public class ProviderOnboardingHelper {
 	
 	public static void setUpOffer() {
 
-		String foodItemId = "asG8yWfL";
+		String foodItemId = "225636";
 		String providerId = "zvpZa8ub";
-		String offerDescription = "Rice flour fried on tava with onions and spieces, served with achaar. (3 pieces)";
+		String offerDescription = "Grilled cottage cheese cubes in tomato sauce. (1 bowl)";
 		int offerUnitPrice = 899;
-		int offerQuantity = 5;
-		String offerTags = "Spicy, Gravy";
+		int offerQuantity = 15;
+		String offerTags = "Spicy,North Indian,Gravy";
 		DateTime dateTime = DateTime.now();
-		dateTime = dateTime.withMonthOfYear(12).withDayOfMonth(17);
+		dateTime = dateTime.withMonthOfYear(12).withDayOfMonth(19);
 		
 		FoodItemOfferDAO foodItemOfferDAO = new FoodItemOfferDAO();
 		foodItemOfferDAO.setFoodItemOfferId(IDGenerator.generateFoodItemOfferId());

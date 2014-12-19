@@ -47,6 +47,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $scope.validateForm(); 
         if($scope.location.zipCode && $scope.location.radius != 0 && $scope.location.availableDay != 0) {
             delete $scope.master['food'];
+            $scope.noResults = 0;
             $scope.searching = 1;
             $('html, body').animate({
                 scrollTop: $("#foodFinderMsg").offset().top
@@ -60,6 +61,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
             request.timezoneOffsetMins = d.getTimezoneOffset();
             $http.post("api/searchFoodItems", JSON.stringify(request)).success(function(data) {
                 $scope.master.food = data;
+                if(!data || data.length == 0) $scope.noResults = 1;
                 $scope.searching = 0;
                 $scope.searchedOnce = 1;
                 $('html, body').animate({
@@ -125,7 +127,8 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     	var nowDate = new Date();
     	
     	// if we are above the cut off time, don't show the option for today
-    	var cutoffTime = 16; // cut of time to order by today. Server and client side are stored separately. 
+    	var cutoffTime = 16; // cut of time to order by today. Server and client side are stored separately.
+    	
     	if(nowDate.getHours() >= cutoffTime) {
     	    $scope.isBeforeCutOffTime = 0;
     		$scope.location = {radius:5, availableDay:"Tomorrow"};
@@ -136,6 +139,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         
         $scope.searching = 0;
     }
+    
     $scope.showThankYouMessage = 0;
     $scope.feedback = {generalFeedback: '', newItems: '', emailId: ""};
     $scope.showFeedbackForm = 0;
@@ -175,6 +179,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
 
     $scope.getFinalOrder = function(index) {
         var order = {};
+        order.availableDay = $scope.availableDay;
         order.items = [];
         order.orderItems = [];
         order.tax = Math.floor($scope.getTotalPriceInCents(index) * 0.095);

@@ -1,6 +1,17 @@
-body{
-	font-family: 'Open Sans', sans-serif;
-	margin-bottom: 20px;
+html, body{
+	margin:0;
+	padding:0;
+	height:100%;
+	min-height:620px;
+}
+
+.docMain {
+     position:relative;
+     min-height:100%;     
+}
+
+.bodyMain {
+     padding-bottom: 44px;
 }
 
 a:link {
@@ -28,6 +39,7 @@ a:active {
      background: rgba(0, 0, 0, 0.7);
      border-radius: 5px;
      display: inline-block;
+     margin: 0px 0 40px;
 }
 
 .btnGo, .btnGo:hover, .btnGo:focus {
@@ -67,7 +79,7 @@ a:active {
 }
 
 .fillerxs {
-     height: 90px;
+     height: 70px;
 }
 
 .thumbnail {
@@ -104,7 +116,7 @@ a:active {
 
 .foodTitle {
      line-height: 24px;
-     font-size: 22px;
+     font-size: 18px;
 }
 
 .foodPrice{
@@ -151,7 +163,7 @@ a:active {
 
 .atcButton {
      border-top: 1px solid #E1EEF5;
-     padding-top: 10px;
+     padding: 10px 0px 0px;
 }
 
 .showhideBtn {
@@ -165,7 +177,8 @@ a:active {
 
 .distanceInfoText {
      color: #CCC;
-     float: right;
+	 display: block;
+     font-size: 13px;
 }
 
 .feedbackQL {
@@ -174,7 +187,7 @@ a:active {
 }
 
 .feedbackInput {
-     width: 600px;
+     width: 300px;
      display: inline;
      margin: 10px 0px;
 }
@@ -192,10 +205,11 @@ a:active {
      height: 400px;
 }
 
-@media ( min-width :768px) {
-     .navbar-nav {
-          padding-left: 35%;
-     }
+.navHolder {
+     width: 440px;
+     height: 40px;
+     float: none;
+     margin: 0px auto;
 }
 
 .navbar {
@@ -402,14 +416,32 @@ a:active {
 }
 
 #footer {
-padding-left: 5px;
-padding-right: 5px;
-color: #FFF;
-width: 100%;
-text-align: center;
-background-color: #4D82B6;	
-font-size: 11px;
-text-align: center;
-position : fixed;
-bottom : 0;
+     padding: 5px;
+     color: #666666;
+     font-size: 12px;
+     bottom: 0px;
+     position:absolute;
+     height: 44px;
+}
+
+#footer>div>a {
+     color: #F04E00 !important;
+     text-shadow: none;
+}
+
+textarea {
+     resize: none;
+}
+
+.cuElem {
+     margin: 0px !important;
+}
+
+.borderFooter {
+     border-top: 1px solid #DDDDDD;
+}
+
+.thumbnail>a>img {
+     width: 245px;
+     height: 183px;
 }

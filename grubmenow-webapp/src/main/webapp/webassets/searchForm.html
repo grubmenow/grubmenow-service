@@ -33,13 +33,14 @@
     <div id="foodFinderMsg"></div>
     <h3 ng-show="badRadius || badZipcode || badDay" class="spacer">Please enter all the required fields</h3>
 	<h3 ng-show="searching" class="spacer">Finding delicious food within {{master.radius}} miles of {{master.zipCode}} ...</h3>
+    <h3 ng-show="noResults" class="spacer">Sorry, no chefs found near your location. </h3>
 	<div ng-show="searching" class="spinner"></div>
     <div class="container spacer" id="searchResults">
         <div class="row">
             <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food" id="searchResults">
                 <div class="thumbnail">
                     <a href="#/chefs?id={{foodItem.foodItemId}}&availableDay={{master.availableDay}}&radius={{master.radius}}&zipCode={{master.zipCode}}">
-                    <img src="{{foodItem.foodItemImageUrl}}" alt="{{foodItem.foodItemName}}">
+                    <img class="foodImg" src="{{foodItem.foodItemImageUrl}}" alt="{{foodItem.foodItemName}}">
                     <div class="caption">
                         <h4>{{foodItem.foodItemName}}</h4>
                         <p>{{foodItem.foodItemDescription}}</p>
@@ -68,10 +69,11 @@
 
             </div>
             <div ng-show="showFoodItemSuggestionForm" id="searchSuggestionForm" class="navLineBtn feedbackQL">
-                <span>Please leave us some comments about your search <br> Your comments will help make our site better for everyone.
+                <span>Please leave us some comments about your search. <br> Your comments will help make our site better for everyone.
                 </span>
                 <div class="clearfix"></div>
-                <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.newItems" placeholder="Food items you are looking for"></input> <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.emailId" placeholder="Your Email Id"></input>
+                <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.newItems" placeholder="Food items you are looking for"></input> 
+                <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.emailId" placeholder="Your Email Id"></input>
                 <div class="clearfix"></div>
                 <button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary btnGo">Submit</button>
                 <button ng-click="cancelFeedbackForms()" class="btn btn-secondary btnGo">Cancel</button>

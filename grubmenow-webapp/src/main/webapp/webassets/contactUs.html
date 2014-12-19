@@ -2,20 +2,21 @@
 <div class="food-finder text-center" ng-controller="contactUsController">
     <div class="col-xs-12 text-center container" >
         <div ng-show="showFeedbackForm" class="navLineBtn feedbackQL">
-            <span>Please contact us regarding any problems or feedback</span>
+            <h4>Please contact us regarding any problems or feedback</h4>
         </div>
         <div ng-show="showFeedbackForm" class="formBox">
         <form class="form-inline" role="form" novalidate>
             <div class="form-group">
-                <input type="text" class="form-control formElem" id="inputEmailId" placeholder="Enter your Email" ng-model="feedback.emailId" maxlength="64"></input>
+                <input type="text" class="form-control formElem cuElem" id="inputEmailId" placeholder="Enter your Email" ng-model="feedback.emailId" maxlength="64"></input>
             </div>
             <div class="form-group">
-                <input type="text" class="form-control formElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="feedback.zipCode" maxlength="5"></input>
+                <input type="text" class="form-control formElem cuElem" id="inputZipcode" placeholder="Enter your zipcode" ng-model="feedback.zipCode" maxlength="5"></input>
             </div>
         </form>
+        <p/>
         <form class="form" role="form" novalidate>
             <div class="form-group">
-                <textarea class="form-control formElem" ng-model="feedback.generalFeedback" placeholder="Your Message"></textarea>
+                <textarea class="form-control formElem cuMessage" ng-model="feedback.generalFeedback" placeholder="Your Message"></textarea>
             </div>
             <button ng-click="submitContact()" class="btn btnGo">Submit</button>
         </form>

@@ -33,6 +33,7 @@ import com.grubmenow.service.datamodel.OrderState;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
 import com.grubmenow.service.model.Amount;
+import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
@@ -50,8 +51,6 @@ import com.grubmenow.service.persist.PersistenceFactory;
 public class PlaceOrderService  extends AbstractRemoteService {
 
 	private static float TAX_PERCENTAGE = 0.095f;
-	
-	private static int ORDER_CUT_OFF_HOUR = 16;
 	
 	@RequestMapping(value = "/api/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
@@ -377,7 +376,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			
 			FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById(orderItem.getFoodItemOfferId());
 			
-			validateFoodOffer(foodItemOfferDAO);
+			validateFoodOffer(foodItemOfferDAO, request.getTimezoneOffsetMins());
 			
 			if (orderFulfilmentDate == null)
 			{
@@ -447,17 +446,32 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		Validator.isTrue(providerDAO.getProviderState() == ProviderState.ACTIVE, "Provider state is not Active");
 	}
 	
-	private void validateFoodOffer (FoodItemOfferDAO foodItemOfferDAO) {
+	private void validateFoodOffer (FoodItemOfferDAO foodItemOfferDAO, int requestTimezoneOffsetMins) {
 		// check if offer is a valid offer
 		Validator.isTrue(foodItemOfferDAO.getOfferState() == OfferState.ACTIVE, "Offer state is not Active");
 
 		// if meal type is dinner and it is for today
-		if(foodItemOfferDAO.getOfferMealType() == OfferMealType.DINNER && foodItemOfferDAO.getOfferDay().getDayOfYear() == DateTime.now().getDayOfYear() && foodItemOfferDAO.getOfferDay().getDayOfYear() == DateTime.now().getDayOfYear()) {
-			Validator.validateNowBeforeCutOff(ORDER_CUT_OFF_HOUR, "Order cannot be placed as it is after cut-off time.");
+		if(foodItemOfferDAO.getOfferMealType() == OfferMealType.DINNER)
+		{
+		    DateTime foodItemOfferCutOffTimeWrtClient = calculateFoodItemOfferCutoffTimeWrtClient(foodItemOfferDAO.getOfferDay());
+		    DateTime clientCurrentTime = TimezoneUtils.getCurrentTimeWrtClient(requestTimezoneOffsetMins);
+		    if (clientCurrentTime.isAfter(foodItemOfferCutOffTimeWrtClient))
+		    {
+		        throw new ValidationException("Order cannot be placed as it is after cut-off time.");
+		    }
 		}
 	}
 
-	private void validateInput(PlaceOrderRequest request) {
+    private DateTime calculateFoodItemOfferCutoffTimeWrtClient(DateTime offerDay)
+    {
+	    // offerDay saved in DB is in client's timezone's day itself. We should 
+	    // save the exact time in DB in UTC to be consistent
+	    DateTime orderCutoffTimeWrtClient = offerDay.withTimeAtStartOfDay();
+	    orderCutoffTimeWrtClient = orderCutoffTimeWrtClient.plusHours(TimezoneUtils.DINNER_ORDER_CUT_OFF_HOUR);
+	    return orderCutoffTimeWrtClient;
+    }
+
+    private void validateInput(PlaceOrderRequest request) {
 		Validator.notBlank(request.getProviderId(), "Invalid Provider Id");
 		Validator.notPositiveAmount(request.getOrderAmount(), "Invalid Order Amount");
 		Validator.notNull(request.getPaymentMethod(), "Invalid Payment Method");
@@ -475,8 +489,18 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		
 		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(request.getProviderId());
 		validateProvider(providerDAO);
+
+		// make sure that the order request time is before the cutoff time for that day
+		Validator.notNull(request.getOrderAvailabilityDay(), "Order Availability day cannot be null");
+		DateTime orderCutoffTimeWrtClient = TimezoneUtils.calculateOrderCutOffTimeWrtClient(request.getOrderAvailabilityDay(), 
+		        request.getTimezoneOffsetMins());
+		DateTime currentTimeWrtClient = TimezoneUtils.getCurrentTimeWrtClient(request.getTimezoneOffsetMins());
+		if (currentTimeWrtClient.isAfter(orderCutoffTimeWrtClient))
+		{
+		    throw new ValidationException("Order cannot be placed as it is after cut-off time.");
+		}
 	}
-	
+
 	/**
 	 * An object that carries the order and related state and objects from one method to another. 
 	 * This is also used to avoid multiple redundant calls to db. 

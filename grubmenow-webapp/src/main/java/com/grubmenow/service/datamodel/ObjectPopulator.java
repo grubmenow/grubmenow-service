@@ -118,9 +118,19 @@ public class ObjectPopulator {
 		
 		foodItemOffer.setAvailableDay(availableDay);
 		foodItemOffer.setMealType(MealType.valueOf(foodItemOfferDAO.getOfferMealType().name()));
-		foodItemOffer.setOfferTags(StringUtils.split(StringUtils.trimToEmpty(foodItemOfferDAO.getOfferDescriptionTags()), ','));
+		
+		String[] tags = StringUtils.split(StringUtils.trimToEmpty(foodItemOfferDAO.getOfferDescriptionTags()), ',');
+		foodItemOffer.setOfferTags(formatTags(tags));
 		
 		return foodItemOffer;
+	}
+	
+	private static String[] formatTags(String[] tags) {
+		for(int i=0;i<tags.length;i++) {
+			tags[i] = StringUtils.trimToEmpty(tags[i]);
+		}
+		
+		return tags;
 	}
 	
 	public static String readableDay (DateTime dateTime) {
