@@ -87,7 +87,7 @@
                         </div>
                         <div class="col-xs-4 foodItemOfferLayout">
                         	<span style="float: right">
-	                            <select style="display: inline; float:right" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty">
+	                            <select style="display: inline; float:right;" class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty">
 	                            	<option ng-show="{{i}} <= rest.foodItemOffer.availableQuantity" data-ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]" value={{i}}>{{i}}</option>
 	                            </select>
 	                            <br/>
@@ -102,7 +102,7 @@
 						-->
 						
                         <div class="clearfix"></div>
-                        <p />
+                        <p />	
                         
                         <div class="col-xs-12 text-left">
                             <button type="button" id="showMore{{$index}}" ng-show="!showRestMenu[rest.provider.providerId]" class="btn btn-link showhideBtn optionsText" ng-click="showMenu(rest.provider.providerId)">
@@ -113,7 +113,7 @@
                             </button>
                         </div>
 
-                        <div class="col-xs-8" ng-show="showRestMenu[rest.provider.providerId] && restMenu[rest.provider.providerId].providerFoodItemOffers.length != 0">
+                        <div class="col-xs-8" ng-show="showRestMenu[rest.provider.providerId] && restMenu[rest.provider.providerId].providerFoodItemOffers.length == 0">
                        	 	<span style="font-size: 12px; font-style: italic;">Sorry, no other offering from <b>'{{rest.provider.providerName}}'</b> at this time.</span> 
                         </div>
                         
@@ -125,15 +125,14 @@
                             </div>
                                 
                             <div class="col-xs-2 foodItemOfferLayout">
-                            	<span class="foodTitle">${{restMenuItem.foodItemOffer.price.value / 100 | number:2}}</span>
+                            	<span class="foodPrice">${{restMenuItem.foodItemOffer.price.value / 100 | number:2}}</span>
                             </div>
 
                             <div class="col-xs-4 foodItemOfferLayout">
-                            	<span class="foodTitle" style="color: gray; font-weight: bold;"> &nbsp&nbsp&nbsp x &nbsp&nbsp&nbsp </span>
-                                <select style="display: inline;" class="form-control qtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.foodItem.foodItemQty">
+                                <select style="display: inline; float:right;" class="form-control qtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.foodItem.foodItemQty">
                                 	<option ng-show="{{i}} <= restMenuItem.foodItemOffer.availableQuantity" data-ng-repeat="i in [0,1,2,3,4,5,6,7,8,9,10]" value={{i}}>{{i}}</option>
                                 </select>
-                                <span ng-if="restMenuItem.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px">Hurry, {{restMenuItem.foodItemOffer.availableQuantity}} items left !</span>
+                                <span ng-if="restMenuItem.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px; display: block;  float: right;">Hurry, {{restMenuItem.foodItemOffer.availableQuantity}} items left !</span>
                             </div>
                             
                             <div class="clearfix"></div>
