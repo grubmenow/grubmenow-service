@@ -2,6 +2,7 @@ html, body{
 	margin:0;
 	padding:0;
 	height:100%;
+	min-height:620px;
 }
 
 .docMain {
@@ -115,7 +116,7 @@ a:active {
 
 .foodTitle {
      line-height: 24px;
-     font-size: 22px;
+     font-size: 18px;
 }
 
 .foodPrice{
@@ -162,7 +163,7 @@ a:active {
 
 .atcButton {
      border-top: 1px solid #E1EEF5;
-     padding-top: 10px;
+     padding: 10px 0px 0px;
 }
 
 .showhideBtn {
@@ -177,6 +178,7 @@ a:active {
 .distanceInfoText {
      color: #CCC;
      float: right;
+     font-size: 13px;
 }
 
 .feedbackQL {
@@ -431,8 +433,8 @@ textarea {
      resize: none;
 }
 
-.cuMessage {
-     width: 404px;
+.cuElem {
+     margin: 0px !important;
 }
 
 .borderFooter {
