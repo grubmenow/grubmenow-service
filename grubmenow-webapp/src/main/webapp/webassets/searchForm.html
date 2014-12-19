@@ -33,9 +33,9 @@
     <div id="foodFinderMsg"></div>
     <h3 ng-show="badRadius || badZipcode || badDay" class="spacer">Please enter all the required fields</h3>
 	<h3 ng-show="searching" class="spacer">Finding delicious food within {{master.radius}} miles of {{master.zipCode}} ...</h3>
-    <h3 ng-show="noResults" class="spacer">Sorry, no chefs found near your location. </h3>
+    <h4 ng-show="noResults" class="spacer">Sorry, no chefs found near zip code {{master.zipCode}}</h4>
 	<div ng-show="searching" class="spinner"></div>
-    <div class="container spacer" id="searchResults">
+    <div class="container spacer" id="searchResults" ng-hide="searchedOnce && noResults">
         <div class="row">
             <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food" id="searchResults">
                 <div class="thumbnail">
@@ -51,15 +51,15 @@
     	</div>
     </div>
     
-    <div class="container spacer" id="feedbackFormContainer">
-	    <div ng-show="searchedOnce" class="text-center">
-	    	<div class="navLineBtn feedbackQL">
+	    <div ng-show="searchedOnce" class="text-center container spacer" id="feedbackFormContainer">
+	        <div ng-show="submittingFeedback" class="spinner"></div>
+	        <div class="navLineBtn feedbackQL" ng-hide="noResults || showThankYouMessage">
 			     <span>Did you find what you were looking for?</span>
                  <button ng-click="openFeedbackForm(1)" class="btn btnGo">Yes</button>
                 <button ng-click="openFeedbackForm(0)" class="btn btnGo">No</button>
             </div>
 			
-			<div ng-show="showFeedbackForm" id="generalFeedbackForm" class="navLineBtn feedbackQL">
+			<div ng-show="showFeedbackForm && !noResults" id="generalFeedbackForm" class="navLineBtn feedbackQL">
 			    <span>Please leave us some comments about your search <br> Your comments will help make our site better for everyone.</span>
                 <div class="clearfix"></div>
                 <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.generalFeedback" placeholder="Your feedback"></input>
@@ -68,7 +68,7 @@
                 <button ng-click="cancelFeedbackForms()" class="btn btn-secondary btnGo">Cancel</button>
 
             </div>
-            <div ng-show="showFoodItemSuggestionForm" id="searchSuggestionForm" class="navLineBtn feedbackQL">
+            <div ng-show="showFoodItemSuggestionForm || noResults" id="searchSuggestionForm" class="navLineBtn feedbackQL">
                 <span>Please leave us some comments about your search. <br> Your comments will help make our site better for everyone.
                 </span>
                 <div class="clearfix"></div>
@@ -76,12 +76,11 @@
                 <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.emailId" placeholder="Your Email Id"></input>
                 <div class="clearfix"></div>
                 <button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary btnGo">Submit</button>
-                <button ng-click="cancelFeedbackForms()" class="btn btn-secondary btnGo">Cancel</button>
+                <button ng-hide="noResults" ng-click="cancelFeedbackForms()" class="btn btn-secondary btnGo">Cancel</button>
             </div>
             <div ng-show="showThankYouMessage" class="navLineBtn feedbackQL" id="thankYouMessage">
-				Thank you for your feedback!
+				<h4 class="spacer">Thank you for your feedback!</h4>
 			</div>
 		</div>
-	</div>
 </div>
  

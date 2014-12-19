@@ -28,7 +28,7 @@ angular.module('gmnControllers').controller('contactUsController', function ($sc
     			feedbackType: "CONTACT",
     			feedbackMessage: $scope.feedback.generalFeedback, 
     			emailId: $scope.feedback.emailId,
-    			zipcode: $scope.feedback.zipCode};
+                zipCode: $scope.feedback.zipCode};
     	$http.post("api/submitGeneralFeedback", JSON.stringify(request))
     		.success(function(data) {
 	        	$scope.showFeedbackForm = 0;

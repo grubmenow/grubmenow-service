@@ -35,7 +35,19 @@ public class SearchFoodItemService extends AbstractRemoteService {
 		    log.info("No neighboring zip codes found around ["+request.getZipCode()+"] in ["+request.getRadius()+"]");
 		    log.info("Returning empty food items");
 		    return foodItems;
-		}
+        }
+
+        // check if the request is after the order cut off time of that day, if
+        // so: return empty results
+        DateTime orderCutoffTimeWrtClient = TimezoneUtils.calculateOrderCutOffTimeWrtClient(request.getAvailableDay(), request.getTimezoneOffsetMins());
+        DateTime currentTimeWrtClient = TimezoneUtils.getCurrentTimeWrtClient(request.getTimezoneOffsetMins());
+        if (currentTimeWrtClient.isAfter(orderCutoffTimeWrtClient))
+        {
+            log.info("Current Time on client [" + currentTimeWrtClient + "] exceeds the order cut off time [ " + orderCutoffTimeWrtClient
+                    + " ], returning empty results");
+            return foodItems;
+        }
+
 		// get all the distinct food items in the related zip code
 		List<FoodItemDAO> foodItemsAround = getAllFoodItemsInZipCodes(neighboringZipCodes, request.getAvailableDay(), 
 		        request.getTimezoneOffsetMins());

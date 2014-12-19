@@ -59,6 +59,8 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
             request.availableDay = $scope.master.availableDay;
             var d = new Date()
             request.timezoneOffsetMins = d.getTimezoneOffset();
+
+            $scope.resetAllFormStates();
             $http.post("api/searchFoodItems", JSON.stringify(request)).success(function(data) {
                 $scope.master.food = data;
                 if(!data || data.length == 0) $scope.noResults = 1;
@@ -68,7 +70,6 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
                     scrollTop: $("#searchResults").offset().top
                 }, $scope.animationTime);
             });
-            console.log('test');
         }
     };
 
@@ -81,19 +82,25 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     };
 
 
-    $scope.submitFeedbackForm = function()
-    {
-    	request = {
-    		feedbackType: "SEARCH_GENERAL_FEEDBACK",
-    		feedbackMessage: $scope.feedback.generalFeedback,
-    		zipCode: $scope.location.zipCode, 
-    		emailId: $scope.feedback.emailId};
-    	$http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data) {
-    		$scope.showFoodItemSuggestionForm = 0;
-        	$scope.showFeedbackForm = 0;
-    		$scope.showThankYouMessage = 1;
-    	})
-    };
+	$scope.submitFeedbackForm = function() {
+		request = {
+			feedbackType : "SEARCH_GENERAL_FEEDBACK",
+			feedbackMessage : $scope.feedback.generalFeedback,
+			zipCode : $scope.location.zipCode,
+			emailId : $scope.feedback.emailId
+		};
+		$scope.submittingFeedback = 1;
+		$http.post("api/submitGeneralFeedback",
+				JSON.stringify(request)).success(
+				function(data) {
+					$scope.submittingFeedback = 0;
+					$scope.showFoodItemSuggestionForm = 0;
+					$scope.showFeedbackForm = 0;
+					$scope.showThankYouMessage = 1;
+				}).error(function(data) {
+			$scope.submittingFeedback = 0;
+		})
+	};
     
     $scope.cancelFeedbackForms = function()
     {
@@ -101,14 +108,32 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $scope.showFeedbackForm = 0;
     }
 
+	$scope.resetAllFormStates = function() {
+		$scope.showThankYouMessage = 0;
+		$scope.feedback = {
+			generalFeedback : '',
+			newItems : '',
+			emailId : ""
+		};
+		$scope.showFeedbackForm = 0;
+		$scope.showFoodItemSuggestionForm = 0;
+		$scope.submittingFeedback = 0;
+	}
+
     $scope.submitFoodItemSuggestionForm = function()
     {
         request = {foodItemSuggestions: $scope.feedback.newItems, zipCode: $scope.location.zipCode, emailId: $scope.feedback.emailId};
+        $scope.submittingFeedback = 1;
         $http.post("api/submitFoodItemSuggestions", JSON.stringify(request)).success(function(data) {
+            $scope.submittingFeedback = 0;
             $scope.showFoodItemSuggestionForm = 0;
             $scope.showFeedbackForm = 0;
+            $scope.noResults = 0; // forget the search information since the user has taken an action over it. 
             $scope.showThankYouMessage = 1;
         })
+        .error(function(data) {
+			$scope.submittingFeedback = 0;
+		})
     };
 
     //Update the Nav state
@@ -139,12 +164,8 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         
         $scope.searching = 0;
     }
-    
-    $scope.showThankYouMessage = 0;
-    $scope.feedback = {generalFeedback: '', newItems: '', emailId: ""};
-    $scope.showFeedbackForm = 0;
-    $scope.showFoodItemSuggestionForm = 0;
-    $scope.animationTime = 1000;
+    $scope.resetAllFormStates();
+    $scope.animationTime = 500;
 });
 
 angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, $http, $location) {

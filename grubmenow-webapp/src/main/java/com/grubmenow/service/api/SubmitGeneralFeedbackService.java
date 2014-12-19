@@ -28,7 +28,7 @@ public class SubmitGeneralFeedbackService extends AbstractRemoteService
 	    generalFeedbackDAO.setEmailId(request.getEmailId());
 	    generalFeedbackDAO.setFeedbackProvidedTime(new DateTime());
 	    generalFeedbackDAO.setMessage(request.getFeedbackMessage());
-	    generalFeedbackDAO.setZipCode(request.getZipcode());
+	    generalFeedbackDAO.setZipCode(request.getZipCode());
 	    PersistenceFactory.getInstance().createGeneralFeedback(generalFeedbackDAO);
 	    log.debug("Feedback request submitted. Type = ["+ request.getFeedbackType() 
 	        +"], message = [" + request.getFeedbackMessage()+"]");
