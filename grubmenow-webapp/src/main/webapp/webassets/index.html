@@ -30,54 +30,61 @@
 
 </head>
 <body>
-    <div class="clearfix"></div>
-    <div class="col-xs-12 text-center">
-        <a href="#home"><img src="logo.png" class="logoImage" /></a>
+    <div class="docMain">
+    <div class="bodyMain">
+        <div class="clearfix"></div>
+        <div class="col-xs-12 text-center">
+            <a href="#home"><img src="logo.png" class="logoImage" /></a>
+        </div>
+        <div class="clearfix"></div>
+        <div class="text-center" id="gmnNavBar">
+            <nav role="navigation" class="navbar navbar-default">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+                        <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <!-- Collection of nav links and other content for toggling -->
+                <div id="navbarCollapse" class="collapse navbar-collapse">
+                <div class="navHolder">
+                    <ul id="gmnNav" class="nav navbar-nav">
+                        <li id="homeNav"><a href="#home">HOME</a></li>
+                        <li id="hiwNav"><a href="#howitworks">HOW IT WORKS?</a></li>
+                        <li id="faqNav"><a href="#faq">FAQ</a></li>
+                        <li id="cuNav"><a href="#contactus">CONTACT US</a></li>
+                    </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div ng-view></div>
     </div>
-    <div class="clearfix"></div>
-    <div class="text-center" id="gmnNavBar">
-        <nav role="navigation" class="navbar navbar-default">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" data-target="#navbarCollapse"
-                    data-toggle="collapse" class="navbar-toggle">
-                    <span class="icon-bar"></span> <span
-                        class="icon-bar"></span> <span class="icon-bar"></span>
-                </button>
-            </div>
-            <!-- Collection of nav links and other content for toggling -->
-            <div id="navbarCollapse" class="collapse navbar-collapse">
-                <ul id="gmnNav" class="nav navbar-nav">
-                    <li id="homeNav"><a href="#home">HOME</a></li>
-                    <li id="hiwNav"><a href="#howitworks">HOW IT WORKS?</a></li>
-                    <li id="faqNav"><a href="#faq">FAQ</a></li>
-                    <li id="cuNav"><a href="#contactus">CONTACT US</a></li>
-                </ul>
-            </div>
-        </nav>
+    <!--Google Analytics tracking code start-->
+    <script>
+                    (function(i, s, o, g, r, a, m) {
+                        i['GoogleAnalyticsObject'] = r;
+                        i[r] = i[r] || function() {
+                            (i[r].q = i[r].q || []).push(arguments)
+                        }, i[r].l = 1 * new Date();
+                        a = s.createElement(o),
+                                m = s.getElementsByTagName(o)[0];
+                        a.async = 1;
+                        a.src = g;
+                        m.parentNode.insertBefore(a, m)
+                    })(window, document, 'script',
+                            '//www.google-analytics.com/analytics.js', 'ga');
+
+                    ga('create', 'UA-55902424-1', 'auto');
+                    ga('send', 'pageview');
+                </script>
+    <!--Google Analytics tracking code end-->
+    <div id="footer" class="col-xs-12">
+        <div class="col-xs-12 text-center borderFooter">
+            <a href="privacy.html" target="_blank">Privacy Policy</a> &nbsp; | &nbsp; <a href="terms.html" target="_blank">Terms of Use</a>
+        </div>
+        <div class="col-xs-12 text-center">&copy Grubmenow 2014</div>
     </div>
-    <div ng-view></div>
-
-<!--Google Analytics tracking code start-->
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-55902424-1', 'auto');
-  ga('send', 'pageview');
-</script>
-<!--Google Analytics tracking code end-->
-<div id="footer">
-  <span style="float: left">
-  	<a href="privacy.html" style="color: #FFF;"  target="_blank">Privacy Policy</a>&nbsp; | &nbsp;<a style="color: #FFF;" href="terms.html" target="_blank">Terms of Use</a>&nbsp; &nbsp;
-  </span>
-  
-  <span style="float: right;">
-  	&copy Grubmenow 2014
-  </span>
-  
-</div>
+    </div>
 </body>
 </html>

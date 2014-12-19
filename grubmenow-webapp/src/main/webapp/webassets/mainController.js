@@ -47,6 +47,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $scope.validateForm(); 
         if($scope.location.zipCode && $scope.location.radius != 0 && $scope.location.availableDay != 0) {
             delete $scope.master['food'];
+            $scope.noResults = 0;
             $scope.searching = 1;
             $('html, body').animate({
                 scrollTop: $("#foodFinderMsg").offset().top
@@ -60,6 +61,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
             request.timezoneOffsetMins = d.getTimezoneOffset();
             $http.post("api/searchFoodItems", JSON.stringify(request)).success(function(data) {
                 $scope.master.food = data;
+                if(!data || data.length == 0) $scope.noResults = 1;
                 $scope.searching = 0;
                 $scope.searchedOnce = 1;
                 $('html, body').animate({
