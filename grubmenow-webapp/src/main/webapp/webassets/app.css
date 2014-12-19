@@ -168,6 +168,7 @@ a:active {
 
 .showhideBtn {
      margin-left: -14px;
+     padding-left: 0px !important;
 }
 
 .optionsText {
@@ -207,8 +208,6 @@ a:active {
 
 .navHolder {
      width: 440px;
-     height: 40px;
-     float: none;
      margin: 0px auto;
 }
 
