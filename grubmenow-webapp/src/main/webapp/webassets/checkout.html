@@ -3,35 +3,42 @@
     <div ng-show="!fbLoaded" class="spinner"></div>
     <div ng-show="fbLoaded" class="container">
         <div class="col-md-2"></div>
-        <div class="col-md-8 col-sm-8 ">
-            <div class="checkoutTitle text-center" ng-show="FB.name"><h4>Welcome {{FB.name}}</h4></div>
+        <div class="col-md-8">
+            <div class="checkoutTitle text-center" ng-show="FB.name"><h4 class="coName">Welcome {{FB.name}}</h4></div>
             <div class="checkoutTitle">Your order details:</div>
             <div class="orderDetails">
-                <div class="orderDetailsHeader">
-                    <div class="col-xs-7 checkoutHeader">Item</div>
-                    <div class="col-xs-2 checkoutHeader">Quantity</div>
-                    <div class="col-xs-3 checkoutHeader">Price</div>
+                <div>
+                    <div class="col-xs-6 checkoutItem checkoutHeader">
+                        Item
+                    </div>
+                    <div class="col-xs-3 checkoutItem checkoutHeader text-right">
+                        Quantity
+                    </div>
+                    <div class="col-xs-3 checkoutItem checkoutHeader text-right">
+                        Price
+                    </div>
                 </div>
                 <div ng-repeat="order in finalOrder.items">
-                    <div class="col-xs-7 checkoutItem truncateText">{{order.orderName}}</div>
-                    <div class="col-xs-2 text-right checkoutItem">{{order.orderQty}}</div>
+                    <div class="col-xs-6 checkoutItem">{{order.orderName}}</div>
+                    <div class="col-xs-3 text-right checkoutItem">{{order.orderQty}}</div>
                     <div class="col-xs-3 text-right checkoutItem">${{order.orderPrice/100 | number:2 }}</div>
+                    <div class="clearfix"></div>
                 </div>
             </div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Taxes: </div><div class=" checkoutText noBold">${{finalOrder.tax/100 | number:2 }}</div>
+            <div class="checkoutText col-sm-4">Taxes: </div><div class="col-sm-8 checkoutText bold">${{finalOrder.tax/100 | number:2 }}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Order Total: </div><div class="checkoutText noBold">${{finalOrder.totalPrice/100 | number:2 }}</div>
+            <div class="checkoutText col-sm-4">Order Total: </div><div class=" col-sm-8 checkoutText bold">${{finalOrder.totalPrice/100 | number:2 }}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText ">Pick up date and time: </div><div class="checkoutText bold">{{finalOrder.pickupTime}}</div>
+            <div class="checkoutText col-sm-4">Pick up date and time: </div><div class="col-sm-8 checkoutText bold">{{finalOrder.pickupTime}}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Pick up address: </div>
-                <div class="checkoutText bold" ng-show="!FB.notRecognized">{{finalOrder.restLocation}}</div>
-                <div class="checkoutText bold" ng-show="FB.notRecognized">Will be displayed after you Log In</div>
+            <div class="checkoutText col-sm-4">Pick up address: </div>
+                <div class="col-sm-8 checkoutText bold" ng-show="!FB.notRecognized">{{finalOrder.restLocation}}</div>
+                <div class="col-sm-8 checkoutText bold" ng-show="FB.notRecognized">Will be displayed after you Log In</div>
             <div class="clearfix"></div>
             <div ng-show="!FB.notRecognized && finalOrder.chefPhone != null">
-                <div class="checkoutText">Chef Phone: </div>
-                <div class="checkoutText bold" >{{finalOrder.chefPhone}}</div>
+                <div class="checkoutText col-sm-4">Chef's Phone: </div>
+                <div class="col-sm-8 checkoutText bold" >{{finalOrder.chefPhone}}</div>
             </div>
             <div class="clearfix"></div>
             <p />
@@ -40,24 +47,33 @@
                     
                     <div class="checkoutTitle">Please enter your contact information below:</div>
                     <div class="coFormElem">
-                        <span class="coFormLabels">Name</span> <input type="text" class="form-control checkoutFormElem" id="coName" ng-model=customer.customerName>
+                        <div class="col-sm-4">Name</div>
+                        <div class="col-sm-8"> 
+                            <input type="text" class="form-control checkoutFormElem" id="coName" ng-model=customer.customerName>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="coFormElem">
-                        <span class="coFormLabels">Email</span> <input type="email" class="form-control checkoutFormElem" id="coEmail" ng-model=customer.customerEmailId>
+                        <div class="col-sm-4">Email</div> 
+                        <div class="col-sm-8">
+                            <input type="email" class="form-control checkoutFormElem" id="coEmail" ng-model=customer.customerEmailId>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="coFormElem">
-                        <span class="coFormLabels">Phone (Optional)</span> <input type="text" class="form-control checkoutFormElem" id="coPhone" ng-model=customer.customerPhoneNumber>
+                        <div class="col-sm-4">Phone (Optional)</div>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control checkoutFormElem" id="coPhone" ng-model=customer.customerPhoneNumber>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="coSpacer"></div>
                     <div class="checkoutTitle">Please enter your payment information below:</div>
-                    <div class="coFormLabels">Payment method:</div>
-                    <div class="checkoutText noBold">
+                    <div class="col-sm-4">Payment method:</div>
+                    <div class="checkoutText col-sm-8">
                         <select class="form-control coPaymentSel" id="inputPayment" ng-model="payment.mode">
                             <option ng-selected="finalOrder.provider.cashOnDeliverPaymentAccepted == true" ng-disabled="finalOrder.provider.cashOnDeliverPaymentAccepted == false" value=cash>Cash on Pickup</option>
-                            <option ng-selected="finalOrder.provider.onlinePaymentAccepted == true" ng-disabled="finalOrder.provider.onlinePaymentAccepted == false" value=card>Credit Card</option>
+                          <!--  <option ng-selected="finalOrder.provider.onlinePaymentAccepted == true" ng-disabled="finalOrder.provider.onlinePaymentAccepted == false" value=card>Credit Card</option> -->
                         </select>
                     </div>
                     <div class="clearfix"></div>
@@ -145,4 +161,5 @@
             </div>
             
         </div>
+    </div>
     </div>

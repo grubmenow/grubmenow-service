@@ -217,6 +217,12 @@ a:active {
      margin: 0px auto;
 }
 
+@media ( max-width : 480px) {
+     .navHolder {
+          width: 100%;
+     }
+}
+
 .navbar {
      min-height: 42px
 }
@@ -257,8 +263,6 @@ a:active {
      color: #000000;
      font-size: 14px;
      line-height: 26px;
-     width: 320px;
-     float: left;
 }
 
 .checkoutTitle {
@@ -266,23 +270,25 @@ a:active {
      font-size: 14px;
      line-height: 26px;
      font-weight: bold;
+     padding: 6px 0px;
+     border-top: 1px solid #ddd;
 }
 
 .checkoutHeader {
-     color: #FFFFFF;
-     font-size: 14px;
+     text-decoration: underline;
      font-weight: bold;
-     line-height: 26px;
-     background-color: #0A549C;
-     border: 1px solid #0A549C;
 }
 
 .orderDetailsHeader {
      height: 30px;
 }
 
+.coName {
+     color:#F04E00;
+     padding: 0px 6px;  
+}
+
 .checkoutItem {
-     border: 1px solid #0A549C;
      padding-top: 3px;
      padding-bottom: 3px;
 }
@@ -290,6 +296,8 @@ a:active {
 .orderDetails {
      overflow: hidden;
      margin: 0px 0px 20px 0px;
+     border: 1px solid #999;
+     border-radius: 6px;
 }
 
 .checkoutFormElem {
@@ -297,11 +305,8 @@ a:active {
      font-weight: bold;
 }
 
-.coFormLabels {
-     float: left;
-     line-height: 34px;
-     width: 160px;
-     margin: 8px 0px 0px 0px;
+.coFormElem {
+     padding: 4px 0px;
 }
 
 .coFormLabelsDiv {
@@ -358,7 +363,7 @@ a:active {
 }
 
 .bold {
-    font-weight: bold;	
+    font-weight: bold;
 }
 
 .leftAlign {
