@@ -139,7 +139,7 @@ public class EmailSender
 
     public void sendGeneralFeedbackEmail(GeneralFeedbackEmailRequest request) throws EmailSendException
     {
-        String toAddress = "mustvicky@gmail.com";
+        String toAddress = "admin@grubmenow.com";
         try
         {
             // Construct an object to contain the recipient address.
