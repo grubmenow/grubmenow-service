@@ -49,6 +49,9 @@ Pick up address mentioned by you is:
 <br/>
 $Formatter.formatAddressFirstLine(${request.provider})<br/>
 $Formatter.formatAddressLastLine(${request.provider})
+#if (${request.provider.providerPhoneNumber})
+<br/>Phone: ${request.provider.providerPhoneNumber}
+#end
 </p>
 If you are unable to fulfil this order or need to update order, please call Grubmenow Customer Service at +1 206 883 6876 by 4PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
 Thank you,<br/> 

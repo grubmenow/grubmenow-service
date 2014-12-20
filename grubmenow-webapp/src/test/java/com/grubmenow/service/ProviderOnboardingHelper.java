@@ -81,7 +81,8 @@ public class ProviderOnboardingHelper {
 		int offerQuantity = 15;
 		String offerTags = "Spicy,North Indian,Gravy";
 		DateTime dateTime = DateTime.now();
-		dateTime = dateTime.withMonthOfYear(12).withDayOfMonth(19);
+		dateTime = dateTime.withMonthOfYear(12).withDayOfMonth(20)
+		        .withTimeAtStartOfDay();
 		
 		FoodItemOfferDAO foodItemOfferDAO = new FoodItemOfferDAO();
 		foodItemOfferDAO.setFoodItemOfferId(IDGenerator.generateFoodItemOfferId());

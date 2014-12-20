@@ -25,6 +25,9 @@
             <div class="clearfix"></div>
             <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{getCustomerOrderResponse.provider.providerAddress}}</div>
             <div class="clearfix"></div>
+                <div class="checkoutText" ng-show="getCustomerOrderResponse.provider.providerPhoneNumber != null">Chef Phone: </div>
+                <div class="checkoutText noBold" ng-show="getCustomerOrderResponse.provider.providerPhoneNumber  != null">{{getCustomerOrderResponse.provider.providerPhoneNumber}}</div>
+            <div class="clearfix"></div>
             <div class="checkoutText">Pick up date and time: </div><div class="checkoutText noBold">{{getCustomerOrderResponse.customerOrder.orderFulfilmentDate}}</div>
             <div class="clearfix"></div>
             <div class="orderDetails">

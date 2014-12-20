@@ -33,7 +33,7 @@
     <div id="foodFinderMsg"></div>
     <h3 ng-show="badRadius || badZipcode || badDay" class="spacer">Please enter all the required fields</h3>
 	<h3 ng-show="searching" class="spacer">Finding delicious food within {{master.radius}} miles of {{master.zipCode}} ...</h3>
-    <h4 ng-show="noResults" class="spacer">Sorry, no chefs found near zip code {{master.zipCode}}</h4>
+    <h4 ng-show="noResults" class="spacer">Sorry, no home cooked food found near zipcode {{master.zipCode}}</h4>
 	<div ng-show="searching" class="spinner"></div>
     <div class="container spacer" id="searchResults" ng-hide="searchedOnce && noResults">
         <div class="row">
