@@ -1,4 +1,4 @@
-var gmnControllers = angular.module('gmnControllers', []);
+var gmnControllers = angular.module('gmnControllers', ['ui.bootstrap']);
 
 var gmnGetQSP = function(scope) {
     var url = window.location.href;

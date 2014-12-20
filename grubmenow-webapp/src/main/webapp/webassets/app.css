@@ -450,3 +450,14 @@ textarea {
      width: 245px;
      height: 183px;
 }
+
+.sup {
+    vertical-align: super;
+    font-size: smaller;
+}
+
+.tooltip-inner {
+    max-width: 240px;
+    /* If max-width does not work, try using width instead */
+    width: 200px;
+}
