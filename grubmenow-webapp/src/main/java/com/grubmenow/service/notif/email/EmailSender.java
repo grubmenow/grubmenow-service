@@ -41,6 +41,7 @@ public class EmailSender
     private final VelocityEngine velocityEngine;
     private final Template customerOrderEmailTemplate;
 	private final Template providerOrderEmailTemplate;
+	private final Template generalFeedbackEmailTemplate;
     
     public EmailSender(String awsAccessKey, String awsSecretKey) throws Exception {
     	AWSCredentials creds = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
@@ -62,6 +63,7 @@ public class EmailSender
 		// initialize the various templates
 		customerOrderEmailTemplate = velocityEngine.getTemplate("email/OrderEmailForConsumer.vm");
 		providerOrderEmailTemplate = velocityEngine.getTemplate("email/OrderEmailForProvider.vm");
+		generalFeedbackEmailTemplate = velocityEngine.getTemplate("email/GeneralFeedbackForGBN.vm");
 	}
 
     public void sendConsumerOrderSuccessEmail(OrderSuccessEmailRequest request) throws EmailSendException {
@@ -135,6 +137,34 @@ public class EmailSender
         }
     }
 
+    public void sendGeneralFeedbackEmail(GeneralFeedbackEmailRequest request) throws EmailSendException
+    {
+        String toAddress = "mustvicky@gmail.com";
+        try
+        {
+            // Construct an object to contain the recipient address.
+            Destination destination = new Destination().withToAddresses(new String[] { toAddress });
+            
+            Content subject = new Content().withData("Feedback recieved, type: " + request.getFeedbackType());
+            Content htmlBody = new Content().withData(generateHtmlBodyForGeneralFeedbackEmail(request));
+            Body body = new Body().withHtml(htmlBody);
+            
+            // Create a message with the specified subject and body.
+            Message message = new Message().withSubject(subject).withBody(body);
+            
+            // Assemble the email.
+            SendEmailRequest sendEmailRequest = new SendEmailRequest().withSource(FROM).withDestination(destination).withMessage(message);
+            
+            log.debug("Attempting to send feedback email to ["+toAddress+"]");
+            sesClient.sendEmail(sendEmailRequest);
+            log.debug("Email sent!");
+        }
+        catch (Exception ex) 
+        {
+            String errMsg = "The email to email Id ["+toAddress+"] was not sent";
+            throw new EmailSendException(errMsg, ex);
+        }        
+    }
     
 	private String generateHtmlBodyForConsumerOrderSuccessEmail(OrderSuccessEmailRequest request) throws VelocityException, IOException {
 		
@@ -143,7 +173,6 @@ public class EmailSender
 		context.put("Formatter", Formatter.class);
 		StringWriter writer = new StringWriter();
         customerOrderEmailTemplate.merge(context, writer);
-        System.out.println(writer.toString());
         return writer.toString();
 	}
 	
@@ -154,9 +183,18 @@ public class EmailSender
 		context.put("Formatter", Formatter.class);
 		StringWriter writer = new StringWriter();
         providerOrderEmailTemplate.merge(context, writer);
-        System.out.println(writer.toString());
         return writer.toString();
 	}
+	
+	private String generateHtmlBodyForGeneralFeedbackEmail(GeneralFeedbackEmailRequest request) throws VelocityException, IOException {
+        
+        VelocityContext context = new VelocityContext();
+        context.put("request", request);
+        context.put("Formatter", Formatter.class);
+        StringWriter writer = new StringWriter();
+        generalFeedbackEmailTemplate.merge(context, writer);
+        return writer.toString();
+    }
 	
 	public static class Formatter
 	{

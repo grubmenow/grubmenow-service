@@ -1,0 +1,34 @@
+<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+table tr:nth-child(odd) {
+   background-color:#fff;
+}
+
+</style>
+</head>
+Hello <b>Grub Me Now</b>, 
+<br/>
+You received the following feedback from customer. 
+
+Feedback Type: ${request.feedbackType}
+<br/>
+Customer Email: ${request.customerEmailId}
+<br/>
+Time: $Formatter.formatDate(${request.feedbackProvidedTime})
+<br/>
+Message: ${request.message}
+<br/>
+Zipcode: ${request.zipCode}
+</html>

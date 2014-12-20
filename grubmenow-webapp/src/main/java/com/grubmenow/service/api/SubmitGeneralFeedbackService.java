@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grubmenow.service.auth.ServiceHandler;
 import com.grubmenow.service.datamodel.GeneralFeedbackDAO;
 import com.grubmenow.service.model.SubmitGeneralFeedbackRequest;
 import com.grubmenow.service.model.SubmitGeneralFeedbackResponse;
 import com.grubmenow.service.model.exception.ValidationException;
+import com.grubmenow.service.notif.email.EmailSendException;
+import com.grubmenow.service.notif.email.GeneralFeedbackEmailRequest;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
@@ -32,8 +35,29 @@ public class SubmitGeneralFeedbackService extends AbstractRemoteService
 	    PersistenceFactory.getInstance().createGeneralFeedback(generalFeedbackDAO);
 	    log.debug("Feedback request submitted. Type = ["+ request.getFeedbackType() 
 	        +"], message = [" + request.getFeedbackMessage()+"]");
+	    sendEmail(generalFeedbackDAO);
+	    
 		return new SubmitGeneralFeedbackResponse();
 	}
+
+    private void sendEmail(GeneralFeedbackDAO generalFeedbackDAO)
+    {
+        GeneralFeedbackEmailRequest generalFeedbackEmailRequest = GeneralFeedbackEmailRequest.builder()
+                .feedbackType(generalFeedbackDAO.getFeedbackType())
+                .customerEmailId(generalFeedbackDAO.getEmailId())
+                .feedbackProvidedTime(generalFeedbackDAO.getFeedbackProvidedTime())
+                .message(generalFeedbackDAO.getMessage())
+                .zipCode(generalFeedbackDAO.getZipCode())
+                .build();
+                
+        try
+        {
+            ServiceHandler.getInstance().getEmailSender().sendGeneralFeedbackEmail(generalFeedbackEmailRequest);
+        } catch (EmailSendException ex)
+        {
+            log.error("Failed sending best-effort feedback email", ex);
+        }
+    }
 
     private void validate(SubmitGeneralFeedbackRequest request)
     {
