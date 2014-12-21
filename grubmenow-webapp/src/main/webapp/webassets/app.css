@@ -109,7 +109,7 @@ a:active {
 }
 
 .qtyBox {
-     width: 50px;
+     width: 100%;
      margin-left: 5px;
      padding: 2px; 
 }
