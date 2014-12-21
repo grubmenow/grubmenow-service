@@ -14,7 +14,7 @@ gmnApp.config(['$routeProvider', function($routeProvider) {
 		controller: 'SearchFormCtrl'
 	}).
 	when('/chefs', {
-		templateUrl: 'restaurantChooser.html',
+		templateUrl: 'restaurantChooser-new.html',
 		controller: 'RestuarantCtrl'
 	}).
 	when('/checkout', {
