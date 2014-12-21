@@ -3,6 +3,8 @@ package com.grubmenow.service.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.apachecommons.CommonsLog;
+
 import org.joda.time.DateTime;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
+@CommonsLog
 public class GetProviderMenuService extends AbstractRemoteService {
 
 	@RequestMapping(value = "/api/getProviderMenu", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
@@ -54,6 +57,11 @@ public class GetProviderMenuService extends AbstractRemoteService {
 		}
 
 		for (FoodItemOfferDAO foodItemOfferDAO : allOffersFromProvider) {
+		    if (request.getExcludedFoodItem() != null && request.getExcludedFoodItem().equals(foodItemOfferDAO.getFoodItemId()))
+		    {
+		        log.debug("Food item matches the excluded food item: " + request.getExcludedFoodItem());
+		        continue;
+		    }
 			FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemOfferDAO.getFoodItemId());
 
 			ProviderFoodItemOffer providerFoodItemOffer = new ProviderFoodItemOffer();

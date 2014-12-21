@@ -269,13 +269,15 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         
     }   
     
-    $scope.showMenu = function(restId) {
+    $scope.showMenu = function(restId, excludedFoodItem) {
         if ($scope.restMenu[restId]) {
             $scope.showRestMenu[restId] = 1;
+            return;
         }
         var requestData = {"providerId": restId, "availableDay": $scope.availableDay};
         var date = new Date();
         requestData.timezoneOffsetMins = d.getTimezoneOffset();
+        requestData.excludedFoodItem = excludedFoodItem;
         var restListUrl = "api/getProviderMenu";
         $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
             $scope.restMenu[restId] = data;
