@@ -42,12 +42,12 @@
                 </div>
             </a>
             <div id="collapse{{$index}}" class="panel-collapse collapse" ng-class="{in:$index==0}">
-                <div class="panel-body">
-                    <div class="container tableCtr">
-						<div class="col-xs-3 col-md-3 foodItemOfferLayout thumbnail-small">
+                <div class="panel-body boxLimit">
+                    <div class="tableCtr">
+						<div class="col-xs-3 col-sm-2 col-md-1 foodItemOfferLayout thumbnail-small">
                               <img src="{{restList.foodItem.foodItemImageUrl}}"/>
                         </div>
-                        <div class="col-xs-7 col-md-7 foodItemOfferLayout">
+                        <div class="col-xs-6 col-sm-7 col-md-8  foodItemOfferLayout">
                             <div class="foodTitle">{{restList.foodItem.foodItemName}}</div>
                             <div class="foodDesc text-muted">{{restList.foodItem.foodItemDescription}}</div>
                             <div class="foodItemOfferDesc text-info">{{rest.foodItemOffer.offerDescription}}</div>
@@ -55,17 +55,17 @@
                             <span ng-repeat="tag in rest.foodItemOffer.offerTags" class="foodItemOfferTags">
                              	{{tag}}
                             </span>
-                            <div ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px;">
-                                Hurry, {{rest.foodItemOffer.availableQuantity}} items left !
-                            </div>
                         </div>
 
-                        <div class="col-xs-2 col-md-2 foodItemOfferLayout text-right">
+                        <div class="col-sm-3 col-md-3 foodItemOfferLayout text-right">
                             <span style="float: right"> 
                                 <select class="form-control qtyBox" id="primaryQty{{$index}}" ng-model="restList.foodItem.foodItemQty">
                                     <option ng-show="{{i}} <= rest.foodItemOffer.availableQuantity" data-ng-repeat="i in [1,2,3,4,5,6,7,8,9,10]" value={{i}}>{{i}}</option>
-                                </select> <br /> 
+                                </select> 
                             </span>
+                            <div ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px; clear: both">
+                                Hurry, {{rest.foodItemOffer.availableQuantity}} items left !
+                            </div>
                         </div>
 
                         <div class="clearfix"></div>

@@ -471,3 +471,17 @@ textarea {
     /* If max-width does not work, try using width instead */
     width: 200px;
 }
+
+.boxLimit {
+     padding: 10px !important;
+}
+
+.thumbnail-small {
+     padding: 5px;
+}
+
+.textWrap {
+     width: 100px;
+     float: left;
+     padding: 5px;
+}
