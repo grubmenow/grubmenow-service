@@ -232,7 +232,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         if ($scope.restMenu[restId]) {
             for(var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
                 var product = $scope.restMenu[restId].providerFoodItemOffers[j];
-                if (!isNaN(parseInt(product.foodItem.foodItemQty))) {
+                if (!isNaN(parseInt(product.foodItem.foodItemQty)) && parseInt(product.foodItem.foodItemQty) > 0) {
                     order.items[i] = {
                             "orderQty": product.foodItem.foodItemQty,
                             "orderName": product.foodItem.foodItemName,
@@ -296,6 +296,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         $scope.restList = data;
         $scope.foodItem = data.foodItem;
         $scope.restList.foodItem.foodItemQty = 1;
+        $('#primaryQty0').val(1);
         $scope.chefsLoaded = 1;
     });
     
