@@ -15,43 +15,41 @@
         <div ng-show="!orderLoaded" class="spinner"></div>
         <div ng-show="orderLoaded" class="panel-default">
 
-        <div class="col-md-8 col-sm-12">
+        <div class="panel-group">
             <div class="checkoutTitle">Order details</div>
-            <div class="checkoutText">Order Id: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.orderId}}</div>
-            <div class="checkoutText">Order date: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.orderCreationDate}}</div>
+            <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2">Order Id: </div><div class="checkoutText bold col-xs-7 col-sm-7 col-md-3 col-lg-3">{{getCustomerOrderResponse.customerOrder.orderId}}</div>
+            <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2">Order date: </div><div class="checkoutText bold col-xs-7 col-sm-7 col-md-3 col-lg-3">{{getCustomerOrderResponse.customerOrder.orderCreationDate}}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Order status: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.orderState}}</div>
-            <div class="checkoutText">Order delivery: </div><div class="checkoutText bold">{{getCustomerOrderResponse.customerOrder.deliveryMethod.replace("_", " ")}}</div>
+            <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2">Order status: </div><div class="checkoutText bold col-xs-7 col-sm-7 col-md-3 col-lg-3">{{getCustomerOrderResponse.customerOrder.orderState}}</div>
+            <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2">Order delivery: </div><div class="checkoutText bold col-xs-7 col-sm-8 col-md-3 col-lg-3">{{getCustomerOrderResponse.customerOrder.deliveryMethod.replace("_", " ")}}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Pick up address: </div><div class="checkoutText noBold">{{getCustomerOrderResponse.provider.providerAddress}}</div>
+            <div class="checkoutText col-xs-5 col-sm5 col-md-2 col-lg-2">Pick up address: </div><div class="checkoutText noBold col-xs-7 col-sm-7 col-md-3 col-lg-3">{{getCustomerOrderResponse.provider.providerAddress}}</div>
             <div class="clearfix"></div>
-                <div class="checkoutText" ng-show="getCustomerOrderResponse.provider.providerPhoneNumber != null">Chef Phone: </div>
-                <div class="checkoutText noBold" ng-show="getCustomerOrderResponse.provider.providerPhoneNumber  != null">{{getCustomerOrderResponse.provider.providerPhoneNumber}}</div>
+                <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2" ng-show="getCustomerOrderResponse.provider.providerPhoneNumber != null">Chef Phone: </div>
+                <div class="checkoutText noBold col-xs-7 col-sm-7 col-md-3 col-lg-3" ng-show="getCustomerOrderResponse.provider.providerPhoneNumber  != null">{{getCustomerOrderResponse.provider.providerPhoneNumber}}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Pick up date and time: </div><div class="checkoutText noBold">{{getCustomerOrderResponse.customerOrder.orderFulfilmentDate}}</div>
+            <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2">Pick up date: </div><div class="checkoutText noBold col-xs-7 col-sm-7 col-md-3 col-lg-3">{{getCustomerOrderResponse.customerOrder.orderFulfilmentDate}}, 6pm to 9pm</div>
             <div class="clearfix"></div>
-            <div class="orderDetails">
+            <div class="orderDetails col-xs-12 col-md-5 text-center">
                 <div class="orderDetailsHeader">
-                    <div class="col-xs-7 checkoutHeader">Item</div>
-                    <div class="col-xs-2 checkoutHeader">Quantity</div>
-                    <div class="col-xs-3 checkoutHeader">Price</div>
+                    <div class="col-xs-7 col-sm-7 col-md-2 col-lg-2 checkoutHeader">Item</div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 checkoutHeader">Quantity</div>
+                    <div class="col-xs-3 col-sm-3 col-md-1 col-lg-1 checkoutHeader">Price</div>
                 </div>
                 <div ng-repeat="orderItem in getCustomerOrderResponse.customerOrderItems">
-                    <div class="col-xs-7 checkoutItem truncateText">{{orderItem.foodItem.foodItemName}}</div>
-                    <div class="col-xs-2 checkoutItem">{{orderItem.quantity}}</div>
-                    <div class="col-xs-3 checkoutItem">${{orderItem.orderItemAmount.value/100 | number:2}}</div>
+                    <div class="col-xs-7 col-sm-7 col-md-2 col-lg-2 checkoutItem truncateText">{{orderItem.foodItem.foodItemName}}</div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 checkoutItem">{{orderItem.quantity}}</div>
+                    <div class="col-xs-3 col-sm-3 col-md-1 col-lg-1 checkoutItem">${{orderItem.orderItemAmount.value/100 | number:2}}</div>
                 </div>
             </div>
-            <div class="checkoutText">Taxes: </div><div class=" checkoutText noBold">${{getCustomerOrderResponse.customerOrder.taxAmount.value/100 | number:2}}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Order Total: </div><div class="checkoutText noBold">${{getCustomerOrderResponse.customerOrder.orderAmount.value/100 | number:2}}</div>
+            <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2">Taxes: </div><div class=" checkoutText noBold col-xs-7 col-sm-7 col-md-3 col-lg-3">${{getCustomerOrderResponse.customerOrder.taxAmount.value/100 | number:2}}</div>
             <div class="clearfix"></div>
-            <div class="checkoutText">Payment method: </div><div class="checkoutText bold">{{formatEnum(getCustomerOrderResponse.customerOrder.paymentMethod)}}</div>
+            <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2">Order Total: </div><div class="checkoutText noBold col-xs-7 col-sm-7 col-md-3 col-lg-3">${{getCustomerOrderResponse.customerOrder.orderAmount.value/100 | number:2}}</div>
             <div class="clearfix"></div>
-            
-            <p />
+            <div class="checkoutText col-xs-5 col-sm-5 col-md-2 col-lg-2">Payment method: </div><div class="checkoutText bold col-xs-7 col-sm-7 col-md-3 col-lg-3">{{formatEnum(getCustomerOrderResponse.customerOrder.paymentMethod)}}</div>
+            <div class="clearfix"></div>
          </div>
-	<br/>
 	<p/>	
 	<div class="col-md-8 col-sm-12">
        <div ng-show="showReview">

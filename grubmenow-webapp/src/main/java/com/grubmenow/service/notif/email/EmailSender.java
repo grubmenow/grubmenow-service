@@ -219,7 +219,7 @@ public class EmailSender
 		
 		public static String formatAmount(Amount amount)
 		{
-			return amount.getCurrency() + " " + NumberFormat.getCurrencyInstance().format(amount.getValue()/100f);
+			return NumberFormat.getCurrencyInstance().format(amount.getValue()/100f);
 		}
 		
 		public static String formatAddressFirstLine(ProviderDAO provider)
