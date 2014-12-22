@@ -101,7 +101,7 @@
                                 <select style="display: inline;" class="form-control qtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.foodItem.foodItemQty">
                                     <option ng-show="{{i}} <= restMenuItem.foodItemOffer.availableQuantity" data-ng-repeat="i in [0, 1,2,3,4,5,6,7,8,9]" value={{i}}>{{i}}</option>
                                 </select>
-                                <div ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px; clear: both">Hurry, {{rest.foodItemOffer.availableQuantity}} items left !</div>
+                                <div ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px; clear: both">Hurry, {{restMenuItem.foodItemOffer.availableQuantity}} items left !</div>
                             </div>
 
                             <div class="clearfix"></div>
