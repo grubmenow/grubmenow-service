@@ -5,7 +5,7 @@
 <%@page import="java.util.List"%>
 <html>
  <head> 
- <jsp:include page="common.jsp" />
+ <%@ include file="common.jsp" %>
  
  <script>
 	$(document).ready(function() {
