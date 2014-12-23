@@ -25,6 +25,10 @@ public class RequestReader {
 		return value;
 	}
 	
+	public int readInt(String parameter) {
+		return Integer.parseInt(read(parameter));
+	}
+	
 	
 	public String readOptional(String parameter) {
 		return request.getParameter(parameter);

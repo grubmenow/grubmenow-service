@@ -5,7 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class IDGenerator {
 
 	public static String generateFoodItemId() {
-		return RandomStringUtils.randomNumeric(4).toLowerCase();
+		return RandomStringUtils.randomAlphabetic(6).toLowerCase();
 	}
 
 	public static String generateProviderId() {

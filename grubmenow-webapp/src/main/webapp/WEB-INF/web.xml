@@ -24,16 +24,36 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>AddFoodItemDashboardServlet</servlet-name>
-		<servlet-class>com.grubmenow.service.dashboard.servlet.AddFoodItemDashboardServlet</servlet-class>
+		<servlet-name>AddEditFoodItemActionDashboardServlet</servlet-name>
+		<servlet-class>com.grubmenow.service.dashboard.servlet.AddEditFoodItemActionDashboardServlet</servlet-class>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>AddFoodItemDashboardServlet</servlet-name>
-		<url-pattern>/dashboard/fooditem-add</url-pattern>
+		<servlet-name>AddEditFoodItemActionDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/add-edit-fooditem-action</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AddEditProviderActionDashboardServlet</servlet-name>
+		<servlet-class>com.grubmenow.service.dashboard.servlet.AddEditProviderActionDashboardServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AddEditProviderActionDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/add-edit-provider-action</url-pattern>
 	</servlet-mapping>
 
+	
+	<servlet>
+		<servlet-name>AddEditFoodItemOfferActionDashboardServlet</servlet-name>
+		<servlet-class>com.grubmenow.service.dashboard.servlet.AddEditFoodItemOfferActionDashboardServlet</servlet-class>
+	</servlet>
 
+	<servlet-mapping>
+		<servlet-name>AddEditFoodItemOfferActionDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/add-edit-fooditemoffer-action</url-pattern>
+	</servlet-mapping>
+	
 	<servlet>
 		<servlet-name>ProviderDashboardServlet</servlet-name>
 		<jsp-file>/dashboard/provider.jsp</jsp-file>
@@ -45,17 +65,6 @@
 	</servlet-mapping>
 
 	<servlet>
-		<servlet-name>AddProviderDashboardServlet</servlet-name>
-		<servlet-class>com.grubmenow.service.dashboard.servlet.AddProviderDashboardServlet</servlet-class>
-	</servlet>
-
-	<servlet-mapping>
-		<servlet-name>AddProviderDashboardServlet</servlet-name>
-		<url-pattern>/dashboard/provider-add</url-pattern>
-	</servlet-mapping>
-
-
-	<servlet>
 		<servlet-name>FoodItemOfferDashboardServlet</servlet-name>
 		<jsp-file>/dashboard/foodItemOffer.jsp</jsp-file>
 	</servlet>
@@ -63,6 +72,36 @@
 	<servlet-mapping>
 		<servlet-name>FoodItemOfferDashboardServlet</servlet-name>
 		<url-pattern>/dashboard/fooditemoffer</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>AddEditFoodItemForm</servlet-name>
+		<jsp-file>/dashboard/addEditFoodItemForm.jsp</jsp-file>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>AddEditFoodItemForm</servlet-name>
+		<url-pattern>/dashboard/add-edit-fooditem-form</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AddEditProviderForm</servlet-name>
+		<jsp-file>/dashboard/addEditProviderForm.jsp</jsp-file>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>AddEditProviderForm</servlet-name>
+		<url-pattern>/dashboard/add-edit-provider-form</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AddEditFoodItemOfferForm</servlet-name>
+		<jsp-file>/dashboard/addEditFoodItemOfferForm.jsp</jsp-file>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>AddEditFoodItemOfferForm</servlet-name>
+		<url-pattern>/dashboard/add-edit-fooditemoffer-form</url-pattern>
 	</servlet-mapping>
 
 </web-app>
