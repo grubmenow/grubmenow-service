@@ -20,7 +20,7 @@
  
  if(request.getParameter("foodItemOfferId") != null) {
 	 FoodItemOfferDAO foodItemOffer = PersistenceFactory.getInstance().getFoodItemOfferById(request.getParameter("foodItemOfferId"));
-	 foodItemOfferId = foodItemOffer.getFoodItemId();
+	 foodItemOfferId = foodItemOffer.getFoodItemOfferId();
 	 foodItemId = foodItemOffer.getFoodItemId();
 	 providerId = foodItemOffer.getProviderId();
 	 offerDescription = foodItemOffer.getOfferDescription();
