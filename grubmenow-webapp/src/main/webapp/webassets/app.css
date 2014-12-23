@@ -82,9 +82,13 @@ a:active {
      height: 70px;
 }
 
-.thumbnail {
-     border: 5px solid #FFD446;
+.thumbnail, .img-thumbnail {
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.075);
+    border: 0px;
+    padding: 0px;
+    margin-bottom: 5px;
 }
+
 
 .spacer {
      margin-top: 35px;
@@ -448,6 +452,12 @@ textarea {
 .borderFooter {
      border-top: 1px solid #DDDDDD;
 }
+
+/*
+.thumbnail {
+     border: 2px solid #ff8246;
+}
+*/
 
 .thumbnail>a>img {
      width: 245px;
