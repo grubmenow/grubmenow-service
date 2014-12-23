@@ -1,3 +1,5 @@
+<%@page import="org.apache.commons.lang3.StringUtils"%>
+<%@page import="com.grubmenow.service.dashboard.DashboardUtils"%>
 <link rel="stylesheet" type="text/css" href="css/common.css" />
 <script type="text/javascript" src="js/jquery/jquery-1.11.1.min.js" ></script>
 <script type="text/javascript" src="js/jqModal/jqModal.min.js" ></script>
@@ -29,3 +31,21 @@ $(document).keyup(function(e) {
    	});
 
 </script>
+
+<%
+  if(!DashboardUtils.isDashboardAccess(request)) {
+	  
+	  // if the value is passed in the url
+	  if(StringUtils.isNotBlank(request.getParameter("accesscode"))) {
+          Cookie cookie = new Cookie("accesscode", request.getParameter("accesscode"));
+          cookie.setMaxAge(24*60*60);
+          response.addCookie(cookie);
+          
+          response.sendRedirect("console");
+          return;
+	  }
+	  
+	  response.sendRedirect("accesscode");
+  	  return;
+  }
+%>

@@ -48,11 +48,6 @@
   	  <td class="form_info"> Url of the Food Item. Example: http://grubmenow.com/img/curd_rice.jpg </td> 
   	</tr>
   	<tr>
-  	  <td class="input_form_text"> Code </td>
-  	  <td> <input class="input_form_text"  type="text" name="code" /> </td>
-  	  <td class="form_info"> Access Code </td> 
-  	</tr>
-  	<tr>
   	  <td></td>
   	  <td> <input id="add-form-submit-button" type="submit" value="Add">
   	       <div id="add-form-message-window"> </div> </td> 

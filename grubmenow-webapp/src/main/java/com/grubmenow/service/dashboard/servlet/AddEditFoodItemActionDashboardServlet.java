@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.grubmenow.service.dashboard.DashboardUtils;
 import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemState;
 import com.grubmenow.service.datamodel.IDGenerator;
@@ -22,8 +23,8 @@ public class AddEditFoodItemActionDashboardServlet extends AbstractDashboadServl
 		RequestReader requestReader = new RequestReader(request);
 		
 		// check access
-		if(!StringUtils.equals(requestReader.read("code"), "hampton")) {
-			throw new IllegalArgumentException("Invalid Code: " + requestReader.read("code"));
+		if(!DashboardUtils.isDashboardAccess(request)) {
+			throw new IllegalArgumentException("Invalid Code");
 		}
 		
 		FoodItemDAO foodItemDAO = updateFoodObject(requestReader);

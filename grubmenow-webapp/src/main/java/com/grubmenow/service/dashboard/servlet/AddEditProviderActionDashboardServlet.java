@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.grubmenow.service.dashboard.DashboardUtils;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
@@ -22,8 +23,8 @@ public class AddEditProviderActionDashboardServlet extends AbstractDashboadServl
 		RequestReader requestReader = new RequestReader(request);
 		
 		// check access
-		if(!StringUtils.equals(requestReader.read("code"), "hampton")) {
-			throw new IllegalArgumentException("Invalid Code: " + requestReader.read("code"));
+		if(!DashboardUtils.isDashboardAccess(request)) {
+			throw new IllegalArgumentException("Invalid Code");
 		}
 		
 		ProviderDAO providerDAO = updateProviderObject(requestReader);

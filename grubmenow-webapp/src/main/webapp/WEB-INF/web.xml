@@ -55,6 +55,16 @@
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>AccessCodeDashboardServlet</servlet-name>
+		<jsp-file>/dashboard/accessCode.jsp</jsp-file>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>AccessCodeDashboardServlet</servlet-name>
+		<url-pattern>/dashboard/accesscode</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>ProviderDashboardServlet</servlet-name>
 		<jsp-file>/dashboard/provider.jsp</jsp-file>
 	</servlet>
