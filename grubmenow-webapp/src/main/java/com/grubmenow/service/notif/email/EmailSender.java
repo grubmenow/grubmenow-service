@@ -70,6 +70,7 @@ public class EmailSender
     	
 		Validate.notNull(request.getConsumer(), "Consumer cannot be null");
 		Validate.notNull(request.getCustomerOrder(), "Customer order cannot be null");
+		Validate.notNull(request.getOrderAmountTotal(), "Customer order amount cannot be null");
 		Validate.notNull(request.getOrderFulfillmentDate(), "Order fulfillment date cannot be null");
 		Validate.notNull(request.getProvider(), "Provider cannot be null");
 		Validate.notEmpty(request.getOrderItems(), "Order items cannot be empty");
@@ -105,6 +106,7 @@ public class EmailSender
     	
 		Validate.notNull(request.getConsumer(), "Consumer cannot be null");
 		Validate.notNull(request.getCustomerOrder(), "Customer order cannot be null");
+		Validate.notNull(request.getOrderAmountTotal(), "Customer order amount cannot be null");
 		Validate.notNull(request.getOrderFulfillmentDate(), "Order fulfillment date cannot be null");
 		Validate.notNull(request.getProvider(), "Provider cannot be null");
 		Validate.notEmpty(request.getOrderItems(), "Order items cannot be empty");

@@ -333,12 +333,17 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			orderItemDetails.add(emailOrderItemDetail);
 		}
 
+		Amount orderAmountTotal = new Amount();
+		orderAmountTotal.setCurrency(customerOrderDAO.getOrderCurrency());
+		orderAmountTotal.setValue(customerOrderDAO.getOrderAmount());
+		
 		// send email
 		OrderSuccessEmailRequest emailRequest = OrderSuccessEmailRequest
 					.builder()
 					.consumer(customerDAO)
 					.provider(providerDAO)
 					.customerOrder(customerOrderDAO)
+					.orderAmountTotal(orderAmountTotal)
 					.orderItems(orderItemDetails)
 					.orderPickupStartTime("6 PM")
 					.orderPickupEndTime("9 PM")

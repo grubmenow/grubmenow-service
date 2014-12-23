@@ -27,6 +27,8 @@ Order summary:
 <b>Customer Name</b>: ${request.consumer.customerFirstName} ${request.consumer.customerLastName}<br/>
 <b> Order id </b>: ${request.customerOrder.orderId}<br/>
 <b> Payment method </b>: $Formatter.formatEnum(${request.customerOrder.paymentMethod})
+<br/>
+<b> Order total </b>: $Formatter.formatAmount(${request.orderAmountTotal})
 </p>
 <table>
 <tr>

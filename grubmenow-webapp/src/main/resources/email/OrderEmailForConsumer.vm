@@ -42,6 +42,8 @@ Your order summary:
 <br/>
 <b> Payment method </b>: $Formatter.formatEnum(${request.customerOrder.paymentMethod})
 <br/>
+<b> Order total </b>: $Formatter.formatAmount(${request.orderAmountTotal})
+<br/>
 <br/>
  Click <a href="http://grubmenow.com/#/orderDetails?orderId=${request.customerOrder.orderId}">here</a> to see details.
 <br/>

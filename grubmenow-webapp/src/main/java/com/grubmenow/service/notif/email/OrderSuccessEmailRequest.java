@@ -11,6 +11,7 @@ import org.joda.time.DateTime;
 import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
+import com.grubmenow.service.model.Amount;
 
 /**
  * The request object for sending the customer order success email. 
@@ -24,6 +25,7 @@ public class OrderSuccessEmailRequest
 	private ProviderDAO provider;
 	private CustomerOrderDAO customerOrder;
 	private DateTime orderFulfillmentDate;
+	private Amount orderAmountTotal;
 	private List<EmailableOrderItemDetail> orderItems = new ArrayList<>();
 	private String orderPickupStartTime = "7 PM";
 	private String orderPickupEndTime = "9 PM";
