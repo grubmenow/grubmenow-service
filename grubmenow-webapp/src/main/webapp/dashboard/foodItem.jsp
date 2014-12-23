@@ -4,30 +4,13 @@
 <%@page import="java.util.List"%>
 <html>
  <head> 
- <jsp:include page="common.jsp" />
- 
- <script>
-	$(document).ready(function() {
-   		$('#add').click(function(e) {
-   			$('#add-form-container').show();
-   			return true;	
- 	     });
-   		
-   		$('#add-form-submit-button').click(function(e) {
- 			 var link = $('#add-form').serialize()
-   			 link = 'fooditem-add?' + link;
- 			 
- 			
- 			 $('#add-form-submit-button').hide();
-     		 $('#add-form-message-window').html('<p align="left">Saving .. &nbsp <img src="img/loader.gif"></p>');
-      		 $('#add-form-message-window').load(link); 
-			
-   			return false;	
- 	     });
-   	});
- </script>
+ <%@ include file="common.jsp" %>
  </head>
  <body>
+ <div class="jqmWindow" id="popUpJqmWindow">
+   Please wait...
+ </div>
+ 
   <jsp:include page="header.jsp" >
   	<jsp:param name="dashboardTitle" value="Food Item" />
   </jsp:include>
@@ -36,46 +19,7 @@
    List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllFoodItem();
   %> 
    
-   <a id="add" href="#">Add New</a> <br/>
-   <div id="add-form-container" style="display: none;">
-    <form id="add-form">
-      <table>
-      	<tr>
-      	  <td class="input_form_text"> Name </td>
-      	  <td> <input class="input_form_text" type="text" name="foodItemName" /> </td> 
-      	</tr>
-      	<tr>
-      	  <td class="input_form_text"> Image Url </td>
-      	  <td> <input class="input_form_text"  type="text" name="foodItemImageUrl" /> </td> 
-      	</tr>
-      	<tr>
-      	  <td class="input_form_text"> Description </td>
-      	  <td> <textarea class="input_form_text"  name="foodItemDescription" ></textarea> </td> 
-      	</tr>
-      	<tr>
-      	  <td class="input_form_text">Tags</td>
-      	  <td> <textarea class="input_form_text"  name="foodItemDescriptionTags" ></textarea> </td> 
-      	</tr>
-      	<tr>
-      	  <td class="input_form_text"> State </td>
-      	  <td> 
-      	      <select class="input_form_text"  name="foodItemState">
-      			<% for(FoodItemState state: FoodItemState.values()) { %>
-      				<option value="<%=state.name()%>"><%=state.name()%></option>
-      			<%} %>
-      		  </select> 
-      	   </td> 
-      	</tr>
-      	<tr>
-      	  <td></td>
-      	  <td> <input id="add-form-submit-button" type="submit" value="Add">
-      	       <div id="add-form-message-window"> </div> </td> 
-      	</tr>
-      </table>
-	    
-    </form>
-   </div> <br/>
-    	
+   <a class="open_popup" href="add-edit-fooditem-form">Add New</a> <br/>
     	
   <table style="width: 100%;">
    <thead>
@@ -86,6 +30,7 @@
       	  <td class="table_header"> Description </td>
       	  <td class="table_header"> Tags </td>
       	  <td class="table_header"> State </td>
+      	  <td class="table_header"> - </td>
      </tr>
    </thead>  	
    <% for(FoodItemDAO foodItem: foodItemDAOs) { %>
@@ -96,6 +41,7 @@
       	  <td class="table_cell"> <%= foodItem.getFoodItemDescription() %> </td>
       	  <td class="table_cell"> <%= foodItem.getFoodItemDescriptionTags() %> </td>
       	  <td class="table_cell"> <%= foodItem.getFoodItemState() %> </td>
+      	  <td class="table_cell"> <a class="open_popup" href="add-edit-fooditem-form?foodItemId=<%= foodItem.getFoodItemId() %>">edit</a> </td>
    <% } %>
    </table>    
  </body>

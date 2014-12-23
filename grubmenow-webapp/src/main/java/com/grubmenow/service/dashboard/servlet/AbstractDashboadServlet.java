@@ -12,5 +12,15 @@ public class AbstractDashboadServlet extends HttpServlet {
     public void forwardTo(HttpServletRequest request, HttpServletResponse response, String page) {
     	getServletContext().getRequestDispatcher(page).forward(request, response);
     }
-    
+	
+    protected void returnSuccessMessageAndRedirectToUrl(HttpServletRequest request, HttpServletResponse response, String message, String redirectUrl) {
+        request.setAttribute("message", message);
+        request.setAttribute("redirecturl", redirectUrl);
+        try {
+            getServletContext().getRequestDispatcher("/dashboard/successMessageAndRedirect.jsp").forward(request, response);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
