@@ -82,13 +82,13 @@ a:active {
      height: 70px;
 }
 
-.thumbnail, .img-thumbnail {
-    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.075);
-    border: 0px;
-    padding: 0px;
-    margin-bottom: 5px;
+.thumbnail {
+     border: 5px solid #FFD446;
+     width: 300px;
+     margin: 10px auto;
+     height: 270px;
+     padding: 10px;
 }
-
 
 .spacer {
      margin-top: 35px;
@@ -415,11 +415,15 @@ a:active {
      text-overflow: ellipsis;
 }
 
+.btnCtr {
+     margin: 20px 0px;
+     color: red;
+}
+
 .btnCO, .btnCO:hover, .btnCO:focus {
      background-color: #FF8246;
      color: white;
      border: 1px solid #FF8246;
-     margin: 20px 0px;
      outline: none;
 }
 
@@ -459,9 +463,9 @@ textarea {
 }
 */
 
-.thumbnail>a>img {
-     width: 245px;
-     height: 183px;
+.foodImg {
+     width: 245px !important;
+     height: 183px !important;
 }
 
 .thumbnail-small>img {

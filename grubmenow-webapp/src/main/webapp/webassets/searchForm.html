@@ -39,7 +39,7 @@
 	<div ng-show="searching" class="spinner"></div>
     <div class="container spacer" id="searchResults" ng-hide="searchedOnce && noResults">
         <div class="row">
-            <div class="col-lg-3 col-sm-4 col-xs-12" ng-repeat="foodItem in master.food" id="searchResults">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" ng-repeat="foodItem in master.food" id="searchResults">
                 <div class="thumbnail">
                     <a href="#/chefs?id={{foodItem.foodItemId}}&availableDay={{master.availableDay}}&radius={{master.radius}}&zipCode={{master.zipCode}}">
                     <img class="foodImg" src="{{foodItem.foodItemImageUrl}}" alt="{{foodItem.foodItemName}}">
