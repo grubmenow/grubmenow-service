@@ -5,7 +5,7 @@
         <div class="col-md-2"></div>
         <div class="col-md-8">
             <div class="checkoutTitle text-center" ng-show="FB.name"><h4 class="coName">Welcome {{FB.name}}</h4></div>
-            <div class="checkoutTitle">Your order details:</div>
+            <div class="checkoutTitle">Your order from <u>{{finalOrder.provider.providerName}}</u>:</div>
             <div class="orderDetails">
                 <div>
                     <div class="col-xs-6 checkoutItem checkoutHeader">
@@ -133,8 +133,8 @@
                 
 	                    <div ng-show="order.error" class="col-xs-12 text-center alert alert-danger"> {{order.error_message}}</div>
 	            		
-                        <div class="text-right">
-                            <input type="button" class="btn btnCO" ng-click="placeOrder()" id="placeOrderButton" value="Place Order and Pay ${{finalOrder.totalPrice/100 | number:2 }} on Pickup" />
+                        <div class="text-right btnCtr">
+                            <input type="button" class="btn btnCO disabled" ng-click="placeOrder()" id="placeOrderButton" value="Place Order and Pay ${{finalOrder.totalPrice/100 | number:2 }} on Pickup" />
                         </div>
                     </div>
                 </form>
