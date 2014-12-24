@@ -102,7 +102,7 @@
                             	<div class="foodPrice noBold" style="color: #F04E00; font-size: 16px;">${{restMenuItem.foodItemOffer.price.value / 100 | number:2}}</div>
                             </div>
                             <div class="col-xs-2 col-sm-3 col-md-2 foodItemOfferLayout text-right">
-                                <select style="display: inline;" class="form-control qtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.foodItem.foodItemQty">
+                                <select style="display: inline;" class="form-control qtyBox menuQtyBox" id="menuQty{{$index}}" ng-model="restMenuItem.foodItem.foodItemQty">
                                     <option ng-show="{{i}} <= restMenuItem.foodItemOffer.availableQuantity" data-ng-repeat="i in [0,1,2,3,4,5,6,7,8,9]" value={{i}}>{{i}}</option>
                                 </select>
                                 <div ng-if="rest.foodItemOffer.availableQuantity < 10" style="color: maroon; font-size: 10px; clear: both">Hurry, {{restMenuItem.foodItemOffer.availableQuantity}} items left</div>

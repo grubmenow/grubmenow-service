@@ -282,6 +282,9 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         $http.post(restListUrl, JSON.stringify(requestData)).success(function(data) {
             $scope.restMenu[restId] = data;
             $scope.showRestMenu[restId] = 1;
+            setTimeout(function(){ 
+                $('.menuQtyBox').each(function(){$(this).val(0)});
+            }, 100);
         });
     }
 
@@ -299,7 +302,6 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
         $scope.chefsLoaded = 1;
         setTimeout(function(){ 
             $('#primaryQty0').val(1);
-            console.log("Set the select value");
         }, 100);
     });
     
