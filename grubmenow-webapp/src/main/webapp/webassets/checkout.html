@@ -134,7 +134,7 @@
 	                    <div ng-show="order.error" class="col-xs-12 text-center alert alert-danger"> {{order.error_message}}</div>
 	            		
                         <div class="text-right btnCtr">
-                            <input type="button" class="btn btnCO disabled" ng-click="placeOrder()" id="placeOrderButton" value="Place Order and Pay ${{finalOrder.totalPrice/100 | number:2 }} on Pickup" />
+                            <input type="button" class="btn btnCO" ng-click="placeOrder()" id="placeOrderButton" value="Place Order and Pay ${{finalOrder.totalPrice/100 | number:2 }} on Pickup" />
                         </div>
                     </div>
                 </form>
