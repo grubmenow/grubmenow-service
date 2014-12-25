@@ -83,9 +83,10 @@ a:active {
 }
 
 .thumbnail {
-     border: 5px solid #ff8246;
-     width: 300px;
-     margin: 10px auto;
+     border: none !important;
+     box-shadow: none !important;
+     width: 280px;
+     margin: 0px auto;
      height: 270px;
      padding: 10px;
 }
