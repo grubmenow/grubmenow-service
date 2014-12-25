@@ -173,16 +173,27 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
     $scope.getTotalItems = function(index) {
         var total = isNaN(parseInt($scope.restList.foodItem.foodItemQty)) ? 0 : parseInt($scope.restList.foodItem.foodItemQty);
         var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
-        if (!restId || !$scope.restMenu[restId]) return total;
+        if (!restId || !$scope.restMenu[restId]) {
+            $scope.validateCheckoutButton(total);
+            return total;
+        }
 
         for(var i = 0; i < $scope.restMenu[restId].providerFoodItemOffers.length; i++) {
             var product = $scope.restMenu[restId].providerFoodItemOffers[i];
             total = product.foodItem.foodItemQty ? isNaN(parseInt(product.foodItem.foodItemQty)) ? total : total + parseInt(product.foodItem.foodItemQty) : total;
         }
 
+        $scope.validateCheckoutButton(total);
         return total;
     }
 
+    $scope.validateCheckoutButton = function(total) {
+        if(total == 0) { 
+            $('#checkoutButton').addClass('disabled'); 
+        } else { 
+            $('#checkoutButton').removeClass('disabled'); 
+        }
+    }    
     $scope.getTotalPriceInCents = function(index) {
         var primaryQty = isNaN(parseInt($scope.restList.foodItem.foodItemQty)) ? 0 : parseInt($scope.restList.foodItem.foodItemQty);
         var total = primaryQty * $scope.restList.providerFoodItemOffers[index].foodItemOffer.price.value;
