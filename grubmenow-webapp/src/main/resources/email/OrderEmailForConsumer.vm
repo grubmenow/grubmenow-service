@@ -50,9 +50,12 @@ Your order summary:
 <br/>
 Please pick up your order between <b>${request.orderPickupStartTime} and ${request.orderPickupEndTime} on $Formatter.formatDate(${request.orderFulfillmentDate})</b> from this location:
 <br/>
+#set($pickUpAddressText = "$Formatter.formatAddressFirstLine(${request.provider}) $Formatter.formatAddressLastLine(${request.provider})")
 ${request.provider.providerName}<br/>
+<a href="http:///maps.google.com/maps?q="$pickUpAddressText">
 $Formatter.formatAddressFirstLine(${request.provider})<br/>
 $Formatter.formatAddressLastLine(${request.provider})
+</a>
 #if (${request.provider.providerPhoneNumber})
 <br/>Phone: ${request.provider.providerPhoneNumber}
 #end
