@@ -73,41 +73,6 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         }
     };
 
-    $scope.openFeedbackForm = function(formInfo) {
-        $scope.showFeedbackForm = formInfo;
-        $scope.showFoodItemSuggestionForm = !formInfo;
-        $('html, body').animate({
-            scrollTop: $("#feedbackFormContainer").offset().top
-        }, $scope.animationTime);
-    };
-
-
-	$scope.submitFeedbackForm = function() {
-		request = {
-			feedbackType : "SEARCH_GENERAL_FEEDBACK",
-			feedbackMessage : $scope.feedback.generalFeedback,
-			zipCode : $scope.location.zipCode,
-			emailId : $scope.feedback.emailId
-		};
-		$scope.submittingFeedback = 1;
-		$http.post("api/submitGeneralFeedback",
-				JSON.stringify(request)).success(
-				function(data) {
-					$scope.submittingFeedback = 0;
-					$scope.showFoodItemSuggestionForm = 0;
-					$scope.showFeedbackForm = 0;
-					$scope.showThankYouMessage = 1;
-				}).error(function(data) {
-			$scope.submittingFeedback = 0;
-		})
-	};
-    
-    $scope.cancelFeedbackForms = function()
-    {
-        $scope.showFoodItemSuggestionForm = 0;
-        $scope.showFeedbackForm = 0;
-    }
-
 	$scope.resetAllFormStates = function() {
 		$scope.showThankYouMessage = 0;
 		$scope.feedback = {
@@ -115,20 +80,22 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
 			newItems : '',
 			emailId : ""
 		};
-		$scope.showFeedbackForm = 0;
-		$scope.showFoodItemSuggestionForm = 0;
 		$scope.submittingFeedback = 0;
 	}
 
     $scope.submitFoodItemSuggestionForm = function()
     {
-        request = {foodItemSuggestions: $scope.feedback.newItems, zipCode: $scope.location.zipCode, emailId: $scope.feedback.emailId};
+        request = {
+                feedbackType: "NO_RESULTS_FEEDBACK",
+                feedbackMessage: $scope.feedback.newItems,
+                emailId: $scope.feedback.emailId,
+                zipCode: $scope.location.zipCode};
+
         $scope.submittingFeedback = 1;
-        $http.post("api/submitFoodItemSuggestions", JSON.stringify(request)).success(function(data) {
+        $http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data) {
             $scope.submittingFeedback = 0;
-            $scope.showFoodItemSuggestionForm = 0;
-            $scope.showFeedbackForm = 0;
-            $scope.noResults = 0; // forget the search information since the user has taken an action over it. 
+            $scope.noResults = 0; // forget the search information since the
+									// user has taken an action over it.
             $scope.showThankYouMessage = 1;
         })
         .error(function(data) {
