@@ -466,6 +466,7 @@ textarea {
 .foodImg {
      width: 245px !important;
      height: 183px !important;
+     border: 1px solid #DDDDDD;
 }
 
 .thumbnail-small>img {
