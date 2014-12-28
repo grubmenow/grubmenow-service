@@ -33,7 +33,11 @@
             <div class="checkoutText col-sm-4">Pick up date and time: </div><div class="col-sm-8 checkoutText bold">{{finalOrder.pickupTime}}</div>
             <div class="clearfix"></div>
             <div class="checkoutText col-sm-4">Pick up address: </div>
-                <div class="col-sm-8 checkoutText bold" ng-show="!FB.notRecognized">{{finalOrder.restLocation}}</div>
+                <div class="col-sm-8 checkoutText bold" ng-show="!FB.notRecognized">
+                    <a target="_blank" href="{{finalOrder.restLocationUrl}}">
+                        {{finalOrder.restLocation}}
+                    </a>
+                </div>
                 <div class="col-sm-8 checkoutText bold" ng-show="FB.notRecognized">Will be displayed after you Log In</div>
             <div class="clearfix"></div>
             <div ng-show="!FB.notRecognized && finalOrder.chefPhone != null">

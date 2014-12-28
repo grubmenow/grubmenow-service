@@ -42,6 +42,9 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     
     $scope.getFinalOrder = function() {
     	$scope.finalOrder = JSON.parse(localStorage.getItem('gmn.finalOrder'));
+    	if($scope.finalOrder.restLocation) {
+            $scope.finalOrder.restLocationUrl = "http://maps.google.com/maps?q="+encodeURIComponent($scope.finalOrder.restLocation);
+    	}
 	}
     
     $scope.handleFBResponse = function(token, name, email) {
