@@ -12,6 +12,7 @@ html, body{
 
 .bodyMain {
      padding-bottom: 44px;
+     overflow: auto;
 }
 
 a:link {
