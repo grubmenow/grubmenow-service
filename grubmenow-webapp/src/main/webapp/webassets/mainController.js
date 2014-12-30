@@ -236,15 +236,19 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
     }
 
     $scope.collapse = function(index) {
-        if(!$scope.collapseState) $scope.collapseState = {};
-        if(!$scope.collapseState.index) {
+        $scope.restList.foodItem.foodItemQty = 1;
+        $('.panel-collapse').each(function(){
+            $(this).collapse({toggle: false});
+            $(this).collapse('hide');
+        });
+        if($('#collapse'+index).hasClass('in')) {
             $('#collapse'+index).collapse('hide');
-            $scope.collapseState.index = 1;
         } else {
             $('#collapse'+index).collapse('show');
-            $scope.collapseState.index = 0;
         }
-        
+        setTimeout(function(){ 
+            $('#primaryQty'+index).val(1);
+        }, 100);
     }   
     
     $scope.showMenu = function(restId, excludedFoodItem) {
