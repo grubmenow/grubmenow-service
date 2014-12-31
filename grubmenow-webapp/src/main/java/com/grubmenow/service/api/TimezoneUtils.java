@@ -6,7 +6,7 @@ import com.grubmenow.service.model.AvailableDay;
 
 public class TimezoneUtils
 {
-    public static final int DINNER_ORDER_CUT_OFF_HOUR = 16;
+    public static final int DINNER_ORDER_CUT_OFF_HOUR = 18;
 
     private TimezoneUtils() {}
 

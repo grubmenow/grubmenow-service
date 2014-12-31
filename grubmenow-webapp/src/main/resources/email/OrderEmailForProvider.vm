@@ -55,7 +55,7 @@ $Formatter.formatAddressLastLine(${request.provider})
 <br/>Phone: ${request.provider.providerPhoneNumber}
 #end
 </p>
-If you are unable to fulfil this order or need to update order, please call Grubmenow Customer Service at +1 206 883 6876 by 4PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
+If you are unable to fulfil this order or need to update order, please call Grubmenow Customer Service at +1 206 883 6876 by 6PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
 Thank you,<br/> 
 Grubmenow team. <br/>
 For Customer Service call +1 206-883-6876 11AM-9PM PT daily

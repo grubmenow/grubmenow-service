@@ -61,7 +61,7 @@ $Formatter.formatAddressLastLine(${request.provider})
 #end
 <p/>
 
-If you'd like to cancel your order, please call Grubmenow Customer Service at +1 209 900 GRUB(4782) by 4PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
+If you'd like to cancel your order, please call Grubmenow Customer Service at +1 209 900 GRUB(4782) by 6PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
 
 Thank you,<br/> 
 Grubmenow team. <br/>

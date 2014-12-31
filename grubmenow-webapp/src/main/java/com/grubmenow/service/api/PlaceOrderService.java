@@ -345,7 +345,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 					.customerOrder(customerOrderDAO)
 					.orderAmountTotal(orderAmountTotal)
 					.orderItems(orderItemDetails)
-					.orderPickupStartTime("6 PM")
+					.orderPickupStartTime("7 PM")
 					.orderPickupEndTime("9 PM")
 					.orderFulfillmentDate(orderFulfillmentDate)
 					.build();
