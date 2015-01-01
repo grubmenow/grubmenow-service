@@ -36,7 +36,8 @@ import com.grubmenow.service.model.PaymentMethod;
 @CommonsLog
 public class EmailSender 
 {
-	private static final String FROM = "admin@grubmenow.com";  // Replace with your "From" address. This address must be verified.
+	private static final String FROM = "admin@grubmenow.com";
+	private static final String BCC = FROM; 
     private final AmazonSimpleEmailServiceClient sesClient;
     private final VelocityEngine velocityEngine;
     private final Template customerOrderEmailTemplate;
@@ -79,7 +80,9 @@ public class EmailSender
     	try
     	{
     		// Construct an object to contain the recipient address.
-    		Destination destination = new Destination().withToAddresses(new String[]{toAddress});
+    		Destination destination = new Destination()
+    		    .withToAddresses(new String[]{toAddress})
+    		    .withBccAddresses(BCC);
     		
     		Content subject = new Content().withData("Thank you for your grubmenow order. Order Id: " + request.getCustomerOrder().getOrderId());
     		Content htmlBody = new Content().withData(generateHtmlBodyForConsumerOrderSuccessEmail(request));
@@ -116,7 +119,9 @@ public class EmailSender
     	try
     	{
     		// Construct an object to contain the recipient address.
-			Destination destination = new Destination().withToAddresses(new String[] { toAddress });
+			Destination destination = new Destination()
+			    .withToAddresses(new String[] { toAddress })
+			    .withBccAddresses(BCC);
     		
     		Content subject = new Content().withData("You received an order to fulfill. Order Id: " + request.getCustomerOrder().getOrderId());
     		Content htmlBody = new Content().withData(generateHtmlBodyForProviderOrderSuccessEmail(request));
