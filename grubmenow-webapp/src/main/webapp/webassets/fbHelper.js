@@ -14,8 +14,8 @@ var fbHelper = {
 
             window.fbAsyncInit = function() {
                 FB.init({
-//                    appId      : '85199433896',
-                    appId      : '591805167609392',
+                    appId      : '85199433896',
+//                    appId      : '591805167609392',
                     cookie     : true,  // enable cookies to allow the server to access the session
                     xfbml      : true,  // parse social plugins on this page
                     version    : 'v2.1' // use version 2.1
