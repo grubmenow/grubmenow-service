@@ -96,6 +96,7 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
                         $scope.customer.customerEmailId = data.emailId;
                         $scope.customer.customerPhoneNumber = data.phoneNumber;
                         $scope.customer.customerLoaded = 1;
+                        $scope.validateFormFields();
                     });
                 })
         .error(
@@ -159,6 +160,32 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     	});
     }
     
+    $scope.validateFormFields = function() {
+        $('#placeOrderButton').addClass('disabled');
+        var allClear = 1;
+        $('.coVal').each(function(){
+            if($(this).val() == '' || $(this).val() == null){
+                allClear = 0;
+                $(this).addClass('redBorder');
+            } else {
+                $(this).removeClass('redBorder');
+            }
+            if($(this).attr('id') == 'coEmail') {
+                var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                var result = re.test($(this).val());
+                if(result){
+                    $(this).removeClass('redBorder');
+                } else {
+                    allClear = 0;
+                    $(this).addClass('redBorder');
+                }
+            }
+        });
+        if(allClear) {
+            $('#placeOrderButton').removeClass('disabled');
+        }
+    }
+    
     $scope.FB = {};
     $scope.customer = {customerLoaded: 0, customerName: null, customerEmailId: null, customerPhoneNumber: null};
     $scope.stripe = {};
@@ -170,6 +197,9 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
         $('html, body').animate({
             scrollTop: $("#inputPayment").offset().top
         }, 500);
+    });
+    $('.coVal').change(function(){
+        $scope.validateFormFields();
     });
 });
 
