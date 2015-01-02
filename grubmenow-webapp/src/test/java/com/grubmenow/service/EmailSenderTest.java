@@ -1,11 +1,11 @@
 package com.grubmenow.service;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 
 import org.joda.time.DateTime;
 
 import com.grubmenow.service.datamodel.CustomerDAO;
+import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.model.Amount;
 import com.grubmenow.service.model.Currency;
@@ -17,8 +17,11 @@ public class EmailSenderTest {
 	public static void main(String[] args) throws Exception {
 		EmailSender emailSender = new EmailSender("AKIAJ32C6BIGSSD7YL5A", "3+BkyXtniT+waUOMqUgR43oIj+IRiVpS37NKx69D");
 		CustomerDAO consumer = new CustomerDAO();
-		consumer.setCustomerFirstName("Ravi");
-		consumer.setCustomerEmailId("pokar.nitin@gmail.com");
+		consumer.setCustomerFirstName("Vikas");
+		consumer.setCustomerEmailId("mustvicky@gmail.com");
+
+		CustomerOrderDAO customerOrderDAO = new CustomerOrderDAO();
+		customerOrderDAO.setOrderAmount(999);
 		
 		Amount orderTotalPrice = new Amount();
 		orderTotalPrice.setCurrency(Currency.USD);
@@ -38,13 +41,12 @@ public class EmailSenderTest {
 		orderItemDetail.setFoodItemDescription("Awesome masala dosa");
 		orderItemDetail.setFoodItemTotalPrice(orderTotalPrice);
 		orderItemDetail.setFoodItemQuantity(1);
-		
-		
-//		ConsumerOrderSuccessEmailRequest request = 
-//			ConsumerOrderSuccessEmailRequest.builder()
+
+//		OrderSuccessEmailRequest request = 
+//			OrderSuccessEmailRequest.builder()
 //				.consumer(consumer)
-//				.orderId("123xx")
-//				.orderTotalPrice(orderTotalPrice)
+//				.customerOrder(customerOrderDAO)
+//				.orderAmountTotal(orderTotalPrice)
 //				.provider(provider)
 //				.orderItems(Arrays.asList(orderItemDetail))
 //				.orderFulfillmentDate(new DateTime().plusDays(1))

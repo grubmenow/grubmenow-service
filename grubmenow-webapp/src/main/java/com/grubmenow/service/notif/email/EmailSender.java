@@ -36,7 +36,7 @@ import com.grubmenow.service.model.PaymentMethod;
 @CommonsLog
 public class EmailSender 
 {
-	private static final String FROM = "admin@grubmenow.com";
+	private static final String FROM = "'GrubMeNow' <admin@grubmenow.com>";
 	private static final String BCC = FROM; 
     private final AmazonSimpleEmailServiceClient sesClient;
     private final VelocityEngine velocityEngine;
