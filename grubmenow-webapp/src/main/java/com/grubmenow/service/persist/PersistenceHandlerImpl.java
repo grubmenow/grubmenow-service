@@ -201,6 +201,24 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 
 		return getObject(FoodItemDAO.class, foodItemId);
 	}
+	
+	@Override
+    public List<FoodItemDAO> getFoodItemByName(String foodItemName) {
+
+        log.info(String.format("Retrieving food item by name : %s " , foodItemName));
+
+        String sql = "select * from FOOD_ITEM where FOOD_ITEM_NAME=:foodItemName ";
+        Session session = sessionFactory.openSession();
+        try {
+            Query query = session.createSQLQuery(sql)
+                    .addEntity(FoodItemDAO.class)
+                    .setString("foodItemName", foodItemName);
+
+            return query.list();
+        } finally {
+            session.close();
+        }
+    }
 
 	
 	@Override

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.grubmenow.service.model.exception.ServiceFaultException;
 import com.grubmenow.service.model.exception.ValidationException;
 
 public abstract class AbstractRemoteService  {
@@ -29,5 +30,20 @@ public abstract class AbstractRemoteService  {
 	     }
 	     return result;
 	  }
+	
+	@ExceptionHandler(ServiceFaultException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+      public @ResponseBody
+       Map<String,Object> handleServiceFaultException(ServiceFaultException ex,
+                                               HttpServletRequest request, HttpServletResponse resp) {
+         HashMap<String, Object> result = new HashMap<>();
+         result.put("error", true);
+         result.put("error_message", ex.getMessage());
+         if (ex.getInternalErrorMessage() != null)
+         {
+             result.put("internal_error_message", ex.getInternalErrorMessage());
+         }
+         return result;
+      }
 	
 }

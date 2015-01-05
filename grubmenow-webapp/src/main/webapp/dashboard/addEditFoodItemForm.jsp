@@ -45,7 +45,7 @@
   	<tr>
   	  <td class="input_form_text"> Image Url </td>
   	  <td> <input class="input_form_text"  type="text" name="foodItemImageUrl" value="<%=foodItemImageUrl %>"/> </td>
-  	  <td class="form_info"> Url of the Food Item. Example: http://grubmenow.com/img/curd_rice.jpg </td> 
+  	  <td class="form_info"> Url of the Food Item. Example: http://somewebsite.com/img/curd_rice.jpg </td> 
   	</tr>
   	<tr>
   	  <td></td>

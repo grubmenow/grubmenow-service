@@ -95,6 +95,16 @@
 	</servlet-mapping>
 	
 	<servlet>
+        <servlet-name>AddNewFoodItemForm</servlet-name>
+        <jsp-file>/dashboard/addNewFoodItemForm.jsp</jsp-file>
+    </servlet>
+    
+    <servlet-mapping>
+        <servlet-name>AddNewFoodItemForm</servlet-name>
+        <url-pattern>/dashboard/add-new-fooditem-form</url-pattern>
+    </servlet-mapping>
+	
+	<servlet>
 		<servlet-name>AddEditProviderForm</servlet-name>
 		<jsp-file>/dashboard/addEditProviderForm.jsp</jsp-file>
 	</servlet>

@@ -77,6 +77,11 @@ public interface PersistenceHandler {
 	 * Get Food Item by Id
 	 */
 	public FoodItemDAO getFoodItemById(String foodItemId);
+	
+	/**
+     * Get Food Item by Name
+     */
+    public List<FoodItemDAO> getFoodItemByName(String foodItemName);
 
 	/**
 	 * Get All Provider

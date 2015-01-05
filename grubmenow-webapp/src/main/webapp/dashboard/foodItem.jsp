@@ -19,6 +19,7 @@
    List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllFoodItem();
   %> 
    
+   <a class="open_popup" href="add-new-fooditem-form">Add New <B>(Downloads the image and saves in our storage after resizing) </B></a> <br/>
    <a class="open_popup" href="add-edit-fooditem-form">Add New</a> <br/>
     	
   <table style="width: 100%;">

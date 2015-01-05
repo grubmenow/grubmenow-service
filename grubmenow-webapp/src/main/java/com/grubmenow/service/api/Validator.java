@@ -19,6 +19,12 @@ public class Validator {
 			throw new ValidationException(message);
 		}
 	}
+	
+	public static void isNull(Object value, String message) {
+        if(value != null) {
+            throw new ValidationException(message);
+        }
+    }
 
 	public static void notBlank(String value, String message) {
 		if(StringUtils.isBlank(value)) {

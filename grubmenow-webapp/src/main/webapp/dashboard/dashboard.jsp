@@ -104,7 +104,6 @@
   <a href="provider"> Provider </a>
   <br/>
   <a href="fooditemoffer"> Food Item Offer </a>
-  
   <br/>
   <div style="width: 100%">
     <span style="float: right;">
