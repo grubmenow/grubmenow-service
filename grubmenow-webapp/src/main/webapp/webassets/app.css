@@ -500,3 +500,12 @@ textarea {
      float: left;
      padding: 5px;
 }
+
+.spc {
+     margin-top: 20px;
+}
+
+.spcRow{
+     border-bottom: 2px solid #ccc;
+     margin-bottom: 20px;
+}
