@@ -27,16 +27,11 @@
                     	</span>
                     	
                     	<span ng-show="rest.distanceInMiles != 0" class="distanceInfoText">
-	                    	   around {{rest.distanceInMiles}} miles near {{rest.provider.zipCode}}
+	                    	   around {{rest.distanceInMiles}} miles near {{zipCode}}
                     	</span>   
                     	
                     	<span ng-show="rest.distanceInMiles == 0" class="distanceInfoText">
-                    		<span style="font-size: 10px">
-	                    	   In your area near
-	                    	</span>
-	                    	<span style="font-size: 13px; font-weight: bold;" >
-	                    	   {{rest.provider.zipCode}}
-	                    	</span>
+                    		In  {{rest.provider.zipCode}} zipcode
                     	</span>
                     	   
                     </span>
