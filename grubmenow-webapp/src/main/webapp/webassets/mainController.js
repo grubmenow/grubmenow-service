@@ -13,6 +13,8 @@ var gmnGetQSP = function(scope) {
     return scope;
 }
 
+var foodSearch;
+
 angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, $http) {
 
     $( ".formElem" ).change(function (e) {
@@ -43,7 +45,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     }
 
     $scope.update = function() {
-        $scope.master = $scope.location;
+        foodSearch = $scope.master = $scope.location;
         $scope.validateForm(); 
         if($scope.location.zipCode && $scope.location.radius != 0 && $scope.location.availableDay != 0) {
             delete $scope.master['food'];
@@ -111,7 +113,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     $('#navbarCollapse').removeClass('in');
 
     $scope.location = {};
-    $scope.location = gmnGetQSP($scope.location);
+    $scope.location = foodSearch ? foodSearch:gmnGetQSP($scope.location);
     if($scope.location.zipCode) {
         $scope.update();
     } else {
