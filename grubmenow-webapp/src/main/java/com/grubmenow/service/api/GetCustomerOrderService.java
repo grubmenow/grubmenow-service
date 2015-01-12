@@ -1,17 +1,19 @@
 package com.grubmenow.service.api;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grubmenow.service.auth.FacebookAuthentication;
 import com.grubmenow.service.auth.FacebookCustomerInfo;
-import com.grubmenow.service.auth.ServiceHandler;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
 import com.grubmenow.service.datamodel.FoodItemDAO;
@@ -24,7 +26,10 @@ import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
-public class GetCustomerOrderService extends AbstractRemoteService {
+public class GetCustomerOrderService extends AbstractRemoteService
+{
+    @Autowired
+    private FacebookAuthentication facebookAuthentication;
 
 	@RequestMapping(value = "/api/getCustomerOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
@@ -70,8 +75,7 @@ public class GetCustomerOrderService extends AbstractRemoteService {
 	private CustomerOrderDAO validateCustomersOrder(GetCustomerOrderRequest request) {
 		FacebookCustomerInfo customerInfo = null;
 		try {
-			customerInfo = ServiceHandler.getInstance().getFacebookAuthentication()
-					.validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
+			customerInfo = facebookAuthentication.validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
 		} catch (Exception e) {
 			throw new ValidationException("Invalid fb authentication token");
 		}

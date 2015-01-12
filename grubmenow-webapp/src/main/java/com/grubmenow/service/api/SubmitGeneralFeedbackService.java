@@ -3,18 +3,19 @@ package com.grubmenow.service.api;
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.grubmenow.service.auth.ServiceHandler;
 import com.grubmenow.service.datamodel.GeneralFeedbackDAO;
 import com.grubmenow.service.model.SubmitGeneralFeedbackRequest;
 import com.grubmenow.service.model.SubmitGeneralFeedbackResponse;
 import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.notif.email.EmailSendException;
+import com.grubmenow.service.notif.email.EmailSender;
 import com.grubmenow.service.notif.email.GeneralFeedbackEmailRequest;
 import com.grubmenow.service.persist.PersistenceFactory;
 
@@ -22,6 +23,9 @@ import com.grubmenow.service.persist.PersistenceFactory;
 @CommonsLog
 public class SubmitGeneralFeedbackService extends AbstractRemoteService 
 {
+    @Autowired
+    private EmailSender emailSender;
+
 	@RequestMapping(value = "/api/submitGeneralFeedback", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public SubmitGeneralFeedbackResponse executeService(@RequestBody SubmitGeneralFeedbackRequest request) {
@@ -52,7 +56,7 @@ public class SubmitGeneralFeedbackService extends AbstractRemoteService
                 
         try
         {
-            ServiceHandler.getInstance().getEmailSender().sendGeneralFeedbackEmail(generalFeedbackEmailRequest);
+            emailSender.sendGeneralFeedbackEmail(generalFeedbackEmailRequest);
         } catch (EmailSendException ex)
         {
             log.error("Failed sending best-effort feedback email", ex);

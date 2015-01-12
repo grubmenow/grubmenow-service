@@ -7,14 +7,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grubmenow.service.auth.FacebookAuthentication;
 import com.grubmenow.service.auth.FacebookCustomerInfo;
-import com.grubmenow.service.auth.ServiceHandler;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
@@ -24,7 +25,10 @@ import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
-public class SubmitOrderFeedbackService extends AbstractRemoteService {
+public class SubmitOrderFeedbackService extends AbstractRemoteService
+{
+    @Autowired
+    private FacebookAuthentication facebookAuthentication;
 
 	@RequestMapping(value = "/api/submitOrderFeedback", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
@@ -89,8 +93,7 @@ public class SubmitOrderFeedbackService extends AbstractRemoteService {
 	private CustomerOrderDAO validateCustomersOrder(SubmitOrderFeedbackRequest request) {
 		FacebookCustomerInfo customerInfo = null;
 		try {
-			customerInfo = ServiceHandler.getInstance().getFacebookAuthentication()
-					.validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
+			customerInfo = facebookAuthentication.validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
 		} catch (Exception e) {
 			throw new ValidationException("Invalid fb authentication token");
 		}

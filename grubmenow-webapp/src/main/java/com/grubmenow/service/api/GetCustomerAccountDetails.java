@@ -2,14 +2,15 @@ package com.grubmenow.service.api;
 
 import lombok.extern.apachecommons.CommonsLog;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grubmenow.service.auth.FacebookAuthentication;
 import com.grubmenow.service.auth.FacebookCustomerInfo;
-import com.grubmenow.service.auth.ServiceHandler;
 import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.model.GetCustomerAccountDetailsRequest;
 import com.grubmenow.service.model.GetCustomerAccountDetailsResponse;
@@ -18,7 +19,11 @@ import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
 @CommonsLog
-public class GetCustomerAccountDetails extends AbstractRemoteService {
+public class GetCustomerAccountDetails extends AbstractRemoteService
+{
+
+    @Autowired
+    private FacebookAuthentication facebookAuthentication;
 
 	@RequestMapping(value = "/api/getCustomerAccountDetails", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
@@ -31,7 +36,7 @@ public class GetCustomerAccountDetails extends AbstractRemoteService {
 	private FacebookCustomerInfo validateAndfetchFacebookCustomerIdFromFb(GetCustomerAccountDetailsRequest request)
     {
 	    try {
-            return ServiceHandler.getInstance().getFacebookAuthentication()
+            return facebookAuthentication
                     .validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
         } catch (Exception ex) {
             log.warn("Invalid fb authentication token", ex);

@@ -10,14 +10,15 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.grubmenow.service.auth.FacebookAuthentication;
 import com.grubmenow.service.auth.FacebookCustomerInfo;
-import com.grubmenow.service.auth.ServiceHandler;
 import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.datamodel.CustomerOrderDAO;
 import com.grubmenow.service.datamodel.CustomerOrderItemDAO;
@@ -33,7 +34,6 @@ import com.grubmenow.service.datamodel.OrderState;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
 import com.grubmenow.service.model.Amount;
-import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
@@ -41,9 +41,11 @@ import com.grubmenow.service.model.PlaceOrderRequest;
 import com.grubmenow.service.model.PlaceOrderResponse;
 import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.notif.email.EmailSendException;
+import com.grubmenow.service.notif.email.EmailSender;
 import com.grubmenow.service.notif.email.EmailableOrderItemDetail;
 import com.grubmenow.service.notif.email.OrderSuccessEmailRequest;
 import com.grubmenow.service.pay.PaymentTransaction;
+import com.grubmenow.service.pay.StripePaymentProcessor;
 import com.grubmenow.service.persist.PersistenceFactory;
 
 @RestController
@@ -52,6 +54,13 @@ public class PlaceOrderService  extends AbstractRemoteService {
 
 	private static float TAX_PERCENTAGE = 0.095f;
 	
+	@Autowired
+	private FacebookAuthentication facebookAuthentication;
+	@Autowired
+	private StripePaymentProcessor stripePaymentProcessor;
+	@Autowired
+	private EmailSender emailSender;
+
 	@RequestMapping(value = "/api/placeOrder", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public PlaceOrderResponse executeService(@RequestBody PlaceOrderRequest request) throws ValidationException {
@@ -82,7 +91,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	private CustomerDAO saveAndFetchCustomerId(PlaceOrderRequest request) {
 		FacebookCustomerInfo fbCustomerInfo = null;
 		try {
-			fbCustomerInfo = ServiceHandler.getInstance().getFacebookAuthentication().validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
+			fbCustomerInfo = facebookAuthentication.validateTokenAndFetchCustomerInfo(request.getWebsiteAuthenticationToken());
 		} catch (Exception e) {
 			throw new ValidationException("Invalid fb authentication token");
 		}
@@ -193,7 +202,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		int amountInCents = orderAmount.getValue();
 		
 		try {
-			PaymentTransaction paymentTransaction = ServiceHandler.getInstance().getStripeProcessor().charge(request.getOnlinePaymentToken(), amountInCents, orderAmount.getCurrency(), orderId, orderId);
+			PaymentTransaction paymentTransaction = stripePaymentProcessor.charge(request.getOnlinePaymentToken(), amountInCents, orderAmount.getCurrency(), orderId, orderId);
 			Validator.notNull(paymentTransaction, "Unable to authorize payment instrument");
 
 			CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
@@ -353,8 +362,8 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		// send email to consumer
 		try
 		{
-			ServiceHandler.getInstance().getEmailSender().sendConsumerOrderSuccessEmail(emailRequest);
-			ServiceHandler.getInstance().getEmailSender().sendProviderOrderSuccessEmail(emailRequest);
+			emailSender.sendConsumerOrderSuccessEmail(emailRequest);
+	        emailSender.sendProviderOrderSuccessEmail(emailRequest);
 		}
 		catch (Exception ex)
 		{
