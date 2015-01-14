@@ -76,8 +76,8 @@
                     <div class="col-sm-4">Payment method:</div>
                     <div class="checkoutText col-sm-8">
                         <select class="form-control coPaymentSel" id="inputPayment" ng-model="payment.mode">
+                            <option ng-selected="finalOrder.provider.onlinePaymentAccepted == true" ng-disabled="finalOrder.provider.onlinePaymentAccepted == false" value=card>Credit Card</option>
                             <option ng-selected="finalOrder.provider.cashOnDeliverPaymentAccepted == true" ng-disabled="finalOrder.provider.cashOnDeliverPaymentAccepted == false" value=cash>Cash on Pickup</option>
-                          <!--  <option ng-selected="finalOrder.provider.onlinePaymentAccepted == true" ng-disabled="finalOrder.provider.onlinePaymentAccepted == false" value=card>Credit Card</option> -->
                         </select>
                     </div>
                     <div class="clearfix"></div>
@@ -86,24 +86,27 @@
                         <div class="payment-errors text-warn"><strong>{{stripe.error.message}}</strong></div>
                         
                         <br/>
-                        <div class="coFormElem">
-                            <span class="coFormLabels"></span> <img class="checkoutFormCC" src="img/credit_card_logo.png"/>
+                        <div class="coFormElem" style="margin-left:10px;">
+                             <img class="checkoutFormCC" src="img/credit_card_logo.png"/>
                         </div>
                         
                         <div class="coFormElem">
-                            <span class="coFormLabels">Card Number</span> <input type="text" class="form-control checkoutFormElem checkoutFormCC" data-stripe="number">
+                            <div class="col-sm-4">Card Number</div>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control checkoutFormElem" data-stripe="number">
+                            </div>
                         </div>
                         <div class="clearfix"></div>
                         <div class="coFormElem">
-                            <span class="coFormLabels">CVC</span>
-                            <div class="coFormLabelsDiv"> 
+                            <div class="col-sm-4">CVC</div>
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control checkoutFormCVC" size="4" data-stripe="cvc">
                             </div>
                         </div>
                         <div class="clearfix"></div>
-                        <div class="coFormElem coExpiry">
-                            <span class="coFormLabels coExpiryLabel">Expiration (MM/YYYY)</span>
-                            <div class="coFormLabelsDiv">
+                        <div class="coFormElem">
+                            <div class="col-sm-4">Expiration (MM/YYYY)</div>
+                            <div class="col-sm-8">
                                 <select class="form-control checkoutFormMM" data-stripe="exp-month">
 		                            <option value=1>Jan</option>
                             		<option value=2>Feb</option>

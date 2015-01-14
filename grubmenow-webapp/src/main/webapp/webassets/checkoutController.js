@@ -193,7 +193,7 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
     $scope.stripe = {};
     $scope.order = {};
     $scope.initializeFB();
-    Stripe.setPublishableKey('pk_test_CJPjqWuObYi705eii41Faeq7');
+    Stripe.setPublishableKey('pk_live_AdevElAUHrWt4SGb3jJJSkQa');
     $scope.getFinalOrder();
     $('#inputPayment').change(function(){
         $('html, body').animate({
