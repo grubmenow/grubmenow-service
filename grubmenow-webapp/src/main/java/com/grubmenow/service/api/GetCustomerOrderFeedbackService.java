@@ -17,12 +17,14 @@ import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.model.GetCustomerOrderFeedbackRequest;
 import com.grubmenow.service.model.GetCustomerOrderFeedbackResponse;
 import com.grubmenow.service.model.exception.ValidationException;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 @CommonsLog
 public class GetCustomerOrderFeedbackService extends AbstractRemoteService
 {
+    @Autowired
+    PersistenceHandler persistenceHandler;
     @Autowired
     private FacebookAuthentication facebookAuthentication;
 
@@ -39,7 +41,7 @@ public class GetCustomerOrderFeedbackService extends AbstractRemoteService
 		GetCustomerOrderFeedbackResponse response = new GetCustomerOrderFeedbackResponse();
 		
 		try{
-			OrderFeedbackDAO orderFeedbackDAO = PersistenceFactory.getInstance().getOrderFeedbackById(request.getOrderId());
+			OrderFeedbackDAO orderFeedbackDAO = persistenceHandler.getOrderFeedbackById(request.getOrderId());
 			if (orderFeedbackDAO != null)
 			{
 			    response.setFeedback(orderFeedbackDAO.getFeedback());
@@ -73,7 +75,7 @@ public class GetCustomerOrderFeedbackService extends AbstractRemoteService
 		}
 		
 		// get order
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(request.getOrderId());
+		CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(request.getOrderId());
 		
 		Validator.isTrue(StringUtils.equals(customerOrderDAO.getCustomerId(), customerInfo.getFacebookUserId()), "Unable to confirm the order for this customer");
 		

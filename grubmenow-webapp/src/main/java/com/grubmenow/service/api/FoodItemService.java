@@ -21,6 +21,7 @@ import lombok.extern.apachecommons.CommonsLog;
 
 import org.apache.commons.io.IOUtils;
 import org.imgscalr.Scalr;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -46,13 +47,15 @@ import com.grubmenow.service.datamodel.ObjectPopulator;
 import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.exception.ServiceFaultException;
 import com.grubmenow.service.model.exception.ValidationException;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @Controller
 @RequestMapping(value = "/api/foodItem")
 @CommonsLog
 public class FoodItemService extends AbstractRemoteService
 {
+    @Autowired
+    PersistenceHandler persistenceHandler;
     private static final int IMAGE_WIDTH = 300;
     private static final int IMAGE_HEIGHT = 200;
     
@@ -76,7 +79,7 @@ public class FoodItemService extends AbstractRemoteService
         /* 
          * Make sure that the food item name is unique
          */
-        List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getFoodItemByName(foodItem.getFoodItemName());
+        List<FoodItemDAO> foodItemDAOs = persistenceHandler.getFoodItemByName(foodItem.getFoodItemName());
         if (foodItemDAOs != null && foodItemDAOs.size() > 0)
         {
             throw new ValidationException("Food item name : " + foodItem.getFoodItemName() + " already exists");
@@ -137,7 +140,7 @@ public class FoodItemService extends AbstractRemoteService
         }
         foodItemDAO.setFoodItemImageUrl(foodItemImageUrl);
         foodItemDAO.setFoodItemState(FoodItemState.ACTIVE);
-        PersistenceFactory.getInstance().createFoodItem(foodItemDAO);
+        persistenceHandler.createFoodItem(foodItemDAO);
         return foodItemDAO;
     }
 

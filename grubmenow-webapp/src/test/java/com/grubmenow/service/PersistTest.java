@@ -19,23 +19,24 @@ import com.grubmenow.service.model.OrderItem;
 import com.grubmenow.service.model.PaymentMethod;
 import com.grubmenow.service.model.PlaceOrderRequest;
 import com.grubmenow.service.model.SubmitOrderFeedbackRequest;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
+import com.grubmenow.service.persist.PersistenceHandlerImpl;
 
 
 public class PersistTest {
 
 	public static void main(String[] args) {
 
-//		List<String> zipCodes = PersistenceFactory.getInstance().getNeighbouringZipCodes("98007", 10);
+//		List<String> zipCodes = persistenceHandler.getNeighbouringZipCodes("98007", 10);
 //		
-//		List<FoodItemDAO> foodItemDAOs = PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(zipCodes, new DateTime());
+//		List<FoodItemDAO> foodItemDAOs = persistenceHandler.getAllAvailableFoodItemForZipCodes(zipCodes, new DateTime());
 //		
 //		System.out.println(foodItemDAOs);
 //		
-//		FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById("kyqkfbtdgp");
+//		FoodItemOfferDAO foodItemOfferDAO = persistenceHandler.getFoodItemOfferById("kyqkfbtdgp");
 //		System.out.println(foodItemOfferDAO);
 //		
-//		System.out.println(PersistenceFactory.getInstance().getAllFoodItemOffer());
+//		System.out.println(persistenceHandler.getAllFoodItemOffer());
 //		
 //		populateTestFoodItemOffer();
 		
@@ -100,7 +101,8 @@ public class PersistTest {
 			foodItemOfferDAO1.setIsFoodPickUpOptionAvailable(true);
 			foodItemOfferDAO1.setOfferState(OfferState.ACTIVE);
 
-			PersistenceFactory.getInstance().createFoodItemOffer(
+			PersistenceHandler persistenceHandler = new PersistenceHandlerImpl("", "", "");
+			persistenceHandler.createFoodItemOffer(
 					foodItemOfferDAO1);
 			
 			FoodItemOfferDAO foodItemOfferDAO2 = new FoodItemOfferDAO();
@@ -119,7 +121,7 @@ public class PersistTest {
 			foodItemOfferDAO2.setIsFoodPickUpOptionAvailable(true);
 			foodItemOfferDAO2.setOfferState(OfferState.ACTIVE);
 
-			PersistenceFactory.getInstance().createFoodItemOffer(
+			persistenceHandler.createFoodItemOffer(
 					foodItemOfferDAO2);
 
 			
@@ -139,7 +141,7 @@ public class PersistTest {
 			foodItemOfferDAO3.setIsFoodPickUpOptionAvailable(true);
 			foodItemOfferDAO3.setOfferState(OfferState.ACTIVE);
 
-			PersistenceFactory.getInstance().createFoodItemOffer(
+			persistenceHandler.createFoodItemOffer(
 					foodItemOfferDAO3);
 
 			
@@ -160,7 +162,7 @@ public class PersistTest {
 			foodItemOfferDAO4.setIsFoodPickUpOptionAvailable(true);
 			foodItemOfferDAO4.setOfferState(OfferState.ACTIVE);
 
-			PersistenceFactory.getInstance().createFoodItemOffer(
+			persistenceHandler.createFoodItemOffer(
 					foodItemOfferDAO4);
 
 		}
@@ -185,7 +187,7 @@ public class PersistTest {
 //		foodItemOfferDAO.setIsFoodPickUpOptionAvailable(true);
 //		foodItemOfferDAO.setOfferState(OfferState.ACTIVE);
 //		
-//		PersistenceFactory.getInstance().createFoodItemOffer(foodItemOfferDAO);
+//		persistenceHandler.createFoodItemOffer(foodItemOfferDAO);
 //	}
 //	
 //	private static void testFoodItem(PersistenceHandlerInterface persistenceHandlerInterface) {

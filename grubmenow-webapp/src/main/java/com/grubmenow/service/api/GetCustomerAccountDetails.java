@@ -15,13 +15,14 @@ import com.grubmenow.service.datamodel.CustomerDAO;
 import com.grubmenow.service.model.GetCustomerAccountDetailsRequest;
 import com.grubmenow.service.model.GetCustomerAccountDetailsResponse;
 import com.grubmenow.service.model.exception.ValidationException;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 @CommonsLog
 public class GetCustomerAccountDetails extends AbstractRemoteService
 {
-
+    @Autowired
+    PersistenceHandler persistenceHandler;
     @Autowired
     private FacebookAuthentication facebookAuthentication;
 
@@ -50,7 +51,7 @@ public class GetCustomerAccountDetails extends AbstractRemoteService
 	    String fbUserId = fbCustomerInfo.getFacebookUserId();
 	    try
 	    {
-	        CustomerDAO customerDAO = PersistenceFactory.getInstance().getCustomerById(fbUserId);
+	        CustomerDAO customerDAO = persistenceHandler.getCustomerById(fbUserId);
 	        GetCustomerAccountDetailsResponse response = new GetCustomerAccountDetailsResponse();
 	        response.setFirstName(customerDAO.getCustomerFirstName());
 	        response.setLastName(customerDAO.getCustomerLastName());

@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,11 +24,14 @@ import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.GetFoodItemDetailPageRequest;
 import com.grubmenow.service.model.GetFoodItemDetailPageResponse;
 import com.grubmenow.service.model.ProviderFoodItemOffer;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 @CommonsLog
-public class GetFoodItemDetailPageService extends AbstractRemoteService {
+public class GetFoodItemDetailPageService extends AbstractRemoteService
+{
+    @Autowired
+    PersistenceHandler persistenceHandler;
 
 	@RequestMapping(value = "/api/getDetailPageResults", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
@@ -68,7 +72,7 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 
 	private FoodItem populateFoodItem(String foodItemId)
 	{
-		FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemId);
+		FoodItemDAO foodItemDAO = persistenceHandler.getFoodItemById(foodItemId);
 		return ObjectPopulator.toFoodItem(foodItemDAO);
 	}
 
@@ -79,18 +83,18 @@ public class GetFoodItemDetailPageService extends AbstractRemoteService {
 	        AvailableDay availableDay, 
 	        int requestTimezoneOffsetMins) 
 	{
-		List<FoodItemOfferDAO> foodItemOfferDAOs = PersistenceFactory.getInstance().getCurrentProviderOffering(foodItemId, offerDay);
+		List<FoodItemOfferDAO> foodItemOfferDAOs = persistenceHandler.getCurrentProviderOffering(foodItemId, offerDay);
 
 		List<ProviderFoodItemOffer> providerFoodItemOffers = new ArrayList<>();
 
 		for (FoodItemOfferDAO foodItemOfferDAO : foodItemOfferDAOs) {
 
-			ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(foodItemOfferDAO.getProviderId());
+			ProviderDAO providerDAO = persistenceHandler.getProviderById(foodItemOfferDAO.getProviderId());
 			
 			ProviderFoodItemOffer providerFoodItemOffer = new ProviderFoodItemOffer();
 			providerFoodItemOffer.setProvider(ObjectPopulator.toProvider(providerDAO));
 			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO, availableDay));
-			providerFoodItemOffer.setDistanceInMiles(PersistenceFactory.getInstance().getDistanceInMilesBetweenZipCodes(zipCode, providerDAO.getProviderAddressZipCode())); 
+			providerFoodItemOffer.setDistanceInMiles(persistenceHandler.getDistanceInMilesBetweenZipCodes(zipCode, providerDAO.getProviderAddressZipCode())); 
 
 			providerFoodItemOffers.add(providerFoodItemOffer);
 		}

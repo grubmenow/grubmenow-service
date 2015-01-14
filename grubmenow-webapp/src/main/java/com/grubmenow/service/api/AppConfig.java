@@ -13,6 +13,8 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import com.grubmenow.service.auth.FacebookAuthentication;
 import com.grubmenow.service.notif.email.EmailSender;
 import com.grubmenow.service.pay.StripePaymentProcessor;
+import com.grubmenow.service.persist.PersistenceHandler;
+import com.grubmenow.service.persist.PersistenceHandlerImpl;
 
 @Configuration 
 @ComponentScan("com.grubmenow") 
@@ -30,16 +32,14 @@ public class AppConfig
         String facebookAppId = env.getProperty("facebookAppId");
         String facebookSecretId = env.getProperty("facebookSecretId");
         log.info("Loading facebook App Id ["+ facebookAppId +"]");
-        FacebookAuthentication facebookAuthentication = new FacebookAuthentication(facebookAppId, facebookSecretId);
-        return facebookAuthentication;
+        return new FacebookAuthentication(facebookAppId, facebookSecretId);
     }
 
     @Bean
     public StripePaymentProcessor getStripePaymentProcessor()
     {
         String stripeSecretKey = env.getProperty("stripeSecretKey");
-        StripePaymentProcessor stripePaymentProcessor = new StripePaymentProcessor(stripeSecretKey);
-        return stripePaymentProcessor;
+        return new StripePaymentProcessor(stripeSecretKey);
     }
 
     @Bean
@@ -47,7 +47,15 @@ public class AppConfig
     {
         String sesAwsAccessKey = env.getProperty("sesAwsAccessKey");
         String sesAwsSecretKey = env.getProperty("sesAwsSecretKey");
-        EmailSender emailSender = new EmailSender(sesAwsAccessKey, sesAwsSecretKey);
-        return emailSender;
+        return new EmailSender(sesAwsAccessKey, sesAwsSecretKey);
+    }
+
+    @Bean
+    public PersistenceHandler getPersistenceHandler()
+    {
+        String databaseUrl = env.getProperty("databaseConnectionUrl");
+        String databaseUsername = env.getProperty("databaseUsername");
+        String databasePassword = env.getProperty("databasePassword");
+        return new PersistenceHandlerImpl(databaseUrl, databaseUsername, databasePassword);
     }
 } 

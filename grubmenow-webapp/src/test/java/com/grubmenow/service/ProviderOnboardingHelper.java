@@ -12,12 +12,15 @@ import com.grubmenow.service.datamodel.OfferState;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
 import com.grubmenow.service.model.Currency;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
+import com.grubmenow.service.persist.PersistenceHandlerImpl;
 
 
 public class ProviderOnboardingHelper {
 
+    private static PersistenceHandler persistenceHandler;
 	public static void main(String[] args) {
+	    persistenceHandler = new PersistenceHandlerImpl("databaseConnectionUrl", "databaseUsername", "databasePassword");
 //		setUpItem();
 //		onboardProvider();
 		setUpOffer();
@@ -53,7 +56,7 @@ public class ProviderOnboardingHelper {
 		provider.setIsCashOnDeliverPaymentAccepted(true);
 		provider.setIsOnlinePaymentAccepted(true);
 		
-		PersistenceFactory.getInstance().createProvider(provider);
+		persistenceHandler.createProvider(provider);
 	}
 	
 	public static void setUpItem() {
@@ -68,7 +71,7 @@ public class ProviderOnboardingHelper {
 		foodItem.setFoodItemDescription("");
 		foodItem.setFoodItemImageUrl(imageUrl);
 		foodItem.setFoodItemState(FoodItemState.ACTIVE);
-		PersistenceFactory.getInstance().createFoodItem(foodItem);
+		persistenceHandler.createFoodItem(foodItem);
 	}
 
 	
@@ -101,7 +104,7 @@ public class ProviderOnboardingHelper {
 		foodItemOfferDAO.setOfferState(OfferState.ACTIVE);
 		foodItemOfferDAO.setOfferDescriptionTags(offerTags);
 
-		PersistenceFactory.getInstance().createFoodItemOffer(
+		persistenceHandler.createFoodItemOffer(
 				foodItemOfferDAO);
 	}
 	

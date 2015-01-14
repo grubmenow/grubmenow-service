@@ -13,6 +13,7 @@ import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.ProviderState;
 import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 public class AddEditProviderActionDashboardServlet extends AbstractDashboadServlet {
 
@@ -20,6 +21,7 @@ public class AddEditProviderActionDashboardServlet extends AbstractDashboadServl
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+	    PersistenceHandler persistenceHandler = PersistenceFactory.getInstance();
 		RequestReader requestReader = new RequestReader(request);
 		
 		// check access
@@ -27,14 +29,14 @@ public class AddEditProviderActionDashboardServlet extends AbstractDashboadServl
 			throw new IllegalArgumentException("Invalid Code");
 		}
 		
-		ProviderDAO providerDAO = updateProviderObject(requestReader);
+		ProviderDAO providerDAO = updateProviderObject(requestReader, persistenceHandler);
 
 		String message = "Saved. Provider Id:" + providerDAO.getProviderId();
 
 		returnSuccessMessageAndRedirectToUrl(request, response, message, "provider");
     }
 	
-	private ProviderDAO updateProviderObject (RequestReader reader) {
+	private ProviderDAO updateProviderObject (RequestReader reader, PersistenceHandler persistenceHandler) {
 		String providerId = reader.readOptional("providerId");
 		
 		boolean isNew = StringUtils.isBlank(providerId);
@@ -48,7 +50,7 @@ public class AddEditProviderActionDashboardServlet extends AbstractDashboadServl
 			providerDAO.setNumberOfRatings(0);
 			providerDAO.setProviderState(ProviderState.ACTIVE);
 		} else {
-			providerDAO = PersistenceFactory.getInstance().getProviderById(providerId);
+			providerDAO = persistenceHandler.getProviderById(providerId);
 		}
 		
 		providerDAO.setProviderName(reader.read("providerName"));
@@ -65,9 +67,9 @@ public class AddEditProviderActionDashboardServlet extends AbstractDashboadServl
 		providerDAO.setIsCardOnDeliverPaymentAccepted(Boolean.valueOf(reader.read("isCardOnDeliverPaymentAccepted")));
 		
 		if(isNew) {
-			PersistenceFactory.getInstance().createProvider(providerDAO);
+			persistenceHandler.createProvider(providerDAO);
 		}else {
-			PersistenceFactory.getInstance().updateProvider(providerDAO);
+			persistenceHandler.updateProvider(providerDAO);
 		}
 		
 		return providerDAO;

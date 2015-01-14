@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,12 +17,15 @@ import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.model.AvailableDay;
 import com.grubmenow.service.model.FoodItem;
 import com.grubmenow.service.model.SearchFoodItemRequest;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 @CommonsLog
-public class SearchFoodItemService extends AbstractRemoteService {
+public class SearchFoodItemService extends AbstractRemoteService
+{
 
+    @Autowired
+    PersistenceHandler persistenceHandler;
 	@RequestMapping(value = "/api/searchFoodItems", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public List<FoodItem> executeService(@RequestBody SearchFoodItemRequest request) {
@@ -83,11 +87,11 @@ public class SearchFoodItemService extends AbstractRemoteService {
 		forDate = forDate.minusMinutes(requestTimezoneOffsetMins);
 		log.debug("Finding food item for date: " + forDate);
 
-		return PersistenceFactory.getInstance().getAllAvailableFoodItemForZipCodes(neighboringZipCodes, forDate);
+		return persistenceHandler.getAllAvailableFoodItemForZipCodes(neighboringZipCodes, forDate);
 	}
 
 	private List<String> getAllNeighboringZipCodes(String zipCode, int radius) {
-		return PersistenceFactory.getInstance().getNeighbouringZipCodes(zipCode, radius);
+		return persistenceHandler.getNeighbouringZipCodes(zipCode, radius);
 	}
 
 }

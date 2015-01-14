@@ -46,12 +46,14 @@ import com.grubmenow.service.notif.email.EmailableOrderItemDetail;
 import com.grubmenow.service.notif.email.OrderSuccessEmailRequest;
 import com.grubmenow.service.pay.PaymentTransaction;
 import com.grubmenow.service.pay.StripePaymentProcessor;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 @CommonsLog
-public class PlaceOrderService  extends AbstractRemoteService {
-
+public class PlaceOrderService  extends AbstractRemoteService
+{
+    @Autowired
+    PersistenceHandler persistenceHandler;
 	private static float TAX_PERCENTAGE = 0.095f;
 	
 	@Autowired
@@ -116,7 +118,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		CustomerDAO prevCustomerDAO = null;
 		try
 		{
-		    prevCustomerDAO = PersistenceFactory.getInstance().getCustomerById(fbCustomerInfo.getFacebookUserId());
+		    prevCustomerDAO = persistenceHandler.getCustomerById(fbCustomerInfo.getFacebookUserId());
 		}
 		catch (Exception e)
 		{
@@ -128,13 +130,13 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		{
 		    if (prevCustomerDAO == null)
 		    {
-		        PersistenceFactory.getInstance().createCustomer(customerDAO);
+		        persistenceHandler.createCustomer(customerDAO);
 		    }
 		    else
 		    {
 		        Validator.isTrue(prevCustomerDAO.getCustomerState() == CustomerState.ACTIVE, "Invalid Customer State");
 		        CustomerDAO newCustomerDAO = mergePrevAndNewCustomerDAO(prevCustomerDAO, customerDAO);
-		        PersistenceFactory.getInstance().updateCustomer(newCustomerDAO);
+		        persistenceHandler.updateCustomer(newCustomerDAO);
 		    }
 		}
 		catch (Exception e) {
@@ -205,11 +207,11 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			PaymentTransaction paymentTransaction = stripePaymentProcessor.charge(request.getOnlinePaymentToken(), amountInCents, orderAmount.getCurrency(), orderId, orderId);
 			Validator.notNull(paymentTransaction, "Unable to authorize payment instrument");
 
-			CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
+			CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(orderId);
 			customerOrderDAO.setOrderChargeTransactionId(paymentTransaction.getTransactionId());
 			customerOrderDAO.setOrderPaymentState(OrderPaymentState.AUTHORIZATION_SUCCESS);
 			
-			PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
+			persistenceHandler.updateCustomerOrder(customerOrderDAO);
 		} catch (Exception e) {
 			log.error("Unable to authorize payment instrument", e);
 			throw new ValidationException("Unable to authorize payment instrument", e.getMessage());
@@ -219,10 +221,10 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	private PlaceOrderResponse generateResponse(String orderId) {
 		PlaceOrderResponse response = new PlaceOrderResponse();
 
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
+		CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(orderId);
 		response.setCustomerOrder(ObjectPopulator.toCustomerOrder(customerOrderDAO));
 		
-		List<CustomerOrderItemDAO> customerOrderItemDAOs = PersistenceFactory.getInstance().getCustomerOrderItemByOrderId(orderId);
+		List<CustomerOrderItemDAO> customerOrderItemDAOs = persistenceHandler.getCustomerOrderItemByOrderId(orderId);
 		
 		List<CustomerOrderItem> customerOrderItems = new ArrayList<>();
 		for(CustomerOrderItemDAO customerOrderItemDAO: customerOrderItemDAOs) {
@@ -236,7 +238,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	
 	private void reserveOrder(PlaceOrderRequest request) {
 		
-		Session session = PersistenceFactory.getInstance().getSession();
+		Session session = persistenceHandler.getSession();
 		Transaction transaction = session.beginTransaction();
 		try {
 			for (OrderItem orderItem : request.getOrderItems()) {
@@ -263,7 +265,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	
 	private void releaseReservedOrder(PlaceOrderRequest request) {
 		
-		Session session = PersistenceFactory.getInstance().getSession();
+		Session session = persistenceHandler.getSession();
 		Transaction transaction = session.beginTransaction();
 		try {
 			for (OrderItem orderItem : request.getOrderItems()) {
@@ -288,25 +290,25 @@ public class PlaceOrderService  extends AbstractRemoteService {
 	}
 	
 	private void processOfferReserveFailure(PlaceOrderRequest request, String orderId, String message) {
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
+		CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(orderId);
 		customerOrderDAO.setOrderStateMessage(message);
 		customerOrderDAO.setOrderState(OrderState.FAILED);
-		PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
+		persistenceHandler.updateCustomerOrder(customerOrderDAO);
 	}
 	
 	private void processCreditCardChargeFailure(PlaceOrderRequest request, String orderId, String message) {
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
+		CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(orderId);
 		customerOrderDAO.setOrderStateMessage(message);
 		customerOrderDAO.setOrderPaymentState(OrderPaymentState.AUTHORIZATION_FAILURE);
 		customerOrderDAO.setOrderState(OrderState.FAILED);
-		PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
+		persistenceHandler.updateCustomerOrder(customerOrderDAO);
 	}
 	
 	private CustomerOrderDAO processOrderSuccess(PlaceOrderRequest request, String orderId, String message) {
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(orderId);
+		CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(orderId);
 		customerOrderDAO.setOrderState(OrderState.SUCCESS);
 		customerOrderDAO.setOrderStateMessage(message);
-		PersistenceFactory.getInstance().updateCustomerOrder(customerOrderDAO);
+		persistenceHandler.updateCustomerOrder(customerOrderDAO);
 		return customerOrderDAO;
 	}
 
@@ -315,19 +317,19 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			List<CustomerOrderItemDAO> customerOrderItemDAOs, 
 			DateTime orderFulfillmentDate) throws EmailSendException {
 		String providerId = customerOrderDAO.getProviderId();
-		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(providerId);
+		ProviderDAO providerDAO = persistenceHandler.getProviderById(providerId);
 		List<EmailableOrderItemDetail> orderItemDetails = new ArrayList<>();
 		for(CustomerOrderItemDAO customerOrderItemDAO: customerOrderItemDAOs) {
 			EmailableOrderItemDetail emailOrderItemDetail = new EmailableOrderItemDetail();
 
 			// fill food item name
 			String foodItemId = customerOrderItemDAO.getFoodItemId();
-			FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemId);
+			FoodItemDAO foodItemDAO = persistenceHandler.getFoodItemById(foodItemId);
 			emailOrderItemDetail.setFoodItemName(foodItemDAO.getFoodItemName());
 
 			// fill food item description
 			String foodItemOfferId = customerOrderItemDAO.getFoodItemOfferId();
-			FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById(foodItemOfferId);
+			FoodItemOfferDAO foodItemOfferDAO = persistenceHandler.getFoodItemOfferById(foodItemOfferId);
 			emailOrderItemDetail.setFoodItemDescription(foodItemOfferDAO.getOfferDescription());
 
 			// fill quantity
@@ -388,7 +390,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		for (OrderItem orderItem : request.getOrderItems()) {
 			String orderItemId = IDGenerator.generateOrderId();
 			
-			FoodItemOfferDAO foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById(orderItem.getFoodItemOfferId());
+			FoodItemOfferDAO foodItemOfferDAO = persistenceHandler.getFoodItemOfferById(orderItem.getFoodItemOfferId());
 			
 			validateFoodOffer(foodItemOfferDAO, request.getTimezoneOffsetMins());
 			
@@ -427,7 +429,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		        String.format("Calculated amount is %s, where as request amount is %s - in cents", totalOrderAmountInCents, orderAmount));
 		
 		for(CustomerOrderItemDAO customerOrderItemDAO: orderDAOs) {
-			PersistenceFactory.getInstance().createCustomerOrderItem(customerOrderItemDAO);
+		    persistenceHandler.createCustomerOrderItem(customerOrderItemDAO);
 		}
 		
 		
@@ -447,7 +449,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 		customerOrderDAO.setOrderStateMessage("Creating Order");
 		customerOrderDAO.setOrderTimezoneOffsetMins(requestTimezoneOffsetMins);
 		
-		PersistenceFactory.getInstance().createCustomerOrder(customerOrderDAO);
+		persistenceHandler.createCustomerOrder(customerOrderDAO);
 		
 		Order order = new Order();
 		order.customerOrderDAO = customerOrderDAO;
@@ -501,7 +503,7 @@ public class PlaceOrderService  extends AbstractRemoteService {
 			Validator.notNull(request.getOnlinePaymentToken(), "Invalid Website Authentication Token");	
 		}
 		
-		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(request.getProviderId());
+		ProviderDAO providerDAO = persistenceHandler.getProviderById(request.getProviderId());
 		validateProvider(providerDAO);
 
 		// make sure that the order request time is before the cutoff time for that day

@@ -17,12 +17,14 @@ import com.grubmenow.service.model.exception.ValidationException;
 import com.grubmenow.service.notif.email.EmailSendException;
 import com.grubmenow.service.notif.email.EmailSender;
 import com.grubmenow.service.notif.email.GeneralFeedbackEmailRequest;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 @CommonsLog
 public class SubmitGeneralFeedbackService extends AbstractRemoteService 
 {
+    @Autowired
+    PersistenceHandler persistenceHandler;
     @Autowired
     private EmailSender emailSender;
 
@@ -36,7 +38,7 @@ public class SubmitGeneralFeedbackService extends AbstractRemoteService
 	    generalFeedbackDAO.setFeedbackProvidedTime(new DateTime());
 	    generalFeedbackDAO.setMessage(request.getFeedbackMessage());
 	    generalFeedbackDAO.setZipCode(request.getZipCode());
-	    PersistenceFactory.getInstance().createGeneralFeedback(generalFeedbackDAO);
+	    persistenceHandler.createGeneralFeedback(generalFeedbackDAO);
 	    log.debug("Feedback request submitted. Type = ["+ request.getFeedbackType() 
 	        +"], message = [" + request.getFeedbackMessage()+"]");
 	    sendEmail(generalFeedbackDAO);

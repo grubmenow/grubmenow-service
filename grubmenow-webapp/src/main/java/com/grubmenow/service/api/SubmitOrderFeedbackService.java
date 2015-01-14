@@ -22,11 +22,13 @@ import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.model.SubmitOrderFeedbackRequest;
 import com.grubmenow.service.model.SubmitOrderFeedbackResponse;
 import com.grubmenow.service.model.exception.ValidationException;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 public class SubmitOrderFeedbackService extends AbstractRemoteService
 {
+    @Autowired
+    PersistenceHandler persistenceHandler;
     @Autowired
     private FacebookAuthentication facebookAuthentication;
 
@@ -43,9 +45,9 @@ public class SubmitOrderFeedbackService extends AbstractRemoteService
 		orderFeedbackDAO.setFeedback(request.getFeedback());
 		orderFeedbackDAO.setRating(request.getRating());
 		try{
-			PersistenceFactory.getInstance().createOrderFeedback(orderFeedbackDAO);
+			persistenceHandler.createOrderFeedback(orderFeedbackDAO);
 		}catch (ConstraintViolationException e) {
-			PersistenceFactory.getInstance().updateOrderFeedback(orderFeedbackDAO);
+			persistenceHandler.updateOrderFeedback(orderFeedbackDAO);
 		}
 		
 		// update average customer rating
@@ -64,7 +66,7 @@ public class SubmitOrderFeedbackService extends AbstractRemoteService
 		BigInteger numberOfRatings = null;
 		
 		String sql = "select sum(rating), count(1) as AVG_RATING from ORDER_FEEDBACK where PROVIDER_ID = :provider_id"; 
-		Session session = PersistenceFactory.getInstance().getSession();
+		Session session = persistenceHandler.getSession();
 		try {
 			Query query = session.createSQLQuery(sql)
 					.setString("provider_id", providerId);
@@ -78,10 +80,10 @@ public class SubmitOrderFeedbackService extends AbstractRemoteService
 			session.close();
 		}
 		
-		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(providerId);
+		ProviderDAO providerDAO = persistenceHandler.getProviderById(providerId);
 		providerDAO.setTotalRatingPoints(totalRatingPoints.intValueExact());
 		providerDAO.setNumberOfRatings(numberOfRatings.intValue());
-		PersistenceFactory.getInstance().updateProvider(providerDAO);
+		persistenceHandler.updateProvider(providerDAO);
 	}
 	
 	private void validateInput(SubmitOrderFeedbackRequest request) {
@@ -99,7 +101,7 @@ public class SubmitOrderFeedbackService extends AbstractRemoteService
 		}
 		
 		// get order
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(request.getOrderId());
+		CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(request.getOrderId());
 		
 		Validator.isTrue(StringUtils.equals(customerOrderDAO.getCustomerId(), customerInfo.getFacebookUserId()), "Unable to confirm the order for this customer");
 		

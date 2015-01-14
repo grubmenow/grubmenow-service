@@ -16,6 +16,7 @@ import com.grubmenow.service.datamodel.OfferMealType;
 import com.grubmenow.service.datamodel.OfferState;
 import com.grubmenow.service.model.Currency;
 import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 public class AddEditFoodItemOfferActionDashboardServlet extends AbstractDashboadServlet {
 
@@ -23,6 +24,8 @@ public class AddEditFoodItemOfferActionDashboardServlet extends AbstractDashboad
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        PersistenceHandler persistenceHandler = PersistenceFactory.getInstance();
+        
 		RequestReader requestReader = new RequestReader(request);
 		
 		// check access
@@ -30,14 +33,14 @@ public class AddEditFoodItemOfferActionDashboardServlet extends AbstractDashboad
 			throw new IllegalArgumentException("Invalid Code");
 		}
 		
-		FoodItemOfferDAO foodItemOfferDAO = updateFoodItemOfferObject(requestReader);
+		FoodItemOfferDAO foodItemOfferDAO = updateFoodItemOfferObject(requestReader, persistenceHandler);
 
 		String message = "Saved. Food Item Offer Id:" + foodItemOfferDAO.getFoodItemOfferId();
 
 		returnSuccessMessageAndRedirectToUrl(request, response, message, "fooditemoffer");
     }
 	
-	private FoodItemOfferDAO updateFoodItemOfferObject (RequestReader reader) {
+	private FoodItemOfferDAO updateFoodItemOfferObject (RequestReader reader, PersistenceHandler persistenceHandler) {
 		String foodItemOfferId = reader.readOptional("foodItemOfferId");
 		
 		boolean isNew = StringUtils.isBlank(foodItemOfferId);
@@ -55,7 +58,7 @@ public class AddEditFoodItemOfferActionDashboardServlet extends AbstractDashboad
 			foodItemOfferDAO.setOfferState(OfferState.ACTIVE);
 			foodItemOfferDAO.setAvailableQuantity(reader.readInt("offerQuantity"));
 		} else {
-			foodItemOfferDAO = PersistenceFactory.getInstance().getFoodItemOfferById(foodItemOfferId);
+			foodItemOfferDAO = persistenceHandler.getFoodItemOfferById(foodItemOfferId);
 		}
 		
 		foodItemOfferDAO.setProviderId(reader.read("providerId"));
@@ -67,9 +70,9 @@ public class AddEditFoodItemOfferActionDashboardServlet extends AbstractDashboad
 		foodItemOfferDAO.setOfferDay(new DateTime(reader.readInt("offerDayYYYY"), reader.readInt("offerDayMM"), reader.readInt("offerDayDD"), 0, 0));
 		
 		if(isNew) {
-			PersistenceFactory.getInstance().createFoodItemOffer(foodItemOfferDAO);
+			persistenceHandler.createFoodItemOffer(foodItemOfferDAO);
 		}else {
-			PersistenceFactory.getInstance().udpateFoodItemOffer(foodItemOfferDAO);
+			persistenceHandler.udpateFoodItemOffer(foodItemOfferDAO);
 		}
 		
 		return foodItemOfferDAO;

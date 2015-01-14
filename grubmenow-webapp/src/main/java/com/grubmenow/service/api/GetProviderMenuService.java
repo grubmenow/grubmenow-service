@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.extern.apachecommons.CommonsLog;
 
 import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,19 +23,22 @@ import com.grubmenow.service.model.GetProviderMenuRequest;
 import com.grubmenow.service.model.GetProviderMenuResponse;
 import com.grubmenow.service.model.ProviderFoodItemOffer;
 import com.grubmenow.service.model.exception.ValidationException;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 @CommonsLog
-public class GetProviderMenuService extends AbstractRemoteService {
+public class GetProviderMenuService extends AbstractRemoteService
+{
 
+    @Autowired
+    PersistenceHandler persistenceHandler;
 	@RequestMapping(value = "/api/getProviderMenu", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	protected GetProviderMenuResponse doPost(@RequestBody GetProviderMenuRequest request) throws ValidationException {
 		
 		validateInput(request);
 		
-		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(request.getProviderId());
+		ProviderDAO providerDAO = persistenceHandler.getProviderById(request.getProviderId());
 		validateProvider(request.getProviderId(), providerDAO);
 		
 		DateTime forDate = DateTime.now();
@@ -43,7 +47,7 @@ public class GetProviderMenuService extends AbstractRemoteService {
 		}
 		forDate = forDate.minusMinutes(request.getTimezoneOffsetMins());
 		
-		List<FoodItemOfferDAO> allOffersFromProvider = PersistenceFactory.getInstance().getAllOffersByProvider(request.getProviderId(), forDate);
+		List<FoodItemOfferDAO> allOffersFromProvider = persistenceHandler.getAllOffersByProvider(request.getProviderId(), forDate);
 
 		GetProviderMenuResponse response = new GetProviderMenuResponse();
 		
@@ -62,7 +66,7 @@ public class GetProviderMenuService extends AbstractRemoteService {
 		        log.debug("Food item matches the excluded food item: " + request.getExcludedFoodItem());
 		        continue;
 		    }
-			FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemOfferDAO.getFoodItemId());
+			FoodItemDAO foodItemDAO = persistenceHandler.getFoodItemById(foodItemOfferDAO.getFoodItemId());
 
 			ProviderFoodItemOffer providerFoodItemOffer = new ProviderFoodItemOffer();
 			providerFoodItemOffer.setFoodItemOffer(ObjectPopulator.toFoodItemOffer(foodItemOfferDAO, request.getAvailableDay()));

@@ -1,6 +1,5 @@
 package com.grubmenow.service.api;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +22,13 @@ import com.grubmenow.service.model.CustomerOrderItem;
 import com.grubmenow.service.model.GetCustomerOrderRequest;
 import com.grubmenow.service.model.GetCustomerOrderResponse;
 import com.grubmenow.service.model.exception.ValidationException;
-import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 @RestController
 public class GetCustomerOrderService extends AbstractRemoteService
 {
+    @Autowired
+    PersistenceHandler persistenceHandler;
     @Autowired
     private FacebookAuthentication facebookAuthentication;
 
@@ -44,19 +45,19 @@ public class GetCustomerOrderService extends AbstractRemoteService
 	private GetCustomerOrderResponse generateResponse(GetCustomerOrderRequest request) {
 		GetCustomerOrderResponse response = new GetCustomerOrderResponse();
 
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(request.getOrderId());
+		CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(request.getOrderId());
 		response.setCustomerOrder(ObjectPopulator.toCustomerOrder(customerOrderDAO));
 		
-		ProviderDAO providerDAO = PersistenceFactory.getInstance().getProviderById(customerOrderDAO.getProviderId());
+		ProviderDAO providerDAO = persistenceHandler.getProviderById(customerOrderDAO.getProviderId());
 		response.setProvider(ObjectPopulator.toProvider(providerDAO));
 		
-		List<CustomerOrderItemDAO> customerOrderItemDAOs = PersistenceFactory.getInstance().getCustomerOrderItemByOrderId(request.getOrderId());
+		List<CustomerOrderItemDAO> customerOrderItemDAOs = persistenceHandler.getCustomerOrderItemByOrderId(request.getOrderId());
 		
 		List<CustomerOrderItem> customerOrderItems = new ArrayList<>();
 		for(CustomerOrderItemDAO customerOrderItemDAO: customerOrderItemDAOs) {
 			
 			CustomerOrderItem customerOrderItem = ObjectPopulator.toCustomerOrderItem(customerOrderItemDAO);
-			FoodItemDAO foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(customerOrderItemDAO.getFoodItemId());
+			FoodItemDAO foodItemDAO = persistenceHandler.getFoodItemById(customerOrderItemDAO.getFoodItemId());
 					
 			customerOrderItem.setFoodItem(ObjectPopulator.toFoodItem(foodItemDAO));
 			customerOrderItems.add(customerOrderItem);
@@ -81,7 +82,7 @@ public class GetCustomerOrderService extends AbstractRemoteService
 		}
 		
 		// get order
-		CustomerOrderDAO customerOrderDAO = PersistenceFactory.getInstance().getCustomerOrderById(request.getOrderId());
+		CustomerOrderDAO customerOrderDAO = persistenceHandler.getCustomerOrderById(request.getOrderId());
 		
 		Validator.isTrue(StringUtils.equals(customerOrderDAO.getCustomerId(), customerInfo.getFacebookUserId()), "Unable to confirm the order for this customer");
 		

@@ -47,43 +47,46 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
 	
 	private SessionFactory sessionFactory;
 	
-	public PersistenceHandlerImpl() {
-		Properties properties = new Properties();
-	    properties.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
-	    properties.setProperty("hibernate.connection.url", "jdbc:mysql://grubmenow-db.ccaypnjyvorr.us-west-2.rds.amazonaws.com:3306/grubmenow_service_db");
-	    properties.setProperty("hibernate.connection.username", "root");
-	    properties.setProperty("hibernate.connection.password", "grubmen0w");
-	    properties.setProperty("hibernate.show_sql", "com.mysql.jdbc.Driver");
-	    properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-	    
-	    properties.setProperty("show_sql", "true");
+	public PersistenceHandlerImpl(
+	        String databaseConnectionUrl,
+	        String databaseUsername,
+	        String databasePassword)
+	{
+	    Properties properties = new Properties();
+        properties.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
+        properties.setProperty("hibernate.connection.url", databaseConnectionUrl);
+        properties.setProperty("hibernate.connection.username", databaseUsername);
+        properties.setProperty("hibernate.connection.password", databasePassword);
+        properties.setProperty("hibernate.show_sql", "com.mysql.jdbc.Driver");
+        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        
+        properties.setProperty("show_sql", "true");
 
-	    properties.setProperty("hibernate.c3p0.min_size", "5");
-	    properties.setProperty("hibernate.c3p0.max_size", "20");
-	    properties.setProperty("hibernate.c3p0.timeout", "300");
-	    properties.setProperty("hibernate.c3p0.max_statements", "50");
-	    properties.setProperty("hibernate.c3p0.idle_test_period", "3000");
-	    
-	    Configuration configuration = new Configuration();
-	    configuration.addAnnotatedClass(FoodItemDAO.class);
-	    configuration.addAnnotatedClass(CustomerDAO.class);
-	    configuration.addAnnotatedClass(CustomerOrderItemDAO.class);
-	    configuration.addAnnotatedClass(CustomerOrderDAO.class);
-	    configuration.addAnnotatedClass(FoodItemOfferDAO.class);
-	    configuration.addAnnotatedClass(ProviderDAO.class);
-	    configuration.addAnnotatedClass(OrderFeedbackDAO.class);
-	    configuration.addAnnotatedClass(SearchSuggestionFeedbackDAO.class);
-	    configuration.addAnnotatedClass(GeneralFeedbackDAO.class);
-	    configuration.addAnnotatedClass(InvitationRequestDAO.class);
-	    configuration.addAnnotatedClass(ZipCodeDAO.class);
-	    
-	    configuration.setProperties(properties);
-	    ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
-	            configuration.getProperties()).build();
-	    
-	    sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        properties.setProperty("hibernate.c3p0.min_size", "5");
+        properties.setProperty("hibernate.c3p0.max_size", "20");
+        properties.setProperty("hibernate.c3p0.timeout", "300");
+        properties.setProperty("hibernate.c3p0.max_statements", "50");
+        properties.setProperty("hibernate.c3p0.idle_test_period", "3000");
+        
+        Configuration configuration = new Configuration();
+        configuration.addAnnotatedClass(FoodItemDAO.class);
+        configuration.addAnnotatedClass(CustomerDAO.class);
+        configuration.addAnnotatedClass(CustomerOrderItemDAO.class);
+        configuration.addAnnotatedClass(CustomerOrderDAO.class);
+        configuration.addAnnotatedClass(FoodItemOfferDAO.class);
+        configuration.addAnnotatedClass(ProviderDAO.class);
+        configuration.addAnnotatedClass(OrderFeedbackDAO.class);
+        configuration.addAnnotatedClass(SearchSuggestionFeedbackDAO.class);
+        configuration.addAnnotatedClass(GeneralFeedbackDAO.class);
+        configuration.addAnnotatedClass(InvitationRequestDAO.class);
+        configuration.addAnnotatedClass(ZipCodeDAO.class);
+        
+        configuration.setProperties(properties);
+        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
+                configuration.getProperties()).build();
+        
+        sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 	}
-	
 	
 	public void shutDown() {
 		sessionFactory.close();

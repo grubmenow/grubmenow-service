@@ -13,6 +13,7 @@ import com.grubmenow.service.datamodel.FoodItemDAO;
 import com.grubmenow.service.datamodel.FoodItemState;
 import com.grubmenow.service.datamodel.IDGenerator;
 import com.grubmenow.service.persist.PersistenceFactory;
+import com.grubmenow.service.persist.PersistenceHandler;
 
 public class AddEditFoodItemActionDashboardServlet extends AbstractDashboadServlet {
 
@@ -20,6 +21,8 @@ public class AddEditFoodItemActionDashboardServlet extends AbstractDashboadServl
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+	    PersistenceHandler persistenceHandler = PersistenceFactory.getInstance();
+	    
 		RequestReader requestReader = new RequestReader(request);
 		
 		// check access
@@ -27,14 +30,14 @@ public class AddEditFoodItemActionDashboardServlet extends AbstractDashboadServl
 			throw new IllegalArgumentException("Invalid Code");
 		}
 		
-		FoodItemDAO foodItemDAO = updateFoodObject(requestReader);
+		FoodItemDAO foodItemDAO = updateFoodObject(requestReader, persistenceHandler);
 
 		String message = "Saved. Food Item Id:" + foodItemDAO.getFoodItemId();
 
 		returnSuccessMessageAndRedirectToUrl(request, response, message, "fooditem");
     }
 	
-	private FoodItemDAO updateFoodObject (RequestReader reader) {
+	private FoodItemDAO updateFoodObject (RequestReader reader, PersistenceHandler persistenceHandler) {
 		
 		String foodItemId = reader.readOptional("foodItemId");
 		
@@ -49,16 +52,16 @@ public class AddEditFoodItemActionDashboardServlet extends AbstractDashboadServl
 			foodItemDAO.setFoodItemDescriptionTags("");
 			foodItemDAO.setFoodItemState(FoodItemState.ACTIVE);
 		} else {
-			foodItemDAO = PersistenceFactory.getInstance().getFoodItemById(foodItemId);
+			foodItemDAO = persistenceHandler.getFoodItemById(foodItemId);
 		}
 		
 		foodItemDAO.setFoodItemName(reader.read("foodItemName"));
 		foodItemDAO.setFoodItemImageUrl(reader.read("foodItemImageUrl"));
 		
 		if(isNew) {
-			PersistenceFactory.getInstance().createFoodItem(foodItemDAO);
+			persistenceHandler.createFoodItem(foodItemDAO);
 		}else {
-			PersistenceFactory.getInstance().updateFoodItem(foodItemDAO);
+			persistenceHandler.updateFoodItem(foodItemDAO);
 		}
 		
 		return foodItemDAO;
