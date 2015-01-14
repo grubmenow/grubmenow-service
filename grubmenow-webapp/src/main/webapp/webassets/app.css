@@ -509,3 +509,11 @@ textarea {
      border-bottom: 2px solid #ccc;
      margin-bottom: 20px;
 }
+
+.hiwContainer {
+     margin: 40px 0px;
+}
+
+.hiwImg {
+     width: 80px;
+}
