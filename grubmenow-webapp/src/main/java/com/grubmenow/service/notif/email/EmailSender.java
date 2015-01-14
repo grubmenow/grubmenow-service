@@ -43,8 +43,10 @@ public class EmailSender
     private final Template customerOrderEmailTemplate;
 	private final Template providerOrderEmailTemplate;
 	private final Template generalFeedbackEmailTemplate;
-    
-    public EmailSender(String awsAccessKey, String awsSecretKey) throws Exception {
+	private final boolean isProductionEmail; 
+
+    public EmailSender(String awsAccessKey, String awsSecretKey, boolean isProductionEmail) throws Exception {
+        this.isProductionEmail = isProductionEmail;
     	AWSCredentials creds = new BasicAWSCredentials(awsAccessKey, awsSecretKey);
         sesClient = new AmazonSimpleEmailServiceClient(creds);
         // TODO: kapila: 2014-10-09 Region Hardcoded for now
@@ -84,7 +86,7 @@ public class EmailSender
     		    .withToAddresses(new String[]{toAddress})
     		    .withBccAddresses(BCC);
     		
-    		Content subject = new Content().withData("Thank you for your grubmenow order. Order Id: " + request.getCustomerOrder().getOrderId());
+    		Content subject = new Content().withData(getSubjectIncludingPrefix("Thank you for your grubmenow order. Order Id: " + request.getCustomerOrder().getOrderId()));
     		Content htmlBody = new Content().withData(generateHtmlBodyForConsumerOrderSuccessEmail(request));
     		Body body = new Body().withHtml(htmlBody);
     		
@@ -105,6 +107,19 @@ public class EmailSender
         }
     }
 
+    /**
+     * Creates a customer subject based on the test email or not. 
+     * @return the new subject.
+     */
+    private String getSubjectIncludingPrefix(String originalSubject)
+    {
+        if (isProductionEmail)
+        {
+            return originalSubject;
+        }
+        return "Test: " + originalSubject;
+    }
+
     public void sendProviderOrderSuccessEmail(OrderSuccessEmailRequest request) throws EmailSendException {
     	
 		Validate.notNull(request.getConsumer(), "Consumer cannot be null");
@@ -123,7 +138,7 @@ public class EmailSender
 			    .withToAddresses(new String[] { toAddress })
 			    .withBccAddresses(BCC);
     		
-    		Content subject = new Content().withData("You received an order to fulfill. Order Id: " + request.getCustomerOrder().getOrderId());
+    		Content subject = new Content().withData(getSubjectIncludingPrefix("You received an order to fulfill. Order Id: " + request.getCustomerOrder().getOrderId()));
     		Content htmlBody = new Content().withData(generateHtmlBodyForProviderOrderSuccessEmail(request));
     		Body body = new Body().withHtml(htmlBody);
     		
@@ -152,7 +167,7 @@ public class EmailSender
             // Construct an object to contain the recipient address.
             Destination destination = new Destination().withToAddresses(new String[] { toAddress });
             
-            Content subject = new Content().withData("Feedback recieved, type: " + request.getFeedbackType());
+            Content subject = new Content().withData(getSubjectIncludingPrefix("Feedback recieved, type: " + request.getFeedbackType()));
             Content htmlBody = new Content().withData(generateHtmlBodyForGeneralFeedbackEmail(request));
             Body body = new Body().withHtml(htmlBody);
             

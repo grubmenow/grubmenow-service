@@ -47,7 +47,7 @@ public class AppConfig
     {
         String sesAwsAccessKey = env.getProperty("sesAwsAccessKey");
         String sesAwsSecretKey = env.getProperty("sesAwsSecretKey");
-        return new EmailSender(sesAwsAccessKey, sesAwsSecretKey);
+        return new EmailSender(sesAwsAccessKey, sesAwsSecretKey, isProduction());
     }
 
     @Bean
@@ -58,4 +58,27 @@ public class AppConfig
         String databasePassword = env.getProperty("databasePassword");
         return new PersistenceHandlerImpl(databaseUrl, databaseUsername, databasePassword);
     }
+
+    public boolean isProduction()
+    {
+        String[] activeProfiles = env.getActiveProfiles();
+        if (activeProfiles == null)
+        {
+            log.info("No profile is treated as production profile");
+            return true;
+        }
+        for (String activeProfile: activeProfiles)
+        {
+            if ("dev".equals(activeProfile))
+            {
+                log.info("Any profile dev means we are test profile");
+                return false;
+            }
+        }
+
+        // default for now is production profile
+        log.info("No matching profile for now is treated as production profile");
+        return true;
+    }
+
 } 
