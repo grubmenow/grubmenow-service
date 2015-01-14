@@ -96,7 +96,9 @@ angular.module('gmnControllers').controller('CheckoutCtrl', function ($scope, $h
                         $scope.customer.customerEmailId = data.emailId;
                         $scope.customer.customerPhoneNumber = data.phoneNumber;
                         $scope.customer.customerLoaded = 1;
-                        $scope.validateFormFields();
+                        setTimeout(function(){ 
+                            $scope.validateFormFields();
+                        }, 100);
                     });
                 })
         .error(
