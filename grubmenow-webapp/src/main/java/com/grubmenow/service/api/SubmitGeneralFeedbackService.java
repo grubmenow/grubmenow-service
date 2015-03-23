@@ -38,6 +38,7 @@ public class SubmitGeneralFeedbackService extends AbstractRemoteService
 	    generalFeedbackDAO.setFeedbackProvidedTime(new DateTime());
 	    generalFeedbackDAO.setMessage(request.getFeedbackMessage());
 	    generalFeedbackDAO.setZipCode(request.getZipCode());
+	    generalFeedbackDAO.setSearchDay(request.getSearchDay());
 	    persistenceHandler.createGeneralFeedback(generalFeedbackDAO);
 	    log.debug("Feedback request submitted. Type = ["+ request.getFeedbackType() 
 	        +"], message = [" + request.getFeedbackMessage()+"]");
@@ -54,6 +55,7 @@ public class SubmitGeneralFeedbackService extends AbstractRemoteService
                 .feedbackProvidedTime(generalFeedbackDAO.getFeedbackProvidedTime())
                 .message(generalFeedbackDAO.getMessage())
                 .zipCode(generalFeedbackDAO.getZipCode())
+                .searchDay(generalFeedbackDAO.getSearchDay())
                 .build();
                 
         try

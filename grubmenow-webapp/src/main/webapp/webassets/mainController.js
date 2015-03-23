@@ -91,7 +91,8 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
                 feedbackType: "NO_RESULTS_FEEDBACK",
                 feedbackMessage: $scope.feedback.newItems,
                 emailId: $scope.feedback.emailId,
-                zipCode: $scope.location.zipCode};
+                zipCode: $scope.location.zipCode,
+                searchDay: $scope.location.availableDay};
 
         $scope.submittingFeedback = 1;
         $http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data) {

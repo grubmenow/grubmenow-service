@@ -21,4 +21,5 @@ public class GeneralFeedbackEmailRequest
     String customerEmailId;
     DateTime feedbackProvidedTime;
     String zipCode;
+    String searchDay;
 }

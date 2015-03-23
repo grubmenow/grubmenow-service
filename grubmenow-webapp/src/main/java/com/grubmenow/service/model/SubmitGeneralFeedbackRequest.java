@@ -8,4 +8,5 @@ public class SubmitGeneralFeedbackRequest {
     private String zipCode;
     private String emailId;
 	private String feedbackMessage; 
+	private String searchDay;
 }

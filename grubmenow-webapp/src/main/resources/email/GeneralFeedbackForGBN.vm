@@ -31,4 +31,6 @@ Time: $Formatter.formatDate(${request.feedbackProvidedTime})
 Message: ${request.message}
 <br/>
 Zipcode: ${request.zipCode}
+<br/>
+SearchDay: ${request.searchDay}
 </html>

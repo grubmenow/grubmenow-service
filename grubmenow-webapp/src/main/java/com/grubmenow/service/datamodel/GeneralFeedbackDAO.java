@@ -48,6 +48,9 @@ public class GeneralFeedbackDAO {
     @Column(name = "MESSAGE")
     private String message;
 	
+    @Column(name = "SEARCH_DAY")
+    private String searchDay;
+    
 	@NonNull
     @Column(name = "FEEDBACK_PROVIDED_DATE")
 	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")

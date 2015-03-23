@@ -15,7 +15,7 @@ import com.grubmenow.service.notif.email.EmailableOrderItemDetail;
 
 public class EmailSenderTest {
 	public static void main(String[] args) throws Exception {
-		EmailSender emailSender = new EmailSender("AKIAJ32C6BIGSSD7YL5A", "3+BkyXtniT+waUOMqUgR43oIj+IRiVpS37NKx69D");
+		EmailSender emailSender = new EmailSender("AKIAJ32C6BIGSSD7YL5A", "3+BkyXtniT+waUOMqUgR43oIj+IRiVpS37NKx69D", false);
 		CustomerDAO consumer = new CustomerDAO();
 		consumer.setCustomerFirstName("Vikas");
 		consumer.setCustomerEmailId("mustvicky@gmail.com");
