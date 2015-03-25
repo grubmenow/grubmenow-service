@@ -16,6 +16,15 @@ angular.module('gmnControllers').controller('FAQCtrl', function ($scope, $http) 
     $('#navbarCollapse').removeClass('in');
 });
 
+angular.module('gmnControllers').controller('ProfileCtrl', function ($scope, $http) {
+    //Update the Nav state
+    $( "li", "#gmnNav" ).each(function( index ) {
+        $( this ).removeClass('active');
+    });
+    $('#profileNav').addClass('active');   
+    $('#navbarCollapse').removeClass('in');
+});
+
 
 angular.module('gmnControllers').controller('ContactUsController', function ($scope, $http) {
     //Update the Nav state
