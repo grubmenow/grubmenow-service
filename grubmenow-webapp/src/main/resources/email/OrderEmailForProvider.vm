@@ -20,7 +20,7 @@ table tr:nth-child(odd) {
 </head>
 Hello ${request.provider.providerName}, 
 <br/>
-You have a new grubmenow order that has to be ready by <b>${request.orderPickupStartTime} on $Formatter.formatDate(${request.orderFulfillmentDate})</b>.
+You have a new MealLocal order that has to be ready by <b>${request.orderPickupStartTime} on $Formatter.formatDate(${request.orderFulfillmentDate})</b>.
 <p/>
 Order summary: 
 <p>
@@ -55,8 +55,8 @@ $Formatter.formatAddressLastLine(${request.provider})
 <br/>Phone: ${request.provider.providerPhoneNumber}
 #end
 </p>
-If you are unable to fulfil this order or need to update order, please call Grubmenow Customer Service at +1 206 883 6876 by 6PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
+If you are unable to fulfil this order or need to update order, please call MealLocal Customer Service at +1 206 883 6876 by 6PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
 Thank you,<br/> 
-Grubmenow team. <br/>
+MealLocal team. <br/>
 For Customer Service call +1 209-900-GRUB(4782) 11AM-9PM PT daily
 </html>

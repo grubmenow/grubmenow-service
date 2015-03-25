@@ -20,7 +20,7 @@ table tr:nth-child(odd) {
 </head>
 Hello <b>${request.consumer.customerFirstName}</b>, 
 <br/>
-Thank you for your grubmenow order. Your order id is <a href="http://grubmenow.com/#/orderDetails?orderId=${request.customerOrder.orderId}"><b>${request.customerOrder.orderId}</b></a>.
+Thank you for your MealLocal order. Your order id is <a href="http://meallocal.com/#/orderDetails?orderId=${request.customerOrder.orderId}"><b>${request.customerOrder.orderId}</b></a>.
 <p/>
 Your order summary: 
 <table>
@@ -45,7 +45,7 @@ Your order summary:
 <b> Order total </b>: $Formatter.formatAmount(${request.orderAmountTotal})
 <br/>
 <br/>
- Click <a href="http://grubmenow.com/#/orderDetails?orderId=${request.customerOrder.orderId}">here</a> to see details.
+ Click <a href="http://meallocal.com/#/orderDetails?orderId=${request.customerOrder.orderId}">here</a> to see details.
 <br/>
 <br/>
 Please pick up your order between <b>${request.orderPickupStartTime} and ${request.orderPickupEndTime} on $Formatter.formatDate(${request.orderFulfillmentDate})</b> from this location:
@@ -61,9 +61,9 @@ $Formatter.formatAddressLastLine(${request.provider})
 #end
 <p/>
 
-If you'd like to cancel your order, please call Grubmenow Customer Service at +1 209 900 GRUB(4782) by 6PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
+If you'd like to cancel your order, please call MealLocal Customer Service at +1 209 900 GRUB(4782) by 6PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
 
 Thank you,<br/> 
-Grubmenow team. <br/>
+MealLocal team. <br/>
 For Customer Service call +1 209-900-GRUB(4782) 11AM-9PM PT daily
 </html>

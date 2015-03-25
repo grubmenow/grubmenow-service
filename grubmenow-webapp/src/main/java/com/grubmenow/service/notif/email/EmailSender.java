@@ -36,7 +36,7 @@ import com.grubmenow.service.model.PaymentMethod;
 @CommonsLog
 public class EmailSender 
 {
-	private static final String FROM = "'GrubMeNow' <admin@grubmenow.com>";
+	private static final String FROM = "'MealLocal' <admin@meallocal.com>";
 	private static final String BCC = FROM; 
     private final AmazonSimpleEmailServiceClient sesClient;
     private final VelocityEngine velocityEngine;
@@ -86,7 +86,7 @@ public class EmailSender
     		    .withToAddresses(new String[]{toAddress})
     		    .withBccAddresses(BCC);
     		
-    		Content subject = new Content().withData(getSubjectIncludingPrefix("Thank you for your grubmenow order. Order Id: " + request.getCustomerOrder().getOrderId()));
+    		Content subject = new Content().withData(getSubjectIncludingPrefix("Thank you for your MealLocal order. Order Id: " + request.getCustomerOrder().getOrderId()));
     		Content htmlBody = new Content().withData(generateHtmlBodyForConsumerOrderSuccessEmail(request));
     		Body body = new Body().withHtml(htmlBody);
     		
@@ -161,7 +161,7 @@ public class EmailSender
 
     public void sendGeneralFeedbackEmail(GeneralFeedbackEmailRequest request) throws EmailSendException
     {
-        String toAddress = "admin@grubmenow.com";
+        String toAddress = "admin@meallocal.com";
         try
         {
             // Construct an object to contain the recipient address.
