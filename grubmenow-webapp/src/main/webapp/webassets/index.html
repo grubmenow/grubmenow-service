@@ -15,6 +15,10 @@
 <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
 <link rel="stylesheet" href="app.css" />
+<script>
+	if (window.location.protocol != "https:")
+    	window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+</script>
 <script src="//js.stripe.com/v2/"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
