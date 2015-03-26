@@ -32,8 +32,8 @@ a:active {
 }
 
 .logoImage {
-     margin: 10px 5px 20px 0px;
-     width: 350px;
+     margin: 10px 24px 20px 0px;
+     width: 330px;
 }
 
 .formBox {
@@ -218,7 +218,7 @@ a:active {
 }
 
 .navHolder {
-     width: 440px;
+     width: 518px;
      margin: 0px auto;
 }
 
@@ -517,4 +517,8 @@ textarea {
 
 .hiwImg {
      width: 80px;
+}
+
+.profileImg {
+     width: 215px;
 }

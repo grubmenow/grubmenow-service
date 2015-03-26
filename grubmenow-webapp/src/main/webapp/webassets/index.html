@@ -15,6 +15,10 @@
 <link href='//fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
 
 <link rel="stylesheet" href="app.css" />
+<script>
+	if (window.location.protocol != "https:" && window.location.hostname.indexOf("localhost") < 0)  
+    	window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+</script>
 <script src="//js.stripe.com/v2/"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -53,7 +57,8 @@
                 <div class="navHolder">
                     <ul id="gmnNav" class="nav navbar-nav">
                         <li id="homeNav"><a href="#home">HOME</a></li>
-                        <li id="hiwNav"><a href="#howitworks">HOW IT WORKS?</a></li>
+                        <li id="profileNav"><a href="#profiles">CHEFS</a></li>
+                        <li id="hiwNav"><a href="#howitworks">HOW IT WORKS</a></li>
                         <li id="faqNav"><a href="#faq">FAQ</a></li>
                         <li id="cuNav"><a href="#contactus">CONTACT US</a></li>
                     </ul>

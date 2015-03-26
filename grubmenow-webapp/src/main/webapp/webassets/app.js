@@ -48,7 +48,8 @@ gmnApp.config(['$routeProvider', function($routeProvider) {
         templateUrl: 'terms.html'
     }).
     when('/profiles', {
-        templateUrl: 'profile.html'
+        templateUrl: 'profile.html',
+        controller: 'ProfileCtrl'
     }).
 	otherwise({
 		redirectTo: '/home'
