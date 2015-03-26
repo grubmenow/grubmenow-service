@@ -55,8 +55,8 @@ $Formatter.formatAddressLastLine(${request.provider})
 <br/>Phone: ${request.provider.providerPhoneNumber}
 #end
 </p>
-If you are unable to fulfil this order or need to update order, please call MealLocal Customer Service at +1 206 883 6876 by 6PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
+If you are unable to fulfil this order or need to update order, please call MealLocal Customer Service at +1 203-699-MEAL(6325) by 6PM on $Formatter.formatDate(${request.orderFulfillmentDate}).<br/>
 Thank you,<br/> 
 MealLocal team. <br/>
-For Customer Service call +1 209-900-GRUB(4782) 11AM-9PM PT daily
+For Customer Service call +1 203-699-MEAL(6325) 11AM-9PM PT daily
 </html>
