@@ -134,6 +134,11 @@
 							            		
                         <div class="text-right">
                             <input type="button" class="btn btnCO" ng-click="makePayment()" ng-disabled="stripe.disableSubmit" id="makePaymentButton" value="Pay ${{finalOrder.totalPrice/100 | number:2 }} and Place Order" />
+                            <div>
+                              <b>MealLocal is in beta now. We or the chefs cannot be held liable for any consequences from using the
+                               services provided here. By placing the order, you also agree to our <a href="#terms">Terms of Use</a>.
+                              </b>
+                            </div>
                         </div>
                     </div>
                     <div ng-show="payment.mode == 'cash'">
@@ -142,6 +147,11 @@
 	            		
                         <div class="text-right btnCtr">
                             <input type="button" class="btn btnCO" ng-click="placeOrder()" id="placeOrderButton" value="Place Order and Pay ${{finalOrder.totalPrice/100 | number:2 }} on Pickup" />
+                            <div>
+                              <b>MealLocal is in beta now. We or the chefs cannot be held liable for any consequences from using the
+                               services provided here. By placing the order, you also agree to our <a href="#terms">Terms of Use</a>.
+                              </b>
+                            </div>
                         </div>
                     </div>
                 </form>
