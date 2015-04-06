@@ -1,7 +1,7 @@
 <div class="food-finder text-center" ng-controller="SearchFormCtrl">
 	<div class="clearfix"></div>
-    <h3 class="coName">Find delicious home cooked food near you!</h3>
-	<div class="formContainer">
+    <h4 class="coName">Find delicious home cooked food near you!<br> Search in your neighborhood using the form below or<button type="button" class="btn-link" ng-click="getAllOffers()">See all our offers</button>.</h4>
+    <div class="formContainer">
 	<div class="hidden-xs filler"></div>
 	<div class="visible-xs fillerxs"></div>
 	<div class="col-xs-12 text-center">
@@ -41,7 +41,8 @@
     <div id="foodFinderMsg"></div>
     <h3 ng-show="badRadius || badZipcode || badDay" class="spacer">Please enter all the required fields</h3>
 	<h3 ng-show="searching" class="spacer">Finding delicious food within {{master.radius}} miles of {{master.zipCode}} ...</h3>
-    <h4 ng-show="noResults" class="spacer">Sorry, no home cooked food found near zipcode {{master.zipCode}}</h4>
+    <h4 ng-show="noResults" class="spacer">Sorry, no home cooked food found near zipcode {{master.zipCode}}.<button type="button" class="btn-link" ng-click="getAllOffers()">See all our offers in other areas.</button></h4>
+    <h4 ng-show="allOffers" class="spacer text-left allOffersTitle">Available near Redmond, WA :</h4>
 	<div ng-show="searching" class="spinner"></div>
     <div class="container spacer" id="searchResults" ng-hide="searchedOnce && noResults">
         <div class="row">

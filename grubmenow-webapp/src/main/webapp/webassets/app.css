@@ -109,6 +109,12 @@ a:active {
      float: right;
 }
 
+.allOffersTitle {
+     margin-left: 20px;
+     text-decoration: underline;
+     color: #0A549C;     
+}
+
 .tableHeader {
      text-decoration: underline;
      border-bottom: 1px solid #ddd;

@@ -30,6 +30,7 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
             $('#inputZipcode').addClass('redBorder');
         }
     });
+
     $scope.validateForm = function() {
         $scope.badZipcode = $scope.searching = 0;
         $scope.badRadius = $scope.badDay = 0;
@@ -44,49 +45,61 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         }
     }
 
+    $scope.getFood = function() {
+        delete $scope.master['food'];
+        $scope.noResults = 0;
+        $scope.searching = 1;
+        $('html, body').animate({
+            scrollTop: $("#foodFinderMsg").offset().top
+        }, $scope.animationTime);
+
+        var request = {};
+        request.zipCode = $scope.master.zipCode;
+        request.radius = $scope.master.radius;
+        request.availableDay = $scope.master.availableDay;
+        var d = new Date()
+        request.timezoneOffsetMins = d.getTimezoneOffset();
+
+        $scope.resetAllFormStates();
+        $http.post("api/searchFoodItems", JSON.stringify(request)).success(function(data) {
+            $scope.master.food = data;
+            if(!data || data.length == 0) $scope.noResults = 1;
+            $scope.searching = 0;
+            $scope.searchedOnce = 1;
+            $('html, body').animate({
+                scrollTop: $("#searchResults").offset().top
+            }, $scope.animationTime);
+        });
+    };
+
+    $scope.getAllOffers = function() {
+        foodSearch = $scope.master = $scope.location;
+        $scope.master.zipCode = "98052";
+        $scope.master.radius = "25";
+        $scope.allOffers = 1;
+        $scope.getFood();
+    }
+
     $scope.update = function() {
+        $scope.allOffers = 0;
         foodSearch = $scope.master = $scope.location;
         $scope.validateForm(); 
         if($scope.location.zipCode && $scope.location.radius != 0 && $scope.location.availableDay != 0) {
-            delete $scope.master['food'];
-            $scope.noResults = 0;
-            $scope.searching = 1;
-            $('html, body').animate({
-                scrollTop: $("#foodFinderMsg").offset().top
-            }, $scope.animationTime);
-
-            var request = {};
-            request.zipCode = $scope.master.zipCode;
-            request.radius = $scope.master.radius;
-            request.availableDay = $scope.master.availableDay;
-            var d = new Date()
-            request.timezoneOffsetMins = d.getTimezoneOffset();
-
-            $scope.resetAllFormStates();
-            $http.post("api/searchFoodItems", JSON.stringify(request)).success(function(data) {
-                $scope.master.food = data;
-                if(!data || data.length == 0) $scope.noResults = 1;
-                $scope.searching = 0;
-                $scope.searchedOnce = 1;
-                $('html, body').animate({
-                    scrollTop: $("#searchResults").offset().top
-                }, $scope.animationTime);
-            });
+            $scope.getFood();
         }
     };
 
-	$scope.resetAllFormStates = function() {
-		$scope.showThankYouMessage = 0;
-		$scope.feedback = {
-			generalFeedback : '',
-			newItems : '',
-			emailId : ""
-		};
-		$scope.submittingFeedback = 0;
-	}
+    $scope.resetAllFormStates = function() {
+        $scope.showThankYouMessage = 0;
+        $scope.feedback = {
+                generalFeedback : '',
+                newItems : '',
+                emailId : ""
+        };
+        $scope.submittingFeedback = 0;
+    }
 
-    $scope.submitFoodItemSuggestionForm = function()
-    {
+    $scope.submitFoodItemSuggestionForm = function() {
         request = {
                 feedbackType: "NO_RESULTS_FEEDBACK",
                 feedbackMessage: $scope.feedback.newItems,
@@ -98,12 +111,12 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data) {
             $scope.submittingFeedback = 0;
             $scope.noResults = 0; // forget the search information since the
-									// user has taken an action over it.
+            // user has taken an action over it.
             $scope.showThankYouMessage = 1;
         })
         .error(function(data) {
-			$scope.submittingFeedback = 0;
-		})
+            $scope.submittingFeedback = 0;
+        })
     };
 
     //Update the Nav state
@@ -114,28 +127,32 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
     $('#navbarCollapse').removeClass('in');
 
     $scope.location = {};
-    $scope.location = foodSearch ? foodSearch:gmnGetQSP($scope.location);
-    if($scope.location.zipCode) {
-        $scope.update();
+    var prevLocation = foodSearch ? foodSearch:gmnGetQSP($scope.location);
+
+    if(prevLocation.zipCode) {
+        $scope.master = prevLocation;
+        $scope.getFood();
+    } 
+    var nowDate = new Date();
+
+    // if we are above the cut off time, don't show the option for today
+    var cutoffTime = 18; // cut of time to order by today. Server and client side are stored separately.
+
+    if(nowDate.getHours() >= cutoffTime) {
+        $scope.isBeforeCutOffTime = 0;
+        $scope.location = {radius:5, availableDay:"Tomorrow"};
     } else {
-    	
-    	var nowDate = new Date();
-    	
-    	// if we are above the cut off time, don't show the option for today
-    	var cutoffTime = 18; // cut of time to order by today. Server and client side are stored separately.
-    	
-    	if(nowDate.getHours() >= cutoffTime) {
-    	    $scope.isBeforeCutOffTime = 0;
-    		$scope.location = {radius:5, availableDay:"Tomorrow"};
-    	} else {
-    		$scope.isBeforeCutOffTime = 1;
-    		$scope.location = {radius:5, availableDay:"Today"};	
-    	}
-        
-        $scope.searching = 0;
+        $scope.isBeforeCutOffTime = 1;
+        $scope.location = {radius:5, availableDay:"Today"};	
     }
+
+    $scope.searching = 0;
     $scope.resetAllFormStates();
     $scope.animationTime = 500;
+    $scope.$watch('master', function(newVal, oldVal){
+        console.log('changed');
+        console.log(newVal);
+    }, true);
 });
 
 angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, $http, $location) {
@@ -204,12 +221,12 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
 
         var restId = $scope.restList.providerFoodItemOffers[index].provider.providerId;
         order.restLocation = $scope.restList.providerFoodItemOffers[index].provider.providerAddress;
-        
+
         var pickupDate = $scope.availableDay == 'Today' ? new Date() : new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
         order.pickupTime = $scope.availableDay + " " + $scope.restList.providerFoodItemOffers[index].foodItemOffer.offerDay	
-        					+ ", 7pm to 9pm ";
+        + ", 7pm to 9pm ";
         order.chefPhone = $scope.restList.providerFoodItemOffers[index].provider.providerPhoneNumber;
-        
+
         if ($scope.restMenu[restId]) {
             for(var j = 0; j < $scope.restMenu[restId].providerFoodItemOffers.length; j++) {
                 var product = $scope.restMenu[restId].providerFoodItemOffers[j];
@@ -253,7 +270,7 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
             $('#primaryQty'+index).val(1);
         }, 100);
     }   
-    
+
     $scope.showMenu = function(restId, excludedFoodItem) {
         if ($scope.restMenu[restId]) {
             $scope.showRestMenu[restId] = 1;
@@ -289,12 +306,12 @@ angular.module('gmnControllers').controller('RestuarantCtrl', function ($scope, 
             $('#primaryQty0').val(1);
         }, 100);
     });
-    
+
 }).directive('providerRepeatDirective', function() {
-	  return function(scope, element, attrs) {
-		  scope.$watch('rest', function(){
-			  $('span.stars').stars();
-		  });
-   };
+    return function(scope, element, attrs) {
+        scope.$watch('rest', function(){
+            $('span.stars').stars();
+        });
+    };
 });
 
