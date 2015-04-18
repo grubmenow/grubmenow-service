@@ -73,11 +73,12 @@
 	        <div ng-show="submittingFeedback" class="spinner"></div>
 			
             <div ng-show="noResults && !submittingFeedback" id="searchSuggestionForm" class="navLineBtn feedbackQL">
+                <div ng-show="badFeedbackEmail" class="spacer redText">Please enter valid Email Id</div>
                 <span>Please leave us some comments about your search. <br> Your feedback will help make our site better for everyone.
                 </span>
                 <div class="clearfix"></div>
                 <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.newItems" placeholder="Food items suggestions, comments"></input> 
-                <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.emailId" placeholder="Your Email Id"></input>
+                <input type="text" class="form-control formElem feedbackInput" ng-model="feedback.emailId" placeholder="Your Email Id" ng-class="{redBorder:badFeedbackEmail==1}"></input>
                 <div class="clearfix"></div>
                 <button ng-click="submitFoodItemSuggestionForm()" class="btn btn-secondary btnGo">Submit</button>
             </div>

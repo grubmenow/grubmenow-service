@@ -45,7 +45,7 @@ Your order summary:
 <b> Order total </b>: $Formatter.formatAmount(${request.orderAmountTotal})
 <br/>
 <br/>
- Click <a href="http://meallocal.com/#/orderDetails?orderId=${request.customerOrder.orderId}">here</a> to see details.
+ Click <a href="http://meallocal.com/#/orderDetails?orderId=${request.customerOrder.orderId}">here</a> to <b>provide feedback</b> and see detail of your order.
 <br/>
 <br/>
 Please pick up your order between <b>${request.orderPickupStartTime} and ${request.orderPickupEndTime} on $Formatter.formatDate(${request.orderFulfillmentDate})</b> from this location:

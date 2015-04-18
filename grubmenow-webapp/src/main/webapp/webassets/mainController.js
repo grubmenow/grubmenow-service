@@ -99,22 +99,43 @@ angular.module('gmnControllers').controller('SearchFormCtrl', function ($scope, 
         $scope.submittingFeedback = 0;
     }
 
-    $scope.submitFoodItemSuggestionForm = function() {
-        request = {
-                feedbackType: "NO_RESULTS_FEEDBACK",
-                feedbackMessage: $scope.feedback.newItems,
-                emailId: $scope.feedback.emailId,
-                zipCode: $scope.location.zipCode,
-                searchDay: $scope.location.availableDay};
+    validateEmail = function(emailId)
+    {
+        if (emailId == 0)
+        {
+            return false;
+        }
+        var re = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return re.test(emailId);
+    }
+
+    $scope.submitFoodItemSuggestionForm = function()
+    {
+        if (!validateEmail($scope.feedback.emailId))
+        {
+            // don't proceed unless the email id is valid
+            $scope.badFeedbackEmail = 1;
+            return;
+        }
+        $scope.badFeedbackEmail = 0;
+        request =
+        {
+            feedbackType : "NO_RESULTS_FEEDBACK",
+            feedbackMessage : $scope.feedback.newItems,
+            emailId : $scope.feedback.emailId,
+            zipCode : $scope.location.zipCode,
+            searchDay : $scope.location.availableDay
+        };
 
         $scope.submittingFeedback = 1;
-        $http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data) {
+        $http.post("api/submitGeneralFeedback", JSON.stringify(request)).success(function(data)
+        {
             $scope.submittingFeedback = 0;
             $scope.noResults = 0; // forget the search information since the
             // user has taken an action over it.
             $scope.showThankYouMessage = 1;
-        })
-        .error(function(data) {
+        }).error(function(data)
+        {
             $scope.submittingFeedback = 0;
         })
     };
