@@ -1,0 +1,25 @@
+<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+table tr:nth-child(odd) {
+   background-color:#fff;
+}
+
+</style>
+</head>
+Hello <b>${request.consumer.customerFirstName}</b>, 
+<br/>
+You have home cooked food available in your search area. Please visit
+<a href="https://meallocal.com">MealLocal</a> to order deliciously healthy food.  
+</html>

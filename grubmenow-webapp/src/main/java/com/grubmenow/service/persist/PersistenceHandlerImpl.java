@@ -33,33 +33,35 @@ import com.grubmenow.service.datamodel.InvitationRequestDAO;
 import com.grubmenow.service.datamodel.OrderFeedbackDAO;
 import com.grubmenow.service.datamodel.ProviderDAO;
 import com.grubmenow.service.datamodel.SearchSuggestionFeedbackDAO;
+import com.grubmenow.service.datamodel.SubscriptionDAO;
+import com.grubmenow.service.datamodel.SubscriptionType;
 import com.grubmenow.service.datamodel.ZipCodeDAO;
 import com.grubmenow.service.persist.sql.SQLReader;
 
 /**
- * Implementation of {@link PersistenceHandler} using Amazon AWS as a storage 
+ * Implementation of {@link PersistenceHandler} using Amazon AWS as a storage
  */
 
 @CommonsLog
 public class PersistenceHandlerImpl implements PersistenceHandler {
-	
-	private static DateTimeFormatter printableDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
-	
-	private SessionFactory sessionFactory;
-	
-	public PersistenceHandlerImpl(
-	        String databaseConnectionUrl,
-	        String databaseUsername,
-	        String databasePassword)
-	{
-	    Properties properties = new Properties();
+
+    private static DateTimeFormatter printableDateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+
+    private SessionFactory sessionFactory;
+
+    public PersistenceHandlerImpl(
+            String databaseConnectionUrl,
+            String databaseUsername,
+            String databasePassword)
+    {
+        Properties properties = new Properties();
         properties.setProperty("hibernate.connection.driver_class", "com.mysql.jdbc.Driver");
         properties.setProperty("hibernate.connection.url", databaseConnectionUrl);
         properties.setProperty("hibernate.connection.username", databaseUsername);
         properties.setProperty("hibernate.connection.password", databasePassword);
         properties.setProperty("hibernate.show_sql", "com.mysql.jdbc.Driver");
         properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        
+
         properties.setProperty("show_sql", "true");
 
         properties.setProperty("hibernate.c3p0.min_size", "5");
@@ -67,7 +69,7 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
         properties.setProperty("hibernate.c3p0.timeout", "300");
         properties.setProperty("hibernate.c3p0.max_statements", "50");
         properties.setProperty("hibernate.c3p0.idle_test_period", "3000");
-        
+
         Configuration configuration = new Configuration();
         configuration.addAnnotatedClass(FoodItemDAO.class);
         configuration.addAnnotatedClass(CustomerDAO.class);
@@ -80,132 +82,152 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
         configuration.addAnnotatedClass(GeneralFeedbackDAO.class);
         configuration.addAnnotatedClass(InvitationRequestDAO.class);
         configuration.addAnnotatedClass(ZipCodeDAO.class);
-        
+        configuration.addAnnotatedClass(SubscriptionDAO.class);
+
         configuration.setProperties(properties);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(
                 configuration.getProperties()).build();
-        
+
         sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-	}
-	
-	public void shutDown() {
-		sessionFactory.close();
-	}
-	
-	
-	@Override
-	public Session getSession() {
-		return sessionFactory.openSession();
-	}
+    }
 
-	@Override
-	public List<String> getNeighbouringZipCodes(String zipCode, int numberOfMilesAround) {
-		Map<String, String> tokens = ImmutableMap.of("zip_code", zipCode,
-				"distance_in_miles", Integer.toString(numberOfMilesAround));
-		
-		String sql = SQLReader.loadSQL("/find_neighbouring_zip_codes.sql",
-				tokens);
-		
-		return executeCustomSQL(sql);
-	}
-	
-	@Override
-	public String getDistanceInMilesBetweenZipCodes(String zipCode1, String zipCode2) {
-		Map<String, String> tokens = ImmutableMap.of("zip_code1", zipCode1,
-				"zip_code2", zipCode2);
-		
-		String sql = SQLReader.loadSQL("/find_distance_between_zip_codes.sql", tokens);
-		
-		Double distance = (Double) executeCustomSQL(sql).get(0);
-		return new DecimalFormat("#0.0").format(distance);
-	}
-	
-	@Override
-	public List<FoodItemDAO> getAllFoodItem() {
-		return getAll(FoodItemDAO.class, 1024);
-	}
-
-	
-	@Override
-	public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes, DateTime forDate) {
-		
-		Map<String, String> tokens = ImmutableMap.of("zip_codes", getCommaSeperatedZipCodes(zipCodes), "offer_day",
-				forDate.toString(printableDateTimeFormatter));
-		
-		String sql = SQLReader.loadSQL("/find_all_food_item_with_zip_code.sql", tokens);
-		
-		return executeCustomSQL(FoodItemDAO.class, sql);
-	}
-	
-	@Override
-	public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes, DateTime forDate) {
-
-		Map<String, String> tokens = ImmutableMap.of("zip_codes", getCommaSeperatedZipCodes(zipCodes), "offer_day",
-				forDate.toString(printableDateTimeFormatter), "food_item_id", foodItemId);
-		
-		String sql = SQLReader.loadSQL("/find_all_provider_offering_within_zip_codes.sql", tokens);
-		
-		return executeCustomSQL(FoodItemOfferDAO.class, sql);
-	}
-	
-	@Override
-	public List<FoodItemOfferDAO> getCurrentProviderOffering(String foodItemId, DateTime forDate) {
-
-		String sql = "SELECT  FIO.* "
-					 + "FROM FOOD_ITEM_OFFER FIO, PROVIDER P, FOOD_ITEM FI "
-					 + "WHERE FIO.OFFER_STATE = 'ACTIVE' "
-					 + "AND P.PROVIDER_STATE = 'ACTIVE' AND FI.FOOD_ITEM_STATE = 'ACTIVE' AND FIO.AVAILABLE_QUANTITY > 0  "
-					 + "AND date(FIO.OFFER_DAY) = :offer_day  AND FIO.FOOD_ITEM_ID = :food_item_id "
-					 + "AND FIO.FOOD_ITEM_ID = FI.FOOD_ITEM_ID AND FIO.PROVIDER_ID = P.PROVIDER_ID" ;
-		Session session = sessionFactory.openSession();
-		try
-		{
-			Query query = session.createSQLQuery(sql)
-					.addEntity(FoodItemOfferDAO.class)
-					.setString("food_item_id", foodItemId)
-					.setDate("offer_day", forDate.toDate());
-			
-			return query.list(); 
-		}
-		finally
-		{
-			session.close();
-		}
-		
-	}
-	
-	private String getCommaSeperatedZipCodes(List<String> zipCodes) {
-		List<String> zipCodesWithQuotes = new ArrayList<>(); 
-		for(String zipCode: zipCodes) {
-			zipCodesWithQuotes.add("'" + zipCode + "'");
-		}
-
-		return StringUtils.join(zipCodesWithQuotes, ", ");
-	}
-	
-	@Override
-	public void createFoodItem(FoodItemDAO foodItem) {
-		log.info(String.format("Creating food item: %s ", foodItem));
-		saveObject(foodItem);
-	}
-	
-
-	@Override
-	public void updateFoodItem(FoodItemDAO foodItem) {
-		log.info(String.format("Updating food item: %s " , foodItem));
-		updateObject(foodItem);		
-	}
+    public void shutDown() {
+        sessionFactory.close();
+    }
 
 
-	@Override
-	public FoodItemDAO getFoodItemById(String foodItemId) {
+    @Override
+    public Session getSession() {
+        return sessionFactory.openSession();
+    }
 
-		log.info(String.format("Retrieving food item: %s " , foodItemId));
+    @Override
+    public List<String> getNeighbouringZipCodes(String zipCode, int numberOfMilesAround) {
+        Map<String, String> tokens = ImmutableMap.of("zip_code", zipCode,
+                "distance_in_miles", Integer.toString(numberOfMilesAround));
 
-		return getObject(FoodItemDAO.class, foodItemId);
-	}
-	
-	@Override
+        String sql = SQLReader.loadSQL("/find_neighbouring_zip_codes.sql",
+                tokens);
+
+        return executeCustomSQL(sql);
+    }
+
+    @Override
+    public String getDistanceInMilesBetweenZipCodes(String zipCode1, String zipCode2) {
+        Map<String, String> tokens = ImmutableMap.of("zip_code1", zipCode1,
+                "zip_code2", zipCode2);
+
+        String sql = SQLReader.loadSQL("/find_distance_between_zip_codes.sql", tokens);
+
+        Double distance = (Double) executeCustomSQL(sql).get(0);
+        return new DecimalFormat("#0.0").format(distance);
+    }
+
+    @Override
+    public List<FoodItemDAO> getAllFoodItem() {
+        return getAll(FoodItemDAO.class, 1024);
+    }
+
+
+    @Override
+    public List<FoodItemDAO> getAllAvailableFoodItemForZipCodes(List<String> zipCodes, DateTime forDate) {
+
+        Map<String, String> tokens = ImmutableMap.of("zip_codes", getCommaSeperatedZipCodes(zipCodes), "offer_day",
+                forDate.toString(printableDateTimeFormatter));
+
+        String sql = SQLReader.loadSQL("/find_all_food_item_with_zip_code.sql", tokens);
+
+        return executeCustomSQL(FoodItemDAO.class, sql);
+    }
+
+    @Override
+    public List<FoodItemOfferDAO> getCurrentProviderOfferingWithinZipCodes(String foodItemId, List<String> zipCodes, DateTime forDate) {
+
+        Map<String, String> tokens = ImmutableMap.of("zip_codes", getCommaSeperatedZipCodes(zipCodes), "offer_day",
+                forDate.toString(printableDateTimeFormatter), "food_item_id", foodItemId);
+
+        String sql = SQLReader.loadSQL("/find_all_provider_offering_within_zip_codes.sql", tokens);
+
+        return executeCustomSQL(FoodItemOfferDAO.class, sql);
+    }
+
+    @Override
+    public List<FoodItemOfferDAO> getCurrentProviderOffering(String foodItemId, DateTime forDate) {
+
+        String sql = "SELECT  FIO.* "
+                + "FROM FOOD_ITEM_OFFER FIO, PROVIDER P, FOOD_ITEM FI "
+                + "WHERE FIO.OFFER_STATE = 'ACTIVE' "
+                + "AND P.PROVIDER_STATE = 'ACTIVE' AND FI.FOOD_ITEM_STATE = 'ACTIVE' AND FIO.AVAILABLE_QUANTITY > 0  "
+                + "AND date(FIO.OFFER_DAY) = :offer_day  AND FIO.FOOD_ITEM_ID = :food_item_id "
+                + "AND FIO.FOOD_ITEM_ID = FI.FOOD_ITEM_ID AND FIO.PROVIDER_ID = P.PROVIDER_ID" ;
+        Session session = sessionFactory.openSession();
+        try
+        {
+            Query query = session.createSQLQuery(sql)
+                    .addEntity(FoodItemOfferDAO.class)
+                    .setString("food_item_id", foodItemId)
+                    .setDate("offer_day", forDate.toDate());
+
+            return query.list();
+        }
+        finally
+        {
+            session.close();
+        }
+
+    }
+
+    @Override
+    public List<SubscriptionDAO> getLocationSearchActiveSubscriptions(String zipCode) {
+        String sql = "SELECT S.* "
+                + "FROM SUBSCRIPTION S "
+                + "WHERE SUBSCRIPTION_TYPE = :subscriptionType "
+                + "AND SUBSCRIPTION_STATE = 'ACTIVE' "
+                + "AND SUBSCRIPTION_PARAMETERS like :subscriptionParam ";
+        Session session = sessionFactory.openSession();
+        try {
+            Query query = session.createSQLQuery(sql).addEntity(SubscriptionDAO.class)
+                    .setString("subscriptionType", SubscriptionType.ZIP_CODE_SUBSCRIPTION.name())
+                    .setString("subscriptionParam", "%" + zipCode + "%");
+
+            return query.list();
+        } finally {
+            session.close();
+        }
+    }
+
+    private String getCommaSeperatedZipCodes(List<String> zipCodes) {
+        List<String> zipCodesWithQuotes = new ArrayList<>();
+        for(String zipCode: zipCodes) {
+            zipCodesWithQuotes.add("'" + zipCode + "'");
+        }
+
+        return StringUtils.join(zipCodesWithQuotes, ", ");
+    }
+
+    @Override
+    public void createFoodItem(FoodItemDAO foodItem) {
+        log.info(String.format("Creating food item: %s ", foodItem));
+        saveObject(foodItem);
+    }
+
+
+    @Override
+    public void updateFoodItem(FoodItemDAO foodItem) {
+        log.info(String.format("Updating food item: %s " , foodItem));
+        updateObject(foodItem);
+    }
+
+
+    @Override
+    public FoodItemDAO getFoodItemById(String foodItemId) {
+
+        log.info(String.format("Retrieving food item: %s " , foodItemId));
+
+        return getObject(FoodItemDAO.class, foodItemId);
+    }
+
+    @Override
     public List<FoodItemDAO> getFoodItemByName(String foodItemName) {
 
         log.info(String.format("Retrieving food item by name : %s " , foodItemName));
@@ -223,298 +245,308 @@ public class PersistenceHandlerImpl implements PersistenceHandler {
         }
     }
 
-	
-	@Override
-	public List<ProviderDAO> getAllProvider() {
-		return getAll(ProviderDAO.class, 1024);
-	}
-	
-	
-	@Override
-	public void createProvider(ProviderDAO provider) {
-		log.info(String.format("Creating provider: %s " , provider));
-		
-		saveObject(provider);
-	}
 
-	@Override
-	public void updateProvider(ProviderDAO provider) {
-		log.info(String.format("Updating provider: %s " , provider));
-		
-		updateObject(provider);
-	}
+    @Override
+    public List<ProviderDAO> getAllProvider() {
+        return getAll(ProviderDAO.class, 1024);
+    }
 
-	@Override
-	public void createSearchSuggestionFeedback(SearchSuggestionFeedbackDAO searchSuggestion)
-	{
-	    log.info(String.format("Adding search suggestion: %s", searchSuggestion));
-	    saveObject(searchSuggestion);
-	}
-	
-	@Override
-	public void createGeneralFeedback(GeneralFeedbackDAO generalFeedbackDAO)
-	{
-	    log.info(String.format("Adding general feedback: %s", generalFeedbackDAO));
-	    saveObject(generalFeedbackDAO);
-	    
-	}
-	
-	@Override
-	public void createInvitationRequest(InvitationRequestDAO dao)
-	{
+
+    @Override
+    public void createProvider(ProviderDAO provider) {
+        log.info(String.format("Creating provider: %s " , provider));
+
+        saveObject(provider);
+    }
+
+    @Override
+    public void updateProvider(ProviderDAO provider) {
+        log.info(String.format("Updating provider: %s " , provider));
+
+        updateObject(provider);
+    }
+
+    @Override
+    public void createSearchSuggestionFeedback(SearchSuggestionFeedbackDAO searchSuggestion)
+    {
+        log.info(String.format("Adding search suggestion: %s", searchSuggestion));
+        saveObject(searchSuggestion);
+    }
+
+    @Override
+    public void createGeneralFeedback(GeneralFeedbackDAO generalFeedbackDAO)
+    {
+        log.info(String.format("Adding general feedback: %s", generalFeedbackDAO));
+        saveObject(generalFeedbackDAO);
+
+    }
+
+    @Override
+    public void createInvitationRequest(InvitationRequestDAO dao)
+    {
         saveObject(dao);
-	}
+    }
 
-	
-	@Override
-	public ProviderDAO getProviderById(String providerId) {
-		log.info(String.format("Retrieving provider: %s " , providerId));
-
-		return getObject(ProviderDAO.class, providerId);
-	}
-
-	@Override
-	public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId, DateTime forDay) {
-		String sql = "select * from FOOD_ITEM_OFFER where PROVIDER_ID=:providerId and OFFER_DAY=:offerDay ";
-		Session session = sessionFactory.openSession();
-		try {
-			Query query = session.createSQLQuery(sql)
-					.addEntity(FoodItemOfferDAO.class)
-					.setString("providerId", providerId)
-					.setDate("offerDay", forDay.toDate());
-
-			return query.list();
-		} finally {
-			session.close();
-		}
-	}
-
-	@Override
-	public void createCustomer(CustomerDAO customer) {
-		log.info(String.format("Creating customer: %s " , customer));
-		
-		saveObject(customer);
-	}
-
-	@Override
-	public void updateCustomer(CustomerDAO customer) {
-		log.info(String.format("Updating Customer: %s " , customer));
-		
-		updateObject(customer);
-	}
-	
-	@Override
-	public CustomerDAO getCustomerById(String customerId) {
-		log.info(String.format("Retrieving Customer: %s " , customerId));
-		
-		return getObject(CustomerDAO.class, customerId);
-	}
-
-	@Override
-	public void createFoodItemOffer(FoodItemOfferDAO foodItemOffer) {
-		log.info(String.format("Creating food item offer: %s " , foodItemOffer));
-		
-		saveObject(foodItemOffer);
-	}
-
-	@Override
-	public void udpateFoodItemOffer(FoodItemOfferDAO foodItemOffer) {
-		log.info(String.format("Updating food item offer: %s " , foodItemOffer));
-		
-		updateObject(foodItemOffer);
-	}
-	
-	@Override
-	public FoodItemOfferDAO getFoodItemOfferById(String foodItemOfferId) {
-		log.info(String.format("Retrieving food item offer: %s " , foodItemOfferId));
-		
-		return getObject(FoodItemOfferDAO.class, foodItemOfferId);
-	}
-	
-	@Override
-	public List<FoodItemOfferDAO> getAllFoodItemOffer() {
-		return getAll(FoodItemOfferDAO.class, 1024);
-	}
+    @Override
+    public void createSubscription(SubscriptionDAO dao) {
+        saveObject(dao);
+    }
 
 
-	@Override
-	public void createCustomerOrder(CustomerOrderDAO customerOrder) {
-		log.info(String.format("Creating order: %s " , customerOrder));
-		
-		saveObject(customerOrder);
-	}
-	
-	@Override
-	public void createCustomerOrderItem(CustomerOrderItemDAO customerOrderItem) {
-		log.info(String.format("Creating order item: %s " , customerOrderItem));
-		
-		saveObject(customerOrderItem);
-	}
+    @Override
+    public ProviderDAO getProviderById(String providerId) {
+        log.info(String.format("Retrieving provider: %s " , providerId));
 
-	@Override
-	public void updateCustomerOrder(CustomerOrderDAO customerOrder) {
-		log.info(String.format("Updating order: %s " , customerOrder));
-		
-		updateObject(customerOrder);
-	}
-	
-	@Override
-	public void updateCustomerOrderItem(CustomerOrderItemDAO customerOrderItem) {
-		log.info(String.format("Updating order item: %s " , customerOrderItem));
-		
-		updateObject(customerOrderItem);
-	}
+        return getObject(ProviderDAO.class, providerId);
+    }
 
-	
-	@Override
-	public CustomerOrderDAO getCustomerOrderById(String orderId) {
-		log.info(String.format("Retrieving order: %s " , orderId));
-		
-		return getObject(CustomerOrderDAO.class, orderId);
-	}
-	
-	
-	@Override
-	public CustomerOrderItemDAO getCustomerOrderItemById(String orderItemId) {
-		log.info(String.format("Retrieving order Item: %s " , orderItemId));
-		
-		return getObject(CustomerOrderItemDAO.class, orderItemId);
-	}
-	
-	@Override
-	public List<CustomerOrderItemDAO> getCustomerOrderItemByOrderId(String orderId) {
-		String sql = "select * from CUSTOMER_ORDER_ITEM where ORDER_ID=:orderId";
-		Session session = sessionFactory.openSession();
-		try {
-			Query query = session.createSQLQuery(sql)
-					.addEntity(CustomerOrderItemDAO.class)
-					.setString("orderId", orderId);
+    @Override
+    public List<FoodItemOfferDAO> getAllOffersByProvider(String providerId, DateTime forDay) {
+        String sql = "select * from FOOD_ITEM_OFFER where PROVIDER_ID=:providerId and OFFER_DAY=:offerDay ";
+        Session session = sessionFactory.openSession();
+        try {
+            Query query = session.createSQLQuery(sql)
+                    .addEntity(FoodItemOfferDAO.class)
+                    .setString("providerId", providerId)
+                    .setDate("offerDay", forDay.toDate());
 
-			return query.list();
-		} finally {
-			session.close();
-		}
-	}
-	
-	public OrderFeedbackDAO getOrderFeedbackById(String orderId) {
-		log.info(String.format("Retrieving order feedback: %s " , orderId));
-		
-		return getObject(OrderFeedbackDAO.class, orderId);
-	}
+            return query.list();
+        } finally {
+            session.close();
+        }
+    }
 
-	public void createOrderFeedback(OrderFeedbackDAO orderFeedbackDAO) {
-		log.info(String.format("Creating order feedback: %s " , orderFeedbackDAO));
-		
-		saveObject(orderFeedbackDAO);
-	}
-	
-	public void updateOrderFeedback(OrderFeedbackDAO orderFeedbackDAO) {
-		log.info(String.format("Creating order feedback: %s " , orderFeedbackDAO));
-		
-		updateObject(orderFeedbackDAO);
-	}
-	
-	@Override
-	public ZipCodeDAO getZipCode(String zipCode) {
-		log.info(String.format("Retrieving ZipCode: %s " , zipCode));
+    @Override
+    public void createCustomer(CustomerDAO customer) {
+        log.info(String.format("Creating customer: %s " , customer));
 
-		return getObject(ZipCodeDAO.class, zipCode);
-	}
-	
-	private <T> List<T> executeCustomSQL(Class<T> clazz, String sql) {
-		System.out.println(sql);
-		
-		Session session = sessionFactory.openSession();
-		try {
-			return session.createSQLQuery(sql).addEntity(clazz).list();		
-		} catch (HibernateException e) {
-			throw e;
-		} finally {
-			session.close();
-		}	
-	}
-	
-	private <T> List<T> executeCustomSQL(String sql) {
-		Session session = sessionFactory.openSession();
-		try {
-			return session.createSQLQuery(sql).list();		
-		} catch (HibernateException e) {
-			throw e;
-		} finally {
-			session.close();
-		}	
-	}
+        saveObject(customer);
+    }
 
-	
-	private <T> List<T> getAll(Class<T> clazz, int maxResult) {
-		Session session = sessionFactory.openSession();
-		
-		try {
-			return session.createCriteria(clazz).setMaxResults(maxResult).list();
-		} catch (HibernateException e) {
-			throw e;
-		} finally {
-			session.close();
-		}	
-	}
-	
-	private void saveObject(Object object) {
-		Transaction transaction = null;
-		Session session = sessionFactory.openSession();
-		
-		try {
-			transaction = session.beginTransaction();
-			session.save(object);
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-			throw e;
-		} finally {
-			session.close();
-		}	
-	}
-	
-	
-	private void updateObject(Object object) {
-		Transaction transaction = null;
-		Session session = sessionFactory.openSession();
-		
-		try {
-			transaction = session.beginTransaction();
-			session.update(object);
-			transaction.commit();
-		} catch (HibernateException e) {
-			if (transaction != null)
-				transaction.rollback();
-			throw e;
-		} finally {
-			session.close();
-		}
-	}
+    @Override
+    public void updateCustomer(CustomerDAO customer) {
+        log.info(String.format("Updating Customer: %s " , customer));
 
-//	private void updateObject(Session session, Object object) {
-//		try {
-//			session.update(object);
-//		} catch (HibernateException e) {
-//			throw e;
-//		} finally {
-//			session.close();
-//		}	
-//	}
-	
-	private <T> T getObject(Class<T> clazz, String id) {
-		Validate.notNull(id);
+        updateObject(customer);
+    }
 
-		Session session = sessionFactory.openSession();
-		
-		try {
-			return (T) session.get(clazz, id);
-		} catch (HibernateException e) {
-			throw e;
-		} finally {
-			session.close();
-		}
-	}
-	
+    @Override
+    public CustomerDAO getCustomerById(String customerId) {
+        log.info(String.format("Retrieving Customer: %s " , customerId));
+
+        return getObject(CustomerDAO.class, customerId);
+    }
+
+    @Override
+    public void createFoodItemOffer(FoodItemOfferDAO foodItemOffer) {
+        log.info(String.format("Creating food item offer: %s " , foodItemOffer));
+
+        saveObject(foodItemOffer);
+    }
+
+    @Override
+    public void udpateFoodItemOffer(FoodItemOfferDAO foodItemOffer) {
+        log.info(String.format("Updating food item offer: %s " , foodItemOffer));
+
+        updateObject(foodItemOffer);
+    }
+
+    @Override
+    public FoodItemOfferDAO getFoodItemOfferById(String foodItemOfferId) {
+        log.info(String.format("Retrieving food item offer: %s " , foodItemOfferId));
+
+        return getObject(FoodItemOfferDAO.class, foodItemOfferId);
+    }
+
+    @Override
+    public List<FoodItemOfferDAO> getAllFoodItemOffer() {
+        return getAll(FoodItemOfferDAO.class, 1024);
+    }
+
+
+    @Override
+    public void createCustomerOrder(CustomerOrderDAO customerOrder) {
+        log.info(String.format("Creating order: %s " , customerOrder));
+
+        saveObject(customerOrder);
+    }
+
+    @Override
+    public void createCustomerOrderItem(CustomerOrderItemDAO customerOrderItem) {
+        log.info(String.format("Creating order item: %s " , customerOrderItem));
+
+        saveObject(customerOrderItem);
+    }
+
+    @Override
+    public void updateCustomerOrder(CustomerOrderDAO customerOrder) {
+        log.info(String.format("Updating order: %s " , customerOrder));
+
+        updateObject(customerOrder);
+    }
+
+    @Override
+    public void updateCustomerOrderItem(CustomerOrderItemDAO customerOrderItem) {
+        log.info(String.format("Updating order item: %s " , customerOrderItem));
+
+        updateObject(customerOrderItem);
+    }
+
+
+    @Override
+    public CustomerOrderDAO getCustomerOrderById(String orderId) {
+        log.info(String.format("Retrieving order: %s " , orderId));
+
+        return getObject(CustomerOrderDAO.class, orderId);
+    }
+
+
+    @Override
+    public CustomerOrderItemDAO getCustomerOrderItemById(String orderItemId) {
+        log.info(String.format("Retrieving order Item: %s " , orderItemId));
+
+        return getObject(CustomerOrderItemDAO.class, orderItemId);
+    }
+
+    @Override
+    public List<CustomerOrderItemDAO> getCustomerOrderItemByOrderId(String orderId) {
+        String sql = "select * from CUSTOMER_ORDER_ITEM where ORDER_ID=:orderId";
+        Session session = sessionFactory.openSession();
+        try {
+            Query query = session.createSQLQuery(sql)
+                    .addEntity(CustomerOrderItemDAO.class)
+                    .setString("orderId", orderId);
+
+            return query.list();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public OrderFeedbackDAO getOrderFeedbackById(String orderId) {
+        log.info(String.format("Retrieving order feedback: %s " , orderId));
+
+        return getObject(OrderFeedbackDAO.class, orderId);
+    }
+
+    @Override
+    public void createOrderFeedback(OrderFeedbackDAO orderFeedbackDAO) {
+        log.info(String.format("Creating order feedback: %s " , orderFeedbackDAO));
+
+        saveObject(orderFeedbackDAO);
+    }
+
+    @Override
+    public void updateOrderFeedback(OrderFeedbackDAO orderFeedbackDAO) {
+        log.info(String.format("Creating order feedback: %s " , orderFeedbackDAO));
+
+        updateObject(orderFeedbackDAO);
+    }
+
+    @Override
+    public ZipCodeDAO getZipCode(String zipCode) {
+        log.info(String.format("Retrieving ZipCode: %s " , zipCode));
+
+        return getObject(ZipCodeDAO.class, zipCode);
+    }
+
+    private <T> List<T> executeCustomSQL(Class<T> clazz, String sql) {
+        System.out.println(sql);
+
+        Session session = sessionFactory.openSession();
+        try {
+            return session.createSQLQuery(sql).addEntity(clazz).list();
+        } catch (HibernateException e) {
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    private <T> List<T> executeCustomSQL(String sql) {
+        Session session = sessionFactory.openSession();
+        try {
+            return session.createSQLQuery(sql).list();
+        } catch (HibernateException e) {
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+
+    private <T> List<T> getAll(Class<T> clazz, int maxResult) {
+        Session session = sessionFactory.openSession();
+
+        try {
+            return session.createCriteria(clazz).setMaxResults(maxResult).list();
+        } catch (HibernateException e) {
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    private void saveObject(Object object) {
+        Transaction transaction = null;
+        Session session = sessionFactory.openSession();
+
+        try {
+            transaction = session.beginTransaction();
+            session.save(object);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+
+    private void updateObject(Object object) {
+        Transaction transaction = null;
+        Session session = sessionFactory.openSession();
+
+        try {
+            transaction = session.beginTransaction();
+            session.update(object);
+            transaction.commit();
+        } catch (HibernateException e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    //	private void updateObject(Session session, Object object) {
+    //		try {
+    //			session.update(object);
+    //		} catch (HibernateException e) {
+    //			throw e;
+    //		} finally {
+    //			session.close();
+    //		}
+    //	}
+
+    private <T> T getObject(Class<T> clazz, String id) {
+        Validate.notNull(id);
+
+        Session session = sessionFactory.openSession();
+
+        try {
+            return (T) session.get(clazz, id);
+        } catch (HibernateException e) {
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
 }
